@@ -1,0 +1,296 @@
+---
+const services = [
+  {
+    number: '01',
+    title: 'Webの仕組み',
+    text: 'Webサイト・LP・SEO・導線設計を、作って終わりではなく「問い合わせや採用につながる基盤」として設計します。',
+    tags: ['Web制作', 'LP', 'SEO', '導線設計'],
+  },
+  {
+    number: '02',
+    title: '集客の仕組み',
+    text: 'SNSやコンテンツを単発施策にせず、企画・制作・分析・改善まで継続して回る運用に整えます。',
+    tags: ['SNS運用', 'コンテンツ', '分析', '改善'],
+  },
+  {
+    number: '03',
+    title: '業務の仕組み',
+    text: 'AIや既存ツールを活用し、情報整理・制作・運用・社内業務の属人化とムダを減らします。',
+    tags: ['AI活用', '業務改善', '標準化', '自動化'],
+  },
+];
+
+const principles = [
+  ['課題から始める', 'ツール導入を目的にせず、売上・時間・品質のどこを改善するかから考えます。'],
+  ['小さく試す', '最初から大きく作り込まず、検証できる最小単位から始めます。'],
+  ['続く形にする', '担当者の頑張りに依存せず、誰でも回せる手順・データ・運用に落とします。'],
+  ['資産として残す', 'Web、コンテンツ、データ、顧客接点、ノウハウが積み上がる設計を重視します。'],
+];
+
+const currentYear = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="シクミベースは、中小企業・地域企業のWeb・集客・業務を、継続的に成果が積み上がる仕組みに整える事業ブランドです。" />
+    <meta name="theme-color" content="#0b2f2a" />
+    <link rel="canonical" href="https://shikumi-base.com/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="シクミベース" />
+    <meta property="og:title" content="シクミベース｜事業に、仕組みを。" />
+    <meta property="og:description" content="中小企業・地域企業のWeb・集客・業務を、継続的に成果が積み上がる仕組みに。" />
+    <meta property="og:url" content="https://shikumi-base.com/" />
+    <meta name="twitter:card" content="summary" />
+    <title>シクミベース｜事業に、仕組みを。</title>
+    <style is:global>
+      :root {
+        --ink: #14201e;
+        --muted: #5d6a67;
+        --paper: #f5f2ea;
+        --paper-2: #ece8dd;
+        --green: #0b2f2a;
+        --green-2: #184b43;
+        --line: rgba(20, 32, 30, .14);
+        --white: #fff;
+        --max: 1160px;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.8;
+        letter-spacing: .02em;
+      }
+      a { color: inherit; text-decoration: none; }
+      .wrap { width: min(calc(100% - 40px), var(--max)); margin-inline: auto; }
+      .header {
+        position: sticky; top: 0; z-index: 20;
+        background: color-mix(in srgb, var(--paper) 90%, transparent);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--line);
+      }
+      .header-inner { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+      .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; letter-spacing: .05em; }
+      .brand-mark { width: 32px; aspect-ratio: 1; border: 2px solid var(--green); border-radius: 8px; display: grid; place-items: center; font-size: 12px; color: var(--green); }
+      nav { display: flex; gap: 28px; font-size: 13px; font-weight: 700; }
+      nav a:hover { opacity: .55; }
+      .hero { min-height: 680px; display: grid; align-items: center; border-bottom: 1px solid var(--line); }
+      .hero-grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: 80px; align-items: end; padding: 110px 0 90px; }
+      .eyebrow { color: var(--green-2); font-weight: 800; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+      h1 { margin: 20px 0 30px; font-size: clamp(52px, 8vw, 108px); line-height: .98; letter-spacing: -.055em; font-weight: 900; }
+      .hero-copy { max-width: 650px; font-size: clamp(17px, 2vw, 21px); color: #34413f; }
+      .hero-side { border-left: 1px solid var(--line); padding-left: 32px; }
+      .hero-side p { margin: 0; color: var(--muted); font-size: 14px; }
+      .status { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 18px; font-size: 12px; font-weight: 800; color: var(--green-2); }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-2); }
+      .button-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+      .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 22px; border-radius: 999px; font-weight: 800; font-size: 13px; border: 1px solid var(--green); transition: .2s ease; }
+      .btn.primary { background: var(--green); color: white; }
+      .btn:hover { transform: translateY(-2px); }
+      section { padding: 110px 0; border-bottom: 1px solid var(--line); }
+      .section-head { display: grid; grid-template-columns: 1fr 2fr; gap: 70px; margin-bottom: 64px; }
+      .section-kicker { font-size: 12px; font-weight: 800; letter-spacing: .16em; color: var(--green-2); text-transform: uppercase; }
+      h2 { margin: 0; font-size: clamp(34px, 4.5vw, 62px); line-height: 1.12; letter-spacing: -.035em; }
+      .lead { font-size: 18px; color: #3e4a47; max-width: 760px; }
+      .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+      .service { min-height: 390px; padding: 34px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
+      .number { font-size: 12px; font-weight: 800; color: var(--green-2); }
+      .service h3 { margin: auto 0 18px; font-size: 28px; letter-spacing: -.025em; }
+      .service p { color: var(--muted); font-size: 14px; margin: 0 0 22px; }
+      .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+      .tag { padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 11px; }
+      .principles { background: var(--green); color: #f7f5ef; }
+      .principles .section-kicker, .principles .lead { color: #d1ddd8; }
+      .principle-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.18); }
+      .principle { background: var(--green); padding: 36px; }
+      .principle h3 { margin: 0 0 12px; font-size: 21px; }
+      .principle p { margin: 0; color: #c9d4d0; font-size: 14px; }
+      .project-card { display: grid; grid-template-columns: 1fr 1fr; min-height: 420px; border: 1px solid var(--line); }
+      .project-copy { padding: 50px; display: flex; flex-direction: column; }
+      .project-copy h3 { font-size: clamp(36px, 5vw, 64px); margin: auto 0 18px; letter-spacing: -.04em; }
+      .project-copy p { color: var(--muted); max-width: 560px; }
+      .project-visual { background: var(--green); color: white; padding: 50px; display: flex; flex-direction: column; justify-content: space-between; }
+      .project-visual .big { font-size: clamp(62px, 9vw, 126px); font-weight: 900; letter-spacing: -.07em; line-height: .85; }
+      .project-visual small { color: #c9d4d0; }
+      .profile { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; align-items: start; }
+      .profile-card { border-top: 3px solid var(--green); padding-top: 22px; }
+      .profile-card .name { font-size: 30px; font-weight: 900; margin-bottom: 4px; }
+      .profile-card .role { color: var(--muted); font-size: 13px; }
+      .profile-copy { font-size: 16px; }
+      .profile-copy p:first-child { margin-top: 0; }
+      .notice { margin-top: 30px; padding: 18px 20px; background: var(--paper-2); font-size: 12px; color: var(--muted); border-left: 3px solid var(--green-2); }
+      .contact { text-align: center; }
+      .contact h2 { max-width: 850px; margin: 0 auto 26px; }
+      .contact p { color: var(--muted); }
+      footer { padding: 36px 0 48px; font-size: 11px; color: var(--muted); }
+      .footer-inner { display: flex; justify-content: space-between; gap: 30px; align-items: flex-start; }
+      .operator { max-width: 640px; }
+      @media (max-width: 820px) {
+        .wrap { width: min(calc(100% - 28px), var(--max)); }
+        nav { display: none; }
+        .hero { min-height: auto; }
+        .hero-grid, .section-head, .project-card, .profile { grid-template-columns: 1fr; gap: 36px; }
+        .hero-grid { padding: 78px 0 64px; }
+        .hero-side { border-left: 0; border-top: 1px solid var(--line); padding: 22px 0 0; }
+        section { padding: 76px 0; }
+        .service-grid { grid-template-columns: 1fr; }
+        .service { min-height: 300px; }
+        .principle-grid { grid-template-columns: 1fr; }
+        .project-copy, .project-visual { padding: 30px; min-height: 320px; }
+        .footer-inner { flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="wrap header-inner">
+        <a class="brand" href="#top" aria-label="シクミベース トップ">
+          <span class="brand-mark">SB</span>
+          <span>シクミベース</span>
+        </a>
+        <nav aria-label="メインナビゲーション">
+          <a href="#about">ABOUT</a>
+          <a href="#service">SERVICE</a>
+          <a href="#project">PROJECT</a>
+          <a href="#profile">PROFILE</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <div class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <div class="eyebrow">Build systems, not busyness.</div>
+            <h1>事業に、<br />仕組みを。</h1>
+            <p class="hero-copy">シクミベースは、中小企業・地域企業のWeb・集客・業務を、担当者の頑張りだけに依存しない「続く仕組み」へ整える事業ブランドです。</p>
+            <div class="button-row">
+              <a class="btn primary" href="#service">できることを見る</a>
+              <a class="btn" href="#project">イバトコについて</a>
+            </div>
+          </div>
+          <aside class="hero-side">
+            <div class="status"><span class="dot"></span>IN DEVELOPMENT / 2026</div>
+            <p>Web制作、SNS運用、マーケティング、AI・業務改善を横断し、「作る」だけではなく、成果が積み上がる運用まで設計します。</p>
+          </aside>
+        </div>
+      </div>
+
+      <section id="about">
+        <div class="wrap">
+          <div class="section-head">
+            <div class="section-kicker">About</div>
+            <div>
+              <h2>人が頑張り続けなくても、<br />価値が積み上がる状態をつくる。</h2>
+              <p class="lead">いい商品やサービスがあっても、発信、集客、更新、社内業務が属人化していると、成長するほど忙しくなります。シクミベースは、Webとデジタルの力で、その「回らない」を整理し、再現できる仕組みに変えていきます。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="service">
+        <div class="wrap">
+          <div class="section-head">
+            <div class="section-kicker">Service</div>
+            <div>
+              <h2>作る。届ける。回す。<br />を、ひとつにつなぐ。</h2>
+              <p class="lead">個別の施策を売るのではなく、事業課題に合わせて必要な機能を組み合わせます。初期は小さく検証し、成果が見えたものから標準化・自動化します。</p>
+            </div>
+          </div>
+          <div class="service-grid">
+            {services.map((service) => (
+              <article class="service">
+                <div class="number">{service.number}</div>
+                <h3>{service.title}</h3>
+                <p>{service.text}</p>
+                <div class="tags">
+                  {service.tags.map((tag) => <span class="tag">{tag}</span>)}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="principles">
+        <div class="wrap">
+          <div class="section-head">
+            <div class="section-kicker">Principles</div>
+            <div>
+              <h2>成果の前に、<br />構造を見る。</h2>
+              <p class="lead">一時的なアクセスやフォロワー数ではなく、売上・利益・顧客接点・データ・運用ノウハウが長期で残るかを重視します。</p>
+            </div>
+          </div>
+          <div class="principle-grid">
+            {principles.map(([title, text]) => (
+              <article class="principle"><h3>{title}</h3><p>{text}</p></article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="project">
+        <div class="wrap">
+          <div class="section-head">
+            <div class="section-kicker">Project</div>
+            <div>
+              <h2>地域で試し、<br />地域を越えて使える形へ。</h2>
+            </div>
+          </div>
+          <article class="project-card">
+            <div class="project-copy">
+              <div class="eyebrow">Ibaraki Local Media</div>
+              <h3>イバトコ</h3>
+              <p>茨城の店・人・企業・地域の「まだ知られていない価値」を、一次情報を起点に届ける地域メディア。情報発信だけで終わらず、地域事業者の集客・Web・SNS・デジタル活用につながる接点を育てています。</p>
+              <div class="button-row"><a class="btn" href="https://ibatoco.jp/" target="_blank" rel="noopener noreferrer">ibatoco.jp ↗</a></div>
+            </div>
+            <div class="project-visual">
+              <small>LOCAL × WEB × DATA</small>
+              <div class="big">IBR<br />→<br />ALL</div>
+              <small>茨城で得た知見を、他地域でも使える仕組みへ。</small>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="profile">
+        <div class="wrap profile">
+          <div class="profile-card">
+            <div class="section-kicker">Operator</div>
+            <div class="name">山野辺 雄太</div>
+            <div class="role">Web Director / Shikumi Base / Ibatoco</div>
+          </div>
+          <div class="profile-copy">
+            <p>Web制作・ディレクションを中心に、要件整理、進行管理、SEO、SNS運用、チームの業務改善まで経験。現在は、企業のホームページ制作・SNS運用・マーケティング支援と並行して、茨城県特化の地域メディア「イバトコ」を運営しています。</p>
+            <p>目指しているのは、受託制作を増やし続けることではなく、現場で成果が出た方法を標準化し、AI・データ・運用設計によって、地域や中小企業が継続的に使える事業基盤へ育てることです。</p>
+            <div class="notice"><strong>法人化前の表記について</strong><br />シクミベースは、2026年8月現在、法人ではなく山野辺雄太が個人で運営する事業ブランドです。法人設立後は、運営主体・表示内容を更新します。</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="contact">
+        <div class="wrap">
+          <div class="section-kicker">Contact</div>
+          <h2>Webや集客を、<br />「続く仕組み」に変えたい方へ。</h2>
+          <p>ホームページ制作、SNS運用、地域企業の情報発信、協業のご相談など。<br />現在、お問い合わせ窓口を整備中です。</p>
+          <div class="button-row" style="justify-content:center">
+            <a class="btn primary" href="https://ibatoco.jp/contact/" target="_blank" rel="noopener noreferrer">イバトコ経由で問い合わせる ↗</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap footer-inner">
+        <div class="operator">シクミベースは、山野辺雄太が運営する事業ブランドです。現在は法人ではありません。掲載するサービス内容・実績等は、提供状況に応じて順次更新します。</div>
+        <div>© {currentYear} Shikumi Base</div>
+      </div>
+    </footer>
+  </body>
+</html>
