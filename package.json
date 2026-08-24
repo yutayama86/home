@@ -9,6 +9,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=shikumi-base --branch=main",
     "astro": "astro"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "astro": "^7.1.6"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.125.0"
   }
 }

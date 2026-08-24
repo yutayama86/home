@@ -24,7 +24,14 @@ npm run build
 ## Deployment
 
 公開先の想定ドメインは `https://shikumi-base.com/` です。
-Cloudflare Pages等の公開環境では、ビルドコマンドを `npm run build`、出力ディレクトリを `dist` に設定してください。
+Cloudflare Pagesへ公開します。ビルドコマンドは `npm run build`、出力ディレクトリは `dist`、プロジェクト名は `shikumi-base` です。
+
+`main` ブランチへの反映時にGitHub Actionsから自動公開されます。GitHubリポジトリには次のActions secretsが必要です。
+
+- `CLOUDFLARE_API_TOKEN`（Cloudflare Pagesの編集権限を持つAPIトークン）
+- `CLOUDFLARE_ACCOUNT_ID`
+
+初回のみCloudflare Pagesプロジェクトの作成と、`shikumi-base.com` / `www.shikumi-base.com` のカスタムドメイン接続が必要です。
 
 ## 法人化後に更新する箇所
 
