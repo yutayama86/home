@@ -1,296 +1,51 @@
 ---
 const services = [
-  {
-    number: '01',
-    title: 'Webの仕組み',
-    text: 'Webサイト・LP・SEO・導線設計を、作って終わりではなく「問い合わせや採用につながる基盤」として設計します。',
-    tags: ['Web制作', 'LP', 'SEO', '導線設計'],
-  },
-  {
-    number: '02',
-    title: '集客の仕組み',
-    text: 'SNSやコンテンツを単発施策にせず、企画・制作・分析・改善まで継続して回る運用に整えます。',
-    tags: ['SNS運用', 'コンテンツ', '分析', '改善'],
-  },
-  {
-    number: '03',
-    title: '業務の仕組み',
-    text: 'AIや既存ツールを活用し、情報整理・制作・運用・社内業務の属人化とムダを減らします。',
-    tags: ['AI活用', '業務改善', '標準化', '自動化'],
-  },
+  { no: '01', en: 'BUILD', title: 'つくる', sub: 'Webの仕組み', text: 'Webサイト・LP・SEO・導線設計を、問い合わせや採用につながる事業基盤として設計します。', items: ['WEB SITE', 'LANDING PAGE', 'SEO / UX'] },
+  { no: '02', en: 'REACH', title: '届ける', sub: '集客の仕組み', text: 'SNSやコンテンツを単発で終わらせず、企画・制作・分析・改善が循環する運用へ整えます。', items: ['SNS', 'CONTENT', 'ANALYTICS'] },
+  { no: '03', en: 'RUN', title: 'まわす', sub: '業務の仕組み', text: 'AIと既存ツールを活かし、情報整理・制作・社内業務の属人化とムダを減らします。', items: ['AI', 'WORKFLOW', 'AUTOMATION'] },
 ];
-
-const principles = [
-  ['課題から始める', 'ツール導入を目的にせず、売上・時間・品質のどこを改善するかから考えます。'],
-  ['小さく試す', '最初から大きく作り込まず、検証できる最小単位から始めます。'],
-  ['続く形にする', '担当者の頑張りに依存せず、誰でも回せる手順・データ・運用に落とします。'],
-  ['資産として残す', 'Web、コンテンツ、データ、顧客接点、ノウハウが積み上がる設計を重視します。'],
+const flow = [
+  ['01', '見つける', '事業と顧客を理解し、本当に解くべき課題を見つける。'],
+  ['02', '小さく試す', '最小単位で形にし、実際の反応から学ぶ。'],
+  ['03', 'つなげる', '制作・集客・業務を、ひと続きの導線にする。'],
+  ['04', '積み上げる', '成果を手順・データ・資産として残す。'],
 ];
-
 const currentYear = new Date().getFullYear();
 ---
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="description" content="シクミベースは、中小企業・地域企業のWeb・集客・業務を、継続的に成果が積み上がる仕組みに整える事業ブランドです。" />
-    <meta name="theme-color" content="#0b2f2a" />
-    <link rel="canonical" href="https://shikumi-base.com/" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="シクミベース" />
-    <meta property="og:title" content="シクミベース｜事業に、仕組みを。" />
-    <meta property="og:description" content="中小企業・地域企業のWeb・集客・業務を、継続的に成果が積み上がる仕組みに。" />
-    <meta property="og:url" content="https://shikumi-base.com/" />
-    <meta name="twitter:card" content="summary" />
-    <title>シクミベース｜事業に、仕組みを。</title>
-    <style is:global>
-      :root {
-        --ink: #14201e;
-        --muted: #5d6a67;
-        --paper: #f5f2ea;
-        --paper-2: #ece8dd;
-        --green: #0b2f2a;
-        --green-2: #184b43;
-        --line: rgba(20, 32, 30, .14);
-        --white: #fff;
-        --max: 1160px;
-      }
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      body {
-        margin: 0;
-        color: var(--ink);
-        background: var(--paper);
-        font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        line-height: 1.8;
-        letter-spacing: .02em;
-      }
-      a { color: inherit; text-decoration: none; }
-      .wrap { width: min(calc(100% - 40px), var(--max)); margin-inline: auto; }
-      .header {
-        position: sticky; top: 0; z-index: 20;
-        background: color-mix(in srgb, var(--paper) 90%, transparent);
-        backdrop-filter: blur(16px);
-        border-bottom: 1px solid var(--line);
-      }
-      .header-inner { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-      .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; letter-spacing: .05em; }
-      .brand-mark { width: 32px; aspect-ratio: 1; border: 2px solid var(--green); border-radius: 8px; display: grid; place-items: center; font-size: 12px; color: var(--green); }
-      nav { display: flex; gap: 28px; font-size: 13px; font-weight: 700; }
-      nav a:hover { opacity: .55; }
-      .hero { min-height: 680px; display: grid; align-items: center; border-bottom: 1px solid var(--line); }
-      .hero-grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: 80px; align-items: end; padding: 110px 0 90px; }
-      .eyebrow { color: var(--green-2); font-weight: 800; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
-      h1 { margin: 20px 0 30px; font-size: clamp(52px, 8vw, 108px); line-height: .98; letter-spacing: -.055em; font-weight: 900; }
-      .hero-copy { max-width: 650px; font-size: clamp(17px, 2vw, 21px); color: #34413f; }
-      .hero-side { border-left: 1px solid var(--line); padding-left: 32px; }
-      .hero-side p { margin: 0; color: var(--muted); font-size: 14px; }
-      .status { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 18px; font-size: 12px; font-weight: 800; color: var(--green-2); }
-      .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-2); }
-      .button-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
-      .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 22px; border-radius: 999px; font-weight: 800; font-size: 13px; border: 1px solid var(--green); transition: .2s ease; }
-      .btn.primary { background: var(--green); color: white; }
-      .btn:hover { transform: translateY(-2px); }
-      section { padding: 110px 0; border-bottom: 1px solid var(--line); }
-      .section-head { display: grid; grid-template-columns: 1fr 2fr; gap: 70px; margin-bottom: 64px; }
-      .section-kicker { font-size: 12px; font-weight: 800; letter-spacing: .16em; color: var(--green-2); text-transform: uppercase; }
-      h2 { margin: 0; font-size: clamp(34px, 4.5vw, 62px); line-height: 1.12; letter-spacing: -.035em; }
-      .lead { font-size: 18px; color: #3e4a47; max-width: 760px; }
-      .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-      .service { min-height: 390px; padding: 34px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
-      .number { font-size: 12px; font-weight: 800; color: var(--green-2); }
-      .service h3 { margin: auto 0 18px; font-size: 28px; letter-spacing: -.025em; }
-      .service p { color: var(--muted); font-size: 14px; margin: 0 0 22px; }
-      .tags { display: flex; flex-wrap: wrap; gap: 6px; }
-      .tag { padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 11px; }
-      .principles { background: var(--green); color: #f7f5ef; }
-      .principles .section-kicker, .principles .lead { color: #d1ddd8; }
-      .principle-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.18); }
-      .principle { background: var(--green); padding: 36px; }
-      .principle h3 { margin: 0 0 12px; font-size: 21px; }
-      .principle p { margin: 0; color: #c9d4d0; font-size: 14px; }
-      .project-card { display: grid; grid-template-columns: 1fr 1fr; min-height: 420px; border: 1px solid var(--line); }
-      .project-copy { padding: 50px; display: flex; flex-direction: column; }
-      .project-copy h3 { font-size: clamp(36px, 5vw, 64px); margin: auto 0 18px; letter-spacing: -.04em; }
-      .project-copy p { color: var(--muted); max-width: 560px; }
-      .project-visual { background: var(--green); color: white; padding: 50px; display: flex; flex-direction: column; justify-content: space-between; }
-      .project-visual .big { font-size: clamp(62px, 9vw, 126px); font-weight: 900; letter-spacing: -.07em; line-height: .85; }
-      .project-visual small { color: #c9d4d0; }
-      .profile { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; align-items: start; }
-      .profile-card { border-top: 3px solid var(--green); padding-top: 22px; }
-      .profile-card .name { font-size: 30px; font-weight: 900; margin-bottom: 4px; }
-      .profile-card .role { color: var(--muted); font-size: 13px; }
-      .profile-copy { font-size: 16px; }
-      .profile-copy p:first-child { margin-top: 0; }
-      .notice { margin-top: 30px; padding: 18px 20px; background: var(--paper-2); font-size: 12px; color: var(--muted); border-left: 3px solid var(--green-2); }
-      .contact { text-align: center; }
-      .contact h2 { max-width: 850px; margin: 0 auto 26px; }
-      .contact p { color: var(--muted); }
-      footer { padding: 36px 0 48px; font-size: 11px; color: var(--muted); }
-      .footer-inner { display: flex; justify-content: space-between; gap: 30px; align-items: flex-start; }
-      .operator { max-width: 640px; }
-      @media (max-width: 820px) {
-        .wrap { width: min(calc(100% - 28px), var(--max)); }
-        nav { display: none; }
-        .hero { min-height: auto; }
-        .hero-grid, .section-head, .project-card, .profile { grid-template-columns: 1fr; gap: 36px; }
-        .hero-grid { padding: 78px 0 64px; }
-        .hero-side { border-left: 0; border-top: 1px solid var(--line); padding: 22px 0 0; }
-        section { padding: 76px 0; }
-        .service-grid { grid-template-columns: 1fr; }
-        .service { min-height: 300px; }
-        .principle-grid { grid-template-columns: 1fr; }
-        .project-copy, .project-visual { padding: 30px; min-height: 320px; }
-        .footer-inner { flex-direction: column; }
-      }
-    </style>
-  </head>
-  <body>
-    <header class="header">
-      <div class="wrap header-inner">
-        <a class="brand" href="#top" aria-label="シクミベース トップ">
-          <span class="brand-mark">SB</span>
-          <span>シクミベース</span>
-        </a>
-        <nav aria-label="メインナビゲーション">
-          <a href="#about">ABOUT</a>
-          <a href="#service">SERVICE</a>
-          <a href="#project">PROJECT</a>
-          <a href="#profile">PROFILE</a>
-        </nav>
-      </div>
-    </header>
-
-    <main id="top">
-      <div class="hero">
-        <div class="wrap hero-grid">
-          <div>
-            <div class="eyebrow">Build systems, not busyness.</div>
-            <h1>事業に、<br />仕組みを。</h1>
-            <p class="hero-copy">シクミベースは、中小企業・地域企業のWeb・集客・業務を、担当者の頑張りだけに依存しない「続く仕組み」へ整える事業ブランドです。</p>
-            <div class="button-row">
-              <a class="btn primary" href="#service">できることを見る</a>
-              <a class="btn" href="#project">イバトコについて</a>
-            </div>
-          </div>
-          <aside class="hero-side">
-            <div class="status"><span class="dot"></span>IN DEVELOPMENT / 2026</div>
-            <p>Web制作、SNS運用、マーケティング、AI・業務改善を横断し、「作る」だけではなく、成果が積み上がる運用まで設計します。</p>
-          </aside>
-        </div>
-      </div>
-
-      <section id="about">
-        <div class="wrap">
-          <div class="section-head">
-            <div class="section-kicker">About</div>
-            <div>
-              <h2>人が頑張り続けなくても、<br />価値が積み上がる状態をつくる。</h2>
-              <p class="lead">いい商品やサービスがあっても、発信、集客、更新、社内業務が属人化していると、成長するほど忙しくなります。シクミベースは、Webとデジタルの力で、その「回らない」を整理し、再現できる仕組みに変えていきます。</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="service">
-        <div class="wrap">
-          <div class="section-head">
-            <div class="section-kicker">Service</div>
-            <div>
-              <h2>作る。届ける。回す。<br />を、ひとつにつなぐ。</h2>
-              <p class="lead">個別の施策を売るのではなく、事業課題に合わせて必要な機能を組み合わせます。初期は小さく検証し、成果が見えたものから標準化・自動化します。</p>
-            </div>
-          </div>
-          <div class="service-grid">
-            {services.map((service) => (
-              <article class="service">
-                <div class="number">{service.number}</div>
-                <h3>{service.title}</h3>
-                <p>{service.text}</p>
-                <div class="tags">
-                  {service.tags.map((tag) => <span class="tag">{tag}</span>)}
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section class="principles">
-        <div class="wrap">
-          <div class="section-head">
-            <div class="section-kicker">Principles</div>
-            <div>
-              <h2>成果の前に、<br />構造を見る。</h2>
-              <p class="lead">一時的なアクセスやフォロワー数ではなく、売上・利益・顧客接点・データ・運用ノウハウが長期で残るかを重視します。</p>
-            </div>
-          </div>
-          <div class="principle-grid">
-            {principles.map(([title, text]) => (
-              <article class="principle"><h3>{title}</h3><p>{text}</p></article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="project">
-        <div class="wrap">
-          <div class="section-head">
-            <div class="section-kicker">Project</div>
-            <div>
-              <h2>地域で試し、<br />地域を越えて使える形へ。</h2>
-            </div>
-          </div>
-          <article class="project-card">
-            <div class="project-copy">
-              <div class="eyebrow">Ibaraki Local Media</div>
-              <h3>イバトコ</h3>
-              <p>茨城の店・人・企業・地域の「まだ知られていない価値」を、一次情報を起点に届ける地域メディア。情報発信だけで終わらず、地域事業者の集客・Web・SNS・デジタル活用につながる接点を育てています。</p>
-              <div class="button-row"><a class="btn" href="https://ibatoco.jp/" target="_blank" rel="noopener noreferrer">ibatoco.jp ↗</a></div>
-            </div>
-            <div class="project-visual">
-              <small>LOCAL × WEB × DATA</small>
-              <div class="big">IBR<br />→<br />ALL</div>
-              <small>茨城で得た知見を、他地域でも使える仕組みへ。</small>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section id="profile">
-        <div class="wrap profile">
-          <div class="profile-card">
-            <div class="section-kicker">Operator</div>
-            <div class="name">山野辺 雄太</div>
-            <div class="role">Web Director / Shikumi Base / Ibatoco</div>
-          </div>
-          <div class="profile-copy">
-            <p>Web制作・ディレクションを中心に、要件整理、進行管理、SEO、SNS運用、チームの業務改善まで経験。現在は、企業のホームページ制作・SNS運用・マーケティング支援と並行して、茨城県特化の地域メディア「イバトコ」を運営しています。</p>
-            <p>目指しているのは、受託制作を増やし続けることではなく、現場で成果が出た方法を標準化し、AI・データ・運用設計によって、地域や中小企業が継続的に使える事業基盤へ育てることです。</p>
-            <div class="notice"><strong>法人化前の表記について</strong><br />シクミベースは、2026年8月現在、法人ではなく山野辺雄太が個人で運営する事業ブランドです。法人設立後は、運営主体・表示内容を更新します。</div>
-          </div>
-        </div>
-      </section>
-
-      <section id="contact" class="contact">
-        <div class="wrap">
-          <div class="section-kicker">Contact</div>
-          <h2>Webや集客を、<br />「続く仕組み」に変えたい方へ。</h2>
-          <p>ホームページ制作、SNS運用、地域企業の情報発信、協業のご相談など。<br />現在、お問い合わせ窓口を整備中です。</p>
-          <div class="button-row" style="justify-content:center">
-            <a class="btn primary" href="https://ibatoco.jp/contact/" target="_blank" rel="noopener noreferrer">イバトコ経由で問い合わせる ↗</a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="wrap footer-inner">
-        <div class="operator">シクミベースは、山野辺雄太が運営する事業ブランドです。現在は法人ではありません。掲載するサービス内容・実績等は、提供状況に応じて順次更新します。</div>
-        <div>© {currentYear} Shikumi Base</div>
-      </div>
-    </footer>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="description" content="シクミベースは、中小企業・地域企業のWeb・集客・業務を、継続的に成果が積み上がる仕組みに整える事業ブランドです。" />
+  <meta name="theme-color" content="#17241e" />
+  <link rel="canonical" href="https://shikumi-base.com/" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:type" content="website" /><meta property="og:site_name" content="シクミベース" />
+  <meta property="og:title" content="シクミベース｜事業に、仕組みを。" />
+  <meta property="og:description" content="中小企業・地域企業のWeb・集客・業務を、継続的に成果が積み上がる仕組みに。" />
+  <meta property="og:url" content="https://shikumi-base.com/" /><meta name="twitter:card" content="summary" />
+  <title>シクミベース｜事業に、仕組みを。</title>
+  <style is:global>
+    :root{--ink:#17241e;--cream:#f2efe5;--lime:#c8ff42;--orange:#ff6b3d;--purple:#6653d8;--line:rgba(23,36,30,.2);--max:1320px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;line-height:1.75;letter-spacing:.035em;overflow-x:hidden}a{color:inherit;text-decoration:none}.wrap{width:min(calc(100% - 64px),var(--max));margin:auto}.label{font:700 11px/1 system-ui;letter-spacing:.18em}.header{position:fixed;inset:0 0 auto;z-index:30;height:74px;border-bottom:1px solid rgba(242,239,229,.2);color:var(--cream);mix-blend-mode:difference}.header-inner{height:100%;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.08em}.logo-mark{width:36px;height:36px;position:relative;border:1px solid currentColor;border-radius:50%}.logo-mark:before,.logo-mark:after{content:"";position:absolute;background:currentColor}.logo-mark:before{width:17px;height:1px;left:9px;top:17px}.logo-mark:after{width:1px;height:17px;left:17px;top:9px}.nav{display:flex;align-items:center;gap:30px;font-size:11px;font-weight:800;letter-spacing:.12em}.nav-cta{border:1px solid currentColor;border-radius:99px;padding:10px 16px}.hero{position:relative;min-height:100svh;background:var(--ink);color:var(--cream);overflow:hidden}.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,229,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,229,.09) 1px,transparent 1px);background-size:10vw 10vw;mask-image:linear-gradient(to bottom,#000 45%,transparent 95%)}.orbit{position:absolute;border:1px solid rgba(200,255,66,.48);border-radius:50%;animation:spin 28s linear infinite}.orbit.o1{width:65vw;height:65vw;right:-13vw;top:-17vw}.orbit.o2{width:42vw;height:42vw;right:-1vw;top:-5vw;animation-direction:reverse}.orbit:after{content:"";position:absolute;width:17px;height:17px;border-radius:50%;background:var(--lime);left:12%;top:13%;box-shadow:0 0 28px var(--lime)}@keyframes spin{to{transform:rotate(360deg)}}.hero-inner{position:relative;z-index:2;min-height:100svh;padding:150px 0 56px;display:flex;flex-direction:column;justify-content:space-between}.hero-meta{display:flex;justify-content:space-between;align-items:flex-start}.hero-meta p{margin:0;max-width:320px;font-size:12px;color:#b8c0b9}.hero h1{margin:9vh 0 5vh;font-size:clamp(70px,12vw,180px);line-height:.83;letter-spacing:-.075em;font-weight:900}.hero h1 span{display:block}.hero h1 .outline{color:transparent;-webkit-text-stroke:1px var(--cream);margin-left:14vw}.hero-bottom{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:40px}.hero-lead{font-size:clamp(17px,1.65vw,24px);max-width:690px;margin:0}.scroll{justify-self:end;display:flex;align-items:center;gap:12px;font:700 10px/1 system-ui;letter-spacing:.2em}.scroll i{width:56px;height:56px;border:1px solid rgba(242,239,229,.4);border-radius:50%;display:grid;place-items:center;font-style:normal}.marquee{overflow:hidden;background:var(--lime);border-bottom:1px solid var(--ink);padding:14px 0}.marquee-track{display:flex;width:max-content;animation:marquee 22s linear infinite;font:900 clamp(26px,3vw,48px)/1 system-ui;letter-spacing:-.04em}.marquee-track span{padding-right:35px}@keyframes marquee{to{transform:translateX(-50%)}}
+    section{position:relative;border-bottom:1px solid var(--line)}.section-pad{padding:140px 0}.section-top{display:grid;grid-template-columns:1fr 3fr;gap:40px;margin-bottom:100px}.section-top h2{margin:0;font-size:clamp(40px,6vw,86px);line-height:1.05;letter-spacing:-.055em}.section-top .intro{max-width:720px;margin:34px 0 0;font-size:17px}.idea{overflow:hidden}.idea-word{font:900 clamp(100px,22vw,330px)/.75 system-ui;letter-spacing:-.09em;color:transparent;-webkit-text-stroke:1px rgba(23,36,30,.18);white-space:nowrap;margin:0 0 70px -1vw}.idea-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}.idea-cell{background:var(--cream);padding:40px;min-height:240px}.idea-cell.accent{background:var(--purple);color:#fff;display:flex;align-items:flex-end}.idea-cell h3{margin:0;font-size:clamp(30px,4vw,58px);line-height:1.12;letter-spacing:-.04em}.idea-cell p{max-width:580px;margin:0;font-size:15px}.services{background:#fff}.service-list{border-top:1px solid var(--ink)}.service{display:grid;grid-template-columns:100px .8fr 1fr;border-bottom:1px solid var(--ink);min-height:310px;transition:.35s}.service:hover{background:var(--lime)}.service>*{padding:34px;border-right:1px solid var(--ink)}.service>*:last-child{border:0}.service-no{font:800 13px/1 system-ui}.service-title{display:flex;flex-direction:column;justify-content:space-between}.service-en{font:900 clamp(52px,7vw,100px)/.85 system-ui;letter-spacing:-.06em}.service-title h3{font-size:22px;margin:0}.service-copy{display:flex;flex-direction:column;justify-content:space-between}.service-copy p{max-width:520px;margin:0}.service-tags{display:flex;flex-wrap:wrap;gap:7px}.service-tags span{border:1px solid currentColor;border-radius:99px;padding:5px 10px;font:700 10px/1 system-ui;letter-spacing:.1em}.flow-section{background:var(--ink);color:var(--cream);overflow:hidden}.flow-section:before{content:"";position:absolute;width:90vw;height:90vw;border:1px solid rgba(200,255,66,.2);border-radius:50%;right:-48vw;top:-35vw}.flow-list{position:relative;border-top:1px solid rgba(242,239,229,.3)}.flow-item{display:grid;grid-template-columns:100px 1fr 1fr;padding:26px 0;border-bottom:1px solid rgba(242,239,229,.3);align-items:center}.flow-item strong{font-size:clamp(25px,3vw,42px);letter-spacing:-.04em}.flow-item p{margin:0;color:#b9c1bc;font-size:13px;max-width:430px}.project{background:var(--orange);overflow:hidden}.project .section-top{margin-bottom:60px}.project-stage{display:grid;grid-template-columns:1.2fr .8fr;border:1px solid var(--ink);min-height:600px}.project-main{padding:48px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--ink)}.project-main h3{font-size:clamp(75px,13vw,190px);line-height:.8;letter-spacing:-.08em;margin:0}.project-main p{max-width:670px;font-size:16px}.project-side{position:relative;padding:40px;display:flex;flex-direction:column;justify-content:space-between;background:var(--cream);overflow:hidden}.map-line{position:absolute;width:500px;height:500px;border:1px solid var(--ink);border-radius:45% 55% 61% 39%;right:-210px;top:40px;transform:rotate(20deg)}.map-line:before,.map-line:after{content:"";position:absolute;border:1px solid var(--ink);border-radius:50%}.map-line:before{inset:45px}.map-line:after{inset:100px}.project-stat{position:relative;font:900 clamp(72px,10vw,140px)/.85 system-ui;letter-spacing:-.08em}.arrow-link{position:relative;display:flex;justify-content:space-between;align-items:center;border-top:1px solid;padding-top:18px;font-weight:800}.profile-grid{display:grid;grid-template-columns:1fr 2fr;gap:80px}.profile-name{font-size:34px;font-weight:900;margin:20px 0 4px}.profile-role{font-size:11px;color:#5e6963}.profile-copy{max-width:760px;font-size:16px}.notice{margin-top:38px;border:1px solid var(--line);padding:22px;font-size:12px;background:rgba(255,255,255,.5)}.contact{background:var(--lime);padding:130px 0 40px}.contact h2{font-size:clamp(55px,11vw,150px);line-height:.85;letter-spacing:-.075em;margin:30px 0 60px}.contact-link{display:grid;grid-template-columns:1fr auto;align-items:center;border-top:1px solid;border-bottom:1px solid;padding:26px 0;font-size:clamp(20px,2.4vw,34px);font-weight:900}.contact-link span:last-child{width:64px;height:64px;border:1px solid;border-radius:50%;display:grid;place-items:center}.footer{display:flex;justify-content:space-between;align-items:end;gap:30px;padding-top:80px;font-size:11px}.footer p{max-width:680px;margin:0}.reveal{opacity:0;transform:translateY(28px);transition:.8s cubic-bezier(.2,.8,.2,1)}.reveal.visible{opacity:1;transform:none}
+    @media(max-width:800px){.wrap{width:min(calc(100% - 28px),var(--max))}.header{height:62px}.nav a:not(.nav-cta){display:none}.hero-inner{padding:110px 0 35px}.hero-meta p{display:none}.hero h1{font-size:clamp(64px,23vw,105px);margin:12vh 0 8vh}.hero h1 .outline{margin-left:0}.hero-bottom,.section-top,.profile-grid{grid-template-columns:1fr}.scroll{display:none}.section-pad{padding:90px 0}.section-top{gap:20px;margin-bottom:55px}.idea-grid{grid-template-columns:1fr}.idea-cell{min-height:200px;padding:26px}.service{grid-template-columns:54px 1fr;min-height:0}.service-copy{grid-column:1/-1;border-top:1px solid var(--ink)!important}.service>*{padding:22px}.service-en{font-size:16vw}.flow-item{grid-template-columns:50px 1fr}.flow-item p{grid-column:2;margin-top:10px}.project-stage{grid-template-columns:1fr}.project-main{min-height:440px;border-right:0;border-bottom:1px solid;padding:28px}.project-side{min-height:370px;padding:28px}.project-stat{font-size:27vw}.contact{padding-top:90px}.footer{flex-direction:column;align-items:flex-start}.orbit.o1{width:120vw;height:120vw}.orbit.o2{width:80vw;height:80vw}.reveal{opacity:1;transform:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.orbit,.marquee-track{animation:none}.reveal{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+  <header class="header"><div class="wrap header-inner"><a class="logo" href="#top"><span class="logo-mark"></span><span>シクミベース</span></a><nav class="nav"><a href="#about">ABOUT</a><a href="#service">SERVICE</a><a href="#project">PROJECT</a><a class="nav-cta" href="#contact">CONTACT ↗</a></nav></div></header>
+  <main id="top">
+    <section class="hero"><div class="hero-grid"></div><div class="orbit o1"></div><div class="orbit o2"></div><div class="wrap hero-inner"><div class="hero-meta"><span class="label">SHIKUMI BASE / IBARAKI</span><p>WEB・集客・業務をつなぎ、事業の価値が継続的に積み上がる構造をつくる。</p></div><h1><span>事業に、</span><span class="outline">仕組みを。</span></h1><div class="hero-bottom"><p class="hero-lead">人が頑張り続けるだけの事業から、<br />仕組みが働き、価値が残る事業へ。</p><a class="scroll" href="#about">EXPLORE THE SYSTEM <i>↓</i></a></div></div></section>
+    <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>BUILD → REACH → RUN → GROW →</span><span>BUILD → REACH → RUN → GROW →</span><span>BUILD → REACH → RUN → GROW →</span><span>BUILD → REACH → RUN → GROW →</span></div></div>
+    <section id="about" class="idea section-pad"><div class="wrap"><div class="section-top reveal"><span class="label">01 / OUR IDEA</span><div><h2>「頑張る」を、<br />「積み上がる」へ。</h2><p class="intro">いい商品やサービスがあっても、発信、集客、更新、社内業務が人に依存していると、成長するほど忙しくなる。シクミベースは、点在する仕事をつなぎ、繰り返せる仕組みに変えていきます。</p></div></div></div><div class="idea-word">SYSTEM</div><div class="wrap"><div class="idea-grid reveal"><div class="idea-cell"><p>Webサイトを作ること。SNSを運用すること。AIを導入すること。それ自体は目的ではありません。売上、時間、品質のどこを変えるのか。課題から逆算して設計します。</p></div><div class="idea-cell accent"><h3>作る。届ける。回す。<br />すべてを、ひとつに。</h3></div></div></div></section>
+    <section id="service" class="services section-pad"><div class="wrap"><div class="section-top reveal"><span class="label">02 / WHAT WE DO</span><div><h2>成果までの流れを、<br />切り離さない。</h2><p class="intro">必要な機能を組み合わせ、小さく検証し、成果が見えたものから標準化・自動化します。</p></div></div><div class="service-list">{services.map(s=><article class="service reveal"><div class="service-no">{s.no}</div><div class="service-title"><div class="service-en">{s.en}</div><h3>{s.title}｜{s.sub}</h3></div><div class="service-copy"><p>{s.text}</p><div class="service-tags">{s.items.map(i=><span>{i}</span>)}</div></div></article>)}</div></div></section>
+    <section class="flow-section section-pad"><div class="wrap"><div class="section-top reveal"><span class="label">03 / HOW WE WORK</span><div><h2>答えを持ち込まず、<br />一緒に構造を見つける。</h2></div></div><div class="flow-list">{flow.map(([no,title,text])=><div class="flow-item reveal"><span class="label">{no}</span><strong>{title}</strong><p>{text}</p></div>)}</div></div></section>
+    <section id="project" class="project section-pad"><div class="wrap"><div class="section-top reveal"><span class="label">04 / LOCAL PROJECT</span><div><h2>地域で試し、<br />地域を越える。</h2></div></div><article class="project-stage reveal"><div class="project-main"><span class="label">IBARAKI LOCAL MEDIA</span><h3>イバ<br />トコ</h3><p>茨城の店・人・企業・地域の「まだ知られていない価値」を、一次情報から届ける地域メディア。地域の顧客接点と知見を育て、他地域でも使える仕組みへつなげます。</p></div><div class="project-side"><div class="map-line"></div><div><span class="label">LOCAL → ALL</span><div class="project-stat">IBR<br />→ALL</div></div><a class="arrow-link" href="https://ibatoco.jp/" target="_blank" rel="noopener noreferrer"><span>イバトコを見る</span><span>↗</span></a></div></article></div></section>
+    <section id="profile" class="section-pad"><div class="wrap profile-grid reveal"><div><span class="label">05 / OPERATOR</span><div class="profile-name">山野辺 雄太</div><div class="profile-role">WEB DIRECTOR / SHIKUMI BASE / IBATOCO</div></div><div class="profile-copy"><p>Web制作・ディレクションを中心に、要件整理、SEO、SNS運用、チームの業務改善まで経験。現在は企業のWeb・マーケティング支援と並行して、茨城県特化の地域メディア「イバトコ」を運営しています。</p><p>現場で成果が出た方法を標準化し、AI・データ・運用設計によって、地域や中小企業が継続的に使える事業基盤へ育てていきます。</p><div class="notice"><strong>法人化前の表記について</strong><br />シクミベースは、2026年8月現在、法人ではなく山野辺雄太が個人で運営する事業ブランドです。法人設立後は、運営主体・表示内容を更新します。</div></div></div></section>
+    <section id="contact" class="contact"><div class="wrap"><span class="label">06 / CONTACT</span><h2>LET'S BUILD<br />THE SYSTEM.</h2><a class="contact-link" href="https://ibatoco.jp/contact/" target="_blank" rel="noopener noreferrer"><span>Web・集客・協業について相談する</span><span>↗</span></a><footer class="footer"><p>シクミベースは、山野辺雄太が運営する事業ブランドです。現在は法人ではありません。掲載するサービス内容・実績等は、提供状況に応じて順次更新します。</p><span>© {currentYear} SHIKUMI BASE</span></footer></div></section>
+  </main>
+  <script is:inline>const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));</script>
+</body>
 </html>
