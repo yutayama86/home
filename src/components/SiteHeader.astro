@@ -1,0 +1,241 @@
+---
+import { ctaHref, contactLinkAttrs } from '../site.config';
+
+const nav = [
+  { href: '#about', label: '私たちについて' },
+  { href: '#service', label: 'できること' },
+  { href: '#process', label: '進め方' },
+  { href: '#project', label: 'イバトコ' },
+  { href: '#profile', label: '運営者' },
+];
+
+const ctaLink = ctaHref();
+const ctaAttrs = contactLinkAttrs();
+---
+
+<header class="header">
+  <div class="wrap header__inner">
+    <a class="logo" href="#top">シクミベース</a>
+
+    <nav class="nav" aria-label="メインメニュー">
+      <ul class="nav__list">
+        {nav.map((item) => (
+          <li><a class="nav__link" href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+      <a class="btn btn--primary nav__cta" href={ctaLink} {...ctaAttrs}>相談する</a>
+    </nav>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span class="menu-toggle__bars" aria-hidden="true"><span></span><span></span></span>
+      <span class="menu-toggle__text">メニュー</span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav class="wrap mobile-menu__inner" aria-label="モバイルメニュー">
+      <ul class="mobile-menu__list">
+        {nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+      <a class="btn btn--primary mobile-menu__cta" href={ctaLink} {...ctaAttrs}>相談する</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header__inner {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  /* ロゴはテキストのみ（記号マークは使わない） */
+  .logo {
+    font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem); /* 20〜24px */
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: var(--navy);
+    white-space: nowrap;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 2.4vw, 36px);
+  }
+
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 1.8vw, 28px);
+  }
+
+  .nav__link {
+    position: relative;
+    display: inline-block;
+    padding: 6px 0;
+    font-size: var(--fs-nav); /* 14〜15px */
+    font-weight: 700;
+    color: var(--text);
+    transition: color 0.2s var(--ease);
+  }
+
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--blue);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s var(--ease);
+  }
+
+  .nav__link:hover {
+    color: var(--blue-ink);
+  }
+
+  .nav__link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .nav__cta {
+    min-height: 44px;
+    padding: 10px 22px;
+  }
+
+  /* --- モバイル --------------------------------------------------------- */
+
+  .menu-toggle {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--navy);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .menu-toggle__bars {
+    display: grid;
+    gap: 5px;
+    width: 18px;
+  }
+
+  .menu-toggle__bars span {
+    display: block;
+    height: 2px;
+    background: currentColor;
+    transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+  }
+
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu__inner {
+    padding-block: 12px 24px;
+  }
+
+  .mobile-menu__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .mobile-menu__list a {
+    display: block;
+    padding: 16px 4px;
+    border-bottom: 1px solid var(--line);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .mobile-menu__cta {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .nav {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: inline-flex;
+    }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const toggle = document.querySelector('.menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (!toggle || !menu) return;
+
+    const setOpen = (open) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // メニュー内のリンクを押したら閉じる
+    menu.addEventListener('click', (event) => {
+      if (event.target.closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // デスクトップ幅に戻したときは閉じておく
+    window.matchMedia('(min-width: 901px)').addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  })();
+</script>

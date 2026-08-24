@@ -1,0 +1,154 @@
+---
+import { contact, contactActionHref, contactLinkAttrs } from '../site.config';
+
+const topics = [
+  'ホームページを作り直したい',
+  'SNSやWeb集客を改善したい',
+  'AIを使って日々の業務を効率化したい',
+  'Web・集客・業務のどこから手を付けるべきか整理したい',
+  '茨城や地域に関するプロジェクトを一緒に進めたい',
+];
+
+const actionHref = contactActionHref();
+const ctaLabel = contact.formUrl ? '相談フォームへ' : 'メールで相談する';
+---
+
+<section class="contact section on-dark" id="contact">
+  <div class="wrap contact__inner">
+    <div class="contact__body reveal">
+      <p class="kicker">ご相談について<span class="kicker__en">CONTACT</span></p>
+      <h2 class="contact__title">
+        <span class="phrase">何から始めるか、</span><span class="phrase">一緒に整理します。</span>
+      </h2>
+      <p class="contact__lead measure">
+        依頼内容が固まっていなくても大丈夫です。いまの状況を伺ったうえで、
+        Web・集客・業務改善のどこから手を付けるとよいかを一緒に整理するところから始めます。
+      </p>
+
+      {actionHref && (
+        <div class="contact__actions">
+          <a class="btn btn--on-dark" href={actionHref} {...contactLinkAttrs()}>
+            {ctaLabel}<span class="btn__arrow" aria-hidden="true">→</span>
+          </a>
+
+          {contact.email && (
+            <p class="contact__address">
+              <span class="contact__address-label">メール</span>
+              <a class="contact__address-link" href={`mailto:${contact.email}`}>{contact.email}</a>
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+
+    <div class="contact__topics reveal" data-delay="1">
+      <h3 class="contact__topics-title">たとえば、こんなご相談から</h3>
+      <ul class="topics">
+        {topics.map((topic) => (
+          <li class="topic">{topic}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    background: var(--navy);
+    color: var(--text-on-dark);
+  }
+
+  .kicker__en {
+    margin-left: 8px;
+    opacity: 0.7;
+  }
+
+  .contact__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(36px, 5vw, 80px);
+    align-items: start;
+  }
+
+  .contact__title {
+    font-size: var(--fs-h2);
+  }
+
+  .contact__lead {
+    margin-top: clamp(18px, 2.2vw, 26px);
+    color: var(--text-on-dark-mute);
+  }
+
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 28px;
+    margin-top: clamp(26px, 3vw, 36px);
+  }
+
+  .contact__address {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .contact__address-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: var(--text-on-dark-mute);
+  }
+
+  .contact__address-link {
+    font-size: var(--fs-body-sm);
+    font-weight: 700;
+    color: #fff;
+    /* メールアドレスは欧文として自然に見せる */
+    font-feature-settings: normal;
+    letter-spacing: 0.01em;
+    border-bottom: 1px solid var(--line-on-dark-strong);
+    padding-bottom: 2px;
+    transition: border-color 0.2s var(--ease);
+  }
+
+  .contact__address-link:hover {
+    border-bottom-color: #fff;
+  }
+
+  .contact__topics-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-on-dark-mute);
+  }
+
+  .topics {
+    margin-top: 16px;
+    border-top: 1px solid var(--line-on-dark);
+  }
+
+  .topic {
+    position: relative;
+    padding: 15px 0 15px 26px;
+    border-bottom: 1px solid var(--line-on-dark);
+    font-size: var(--fs-body-sm);
+    font-weight: 700;
+  }
+
+  .topic::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.05em;
+    width: 12px;
+    height: 2px;
+    background: var(--gold);
+  }
+
+  @media (max-width: 860px) {
+    .contact__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

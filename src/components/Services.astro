@@ -1,0 +1,194 @@
+---
+/**
+ * できること。
+ * カードを3枚並べるのではなく、領域ごとに
+ * 「変えること／支援すること／目指す状態」が読み取れる横並びの行として構成する。
+ */
+const areas = [
+  {
+    no: '01',
+    ja: 'Web制作',
+    en: 'WEB',
+    change: '見られて終わりのサイトを、問い合わせと採用につながる事業基盤に。',
+    support: '要件整理、Webサイト・LPの制作、SEO、導線とコンテンツの設計。',
+    goal: '公開後も自社で更新でき、成果が数字で確認できる。',
+  },
+  {
+    no: '02',
+    ja: '集客・発信',
+    en: 'MARKETING',
+    change: '単発で終わる発信を、企画から改善まで循環する集客の流れに。',
+    support: 'SNS・コンテンツの企画と制作、アクセス解析、改善の型づくり。',
+    goal: '担当が代わっても、同じ質で発信と改善が続く。',
+  },
+  {
+    no: '03',
+    ja: 'AI・業務改善',
+    en: 'AI / OPERATIONS',
+    change: '人の頑張りに頼っていた業務を、仕組みが支える形に。',
+    support: 'AIと既存ツールの活用、情報整理、制作・社内業務の手順化。',
+    goal: '属人化とムダが減り、判断と改善に時間を使える。',
+  },
+];
+
+const rows = [
+  { key: 'change' as const, label: '変えること' },
+  { key: 'support' as const, label: '支援すること' },
+  { key: 'goal' as const, label: '目指す状態' },
+];
+---
+
+<section class="services section" id="service">
+  <div class="wrap">
+    <div class="services__head reveal">
+      <p class="kicker">できること<span class="kicker__en">SERVICE</span></p>
+      <h2 class="section-title">
+        <span class="phrase">3つの領域を、</span><span class="phrase">つなげて支援します。</span>
+      </h2>
+      <p class="section-lead measure">
+        すべてを一度に始める必要はありません。いま効きそうな領域から小さく試し、
+        手応えのあったものを続けられる形へ整えていきます。
+      </p>
+    </div>
+
+    <div class="areas">
+      {areas.map((area, index) => (
+        <article class="area reveal" data-delay={String(index)}>
+          <header class="area__head">
+            <span class="area__no" aria-hidden="true">{area.no}</span>
+            <h3 class="area__title">{area.ja}</h3>
+            <span class="area__en">{area.en}</span>
+          </header>
+
+          <dl class="area__detail">
+            {rows.map((row) => (
+              <div class="area__item">
+                <dt>{row.label}</dt>
+                <dd>{area[row.key]}</dd>
+              </div>
+            ))}
+          </dl>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .services {
+    background: var(--sky-soft);
+  }
+
+  .kicker__en {
+    margin-left: 8px;
+    color: var(--text-mute);
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
+  .services__head {
+    max-width: 46em;
+  }
+
+  .areas {
+    margin-top: clamp(40px, 5vw, 68px);
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .area {
+    display: grid;
+    grid-template-columns: minmax(200px, 0.9fr) minmax(0, 2.6fr);
+    gap: clamp(24px, 3.5vw, 64px);
+    padding-block: clamp(30px, 3.6vw, 48px);
+    border-bottom: 1px solid var(--line);
+    transition: background-color 0.3s var(--ease);
+  }
+
+  .area:hover {
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  .area__head {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+  }
+
+  .area__no {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: var(--blue);
+    font-feature-settings: normal;
+  }
+
+  .area__title {
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
+    color: var(--navy);
+  }
+
+  .area__en {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--text-mute);
+    font-feature-settings: normal;
+  }
+
+  .area__detail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 2.4vw, 36px);
+  }
+
+  .area__item {
+    padding-top: 14px;
+    border-top: 2px solid var(--line-strong);
+  }
+
+  .area__item:first-child {
+    border-top-color: var(--blue);
+  }
+
+  .area__item dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--blue-ink);
+  }
+
+  .area__item dd {
+    margin-top: 8px;
+    font-size: var(--fs-body-sm);
+    color: var(--text-mute);
+  }
+
+  @media (max-width: 1000px) {
+    .area {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .area__head {
+      grid-template-columns: auto 1fr auto;
+      align-items: baseline;
+      gap: 14px;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .area__detail {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .area__head {
+      grid-template-columns: auto 1fr;
+      row-gap: 4px;
+    }
+
+    .area__en {
+      grid-column: 2;
+    }
+  }
+</style>

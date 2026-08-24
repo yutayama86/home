@@ -1,0 +1,97 @@
+---
+const currentYear = new Date().getFullYear();
+
+const links = [
+  { href: '#about', label: '私たちについて' },
+  { href: '#service', label: 'できること' },
+  { href: '#process', label: '進め方' },
+  { href: '#project', label: 'イバトコ' },
+  { href: '#profile', label: '運営者' },
+  { href: '#contact', label: 'ご相談について' },
+];
+---
+
+<footer class="footer on-dark">
+  <div class="wrap footer__inner">
+    <div class="footer__brand">
+      <p class="footer__logo">シクミベース</p>
+      <p class="footer__tagline">事業に、仕組みを。</p>
+    </div>
+
+    <nav class="footer__nav" aria-label="フッターメニュー">
+      <ul>
+        {links.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="wrap footer__meta">
+    <p class="footer__note">個人で運営する事業ブランドです（法人化前）。</p>
+    <p class="footer__copy">© {currentYear} シクミベース</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--navy-deep);
+    color: var(--text-on-dark);
+    padding-block: clamp(48px, 5vw, 72px) 28px;
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 32px;
+    padding-bottom: clamp(32px, 4vw, 48px);
+    border-bottom: 1px solid var(--line-on-dark);
+  }
+
+  .footer__logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .footer__tagline {
+    margin-top: 8px;
+    font-size: var(--fs-body-sm);
+    color: var(--text-on-dark-mute);
+  }
+
+  .footer__nav ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, auto));
+    gap: 10px clamp(24px, 4vw, 56px);
+  }
+
+  .footer__nav a {
+    display: inline-block;
+    padding: 4px 0;
+    font-size: var(--fs-body-sm);
+    color: var(--text-on-dark-mute);
+    transition: color 0.2s var(--ease);
+  }
+
+  .footer__nav a:hover {
+    color: #fff;
+  }
+
+  .footer__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-top: 24px;
+    font-size: 0.75rem;
+    color: var(--text-on-dark-mute);
+  }
+
+  @media (max-width: 600px) {
+    .footer__nav ul {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

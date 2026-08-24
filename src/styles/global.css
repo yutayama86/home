@@ -1,0 +1,371 @@
+/* ==========================================================================
+   シクミベース — デザイントークンと共通プリミティブ
+   色・余白・文字サイズ・罫線はすべてここのCSS変数で管理する。
+   ========================================================================== */
+
+:root {
+  /* --- 色 ------------------------------------------------------------- */
+  --navy: #0a2350;          /* 基調のネイビー（水戸ホーリーホック連想） */
+  --navy-deep: #071a3c;     /* フッターなど、さらに沈めたい面 */
+  --blue: #1668c9;          /* 主要アクセント */
+  --blue-ink: #0f4f9e;      /* 青の文字色・ホバー */
+  --sky: #e9f1fa;           /* 淡いブルーの面 */
+  --sky-soft: #f2f7fc;      /* さらに薄い面 */
+  --mist: #f6f9fc;          /* ページ地色 */
+  --paper: #ffffff;
+  --gold: #c2a052;          /* 少量のアクセントに限定 */
+
+  --text: #13223d;          /* 本文 */
+  --text-mute: #5b6c86;     /* 補助テキスト */
+  --text-on-dark: #ffffff;
+  --text-on-dark-mute: #b4c6de;
+
+  --line: #dbe4ef;          /* 標準の罫線 */
+  --line-strong: #b9c9dc;   /* 強めの罫線 */
+  --line-on-dark: rgba(255, 255, 255, 0.22);
+  --line-on-dark-strong: rgba(255, 255, 255, 0.4);
+
+  --focus: #1668c9;
+
+  /* --- レイアウト ------------------------------------------------------ */
+  --max: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --section-y: clamp(72px, 8.5vw, 128px);
+  --section-y-tight: clamp(56px, 6.5vw, 96px);
+
+  /* --- 文字サイズ ------------------------------------------------------ */
+  /* 本文：SP 15px 〜 PC 17px */
+  --fs-body: clamp(0.9375rem, 0.86rem + 0.32vw, 1.0625rem);
+  --fs-body-sm: clamp(0.875rem, 0.83rem + 0.19vw, 0.9375rem);
+  --fs-lead: clamp(1rem, 0.92rem + 0.36vw, 1.1875rem);
+  /* 見出し：SP 28px 〜 PC 52px */
+  --fs-h2: clamp(1.75rem, 1.24rem + 2.1vw, 3.25rem);
+  --fs-h3: clamp(1.25rem, 1.08rem + 0.72vw, 1.625rem);
+  /* ファーストビュー見出し：SP 40px 〜 PC 88px */
+  --fs-hero: clamp(2.5rem, 1.42rem + 4.6vw, 5.5rem);
+  --fs-label: 0.6875rem;
+  --fs-nav: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+
+  /* --- 字送り・行送り -------------------------------------------------- */
+  --lh-body: 1.85;
+  --lh-heading: 1.45;
+  --ls-body: 0.02em;
+  --ls-heading: 0.005em;
+  --ls-label: 0.16em;
+
+  /* --- その他 ---------------------------------------------------------- */
+  --radius: 4px;
+  --radius-pill: 999px;
+  --ease: cubic-bezier(0.22, 0.8, 0.28, 1);
+  --header-h: 72px;
+}
+
+@media (max-width: 860px) {
+  :root {
+    --header-h: 62px;
+  }
+}
+
+/* ==========================================================================
+   ベース
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* 固定ヘッダー分のアンカーオフセット */
+  scroll-padding-top: calc(var(--header-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mist);
+  color: var(--text);
+  /* 和文・欧文を1つのスタックにまとめ、要素ごとに印象が分離しないようにする */
+  font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic Medium", "Yu Gothic", YuGothic, Meiryo, sans-serif;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  /* 和文の約物を詰めて、日本語の文字組みを自然にする */
+  font-feature-settings: "palt" 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 700;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+  /* 日本語の見出しが文節の途中で折り返されないようにする（未対応環境では従来どおり） */
+  word-break: auto-phrase;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* 暗い面の上でのフォーカスリング */
+.on-dark :focus-visible {
+  outline-color: #ffffff;
+}
+
+/* ==========================================================================
+   レイアウトプリミティブ
+   ========================================================================== */
+
+.wrap {
+  width: 100%;
+  max-width: calc(var(--max) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section--tight {
+  padding-block: var(--section-y-tight);
+}
+
+/* 見出しの文節を確実にまとめる。
+   word-break:auto-phrase が使えない環境でも、この単位より内側では折り返されない。 */
+.phrase {
+  display: inline-block;
+}
+
+/* 読みやすい行長（日本語は 38〜44 文字程度が上限） */
+.measure {
+  max-width: 40em;
+}
+
+.measure-narrow {
+  max-width: 30em;
+}
+
+/* ==========================================================================
+   見出しとラベル
+   ========================================================================== */
+
+/* セクションの小さな補助ラベル（英語はここだけに限定する） */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  color: var(--blue);
+  font-feature-settings: normal;
+}
+
+.kicker::before {
+  content: "";
+  inline-size: 24px;
+  block-size: 2px;
+  background: var(--gold);
+  flex: none;
+}
+
+.on-dark .kicker {
+  color: var(--text-on-dark-mute);
+}
+
+.section-title {
+  font-size: var(--fs-h2);
+  margin: 0;
+}
+
+.section-lead {
+  margin-top: clamp(16px, 2vw, 24px);
+  font-size: var(--fs-lead);
+  color: var(--text-mute);
+}
+
+.on-dark .section-lead {
+  color: var(--text-on-dark-mute);
+}
+
+/* ==========================================================================
+   ボタン
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  /* タップ領域を十分に確保する */
+  min-height: 52px;
+  padding: 14px 28px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-body-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease),
+    border-color 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.btn__arrow {
+  font-size: 1.1em;
+  line-height: 1;
+  transition: transform 0.25s var(--ease);
+}
+
+.btn:hover .btn__arrow {
+  transform: translateX(3px);
+}
+
+.btn--primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--blue-ink);
+  border-color: var(--blue-ink);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.btn--ghost:hover {
+  border-color: var(--navy);
+  background: var(--paper);
+}
+
+.btn--on-dark {
+  background: #fff;
+  border-color: #fff;
+  color: var(--navy);
+}
+
+.btn--on-dark:hover {
+  background: var(--sky);
+  border-color: var(--sky);
+}
+
+/* ==========================================================================
+   スクロール表示（控えめなフェード）
+   JSが動く場合のみ初期状態を隠す。JS無効時は常に表示される。
+   ========================================================================== */
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* 段階表示（意味のある順序で少しずつ現れる） */
+.js .reveal[data-delay="1"] { transition-delay: 0.08s; }
+.js .reveal[data-delay="2"] { transition-delay: 0.16s; }
+.js .reveal[data-delay="3"] { transition-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .js .reveal,
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ==========================================================================
+   ユーティリティ
+   ========================================================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: 8px;
+  z-index: 100;
+  padding: 10px 18px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: var(--radius);
+  font-size: var(--fs-body-sm);
+  font-weight: 700;
+  transform: translateY(-160%);
+  transition: transform 0.2s var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}

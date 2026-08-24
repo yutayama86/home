@@ -1,0 +1,176 @@
+---
+const steps = [
+  { no: '01', title: '見つける', body: '事業と顧客を理解し、本当に解くべき課題を見つける。' },
+  { no: '02', title: '小さく試す', body: '最小単位で形にし、実際の反応から学ぶ。' },
+  { no: '03', title: 'つなげる', body: '制作・集客・業務を、ひと続きの導線にする。' },
+  { no: '04', title: '積み上げる', body: '成果を手順・データ・資産として残す。' },
+];
+---
+
+<section class="process section--tight section on-dark" id="process">
+  <div class="wrap">
+    <div class="process__head reveal">
+      <p class="kicker">進め方<span class="kicker__en">PROCESS</span></p>
+      <h2 class="section-title">
+        <span class="phrase">ご相談から改善まで、</span><span class="phrase">ひと続きで進めます。</span>
+      </h2>
+    </div>
+
+    <ol class="steps">
+      {steps.map((step, index) => (
+        <li class="step reveal" data-delay={String(index)}>
+          <div class="step__marker" aria-hidden="true">
+            <span class="step__dot"></span>
+          </div>
+          <span class="step__no">STEP {step.no}</span>
+          <h3 class="step__title">{step.title}</h3>
+          <p class="step__body">{step.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process {
+    background: var(--navy);
+    color: var(--text-on-dark);
+  }
+
+  .kicker__en {
+    margin-left: 8px;
+    opacity: 0.7;
+  }
+
+  .process__head {
+    max-width: 42em;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(20px, 2.6vw, 40px);
+    margin-top: clamp(40px, 4.6vw, 64px);
+  }
+
+  .step {
+    position: relative;
+  }
+
+  /* 各ステップの上に、つながりを示す罫線と点を置く */
+  .step__marker {
+    position: relative;
+    height: 11px;
+    margin-bottom: 20px;
+  }
+
+  .step__marker::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 0;
+    /* 隣のカラムまで線を伸ばして、流れが途切れないようにする */
+    right: calc(-1 * clamp(20px, 2.6vw, 40px));
+    height: 1px;
+    background: var(--line-on-dark);
+  }
+
+  .step:last-child .step__marker::before {
+    right: 0;
+    background: linear-gradient(to right, var(--line-on-dark), transparent);
+  }
+
+  .step__dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 2px solid var(--blue);
+  }
+
+  .step:last-child .step__dot {
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+
+  .step__no {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: var(--text-on-dark-mute);
+    font-feature-settings: normal;
+  }
+
+  .step__title {
+    margin-top: 10px;
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  }
+
+  .step__body {
+    margin-top: 10px;
+    font-size: var(--fs-body-sm);
+    line-height: 1.8;
+    color: var(--text-on-dark-mute);
+  }
+
+  /* --- タブレット：2列 --------------------------------------------------- */
+  @media (max-width: 900px) and (min-width: 641px) {
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 34px;
+    }
+
+    .step:nth-child(2n) .step__marker::before {
+      right: 0;
+    }
+  }
+
+  /* --- スマートフォン：縦の流れ ------------------------------------------ */
+  @media (max-width: 640px) {
+    .steps {
+      display: block;
+      margin-top: 36px;
+    }
+
+    .step {
+      padding-left: 30px;
+      padding-bottom: 28px;
+    }
+
+    .step:last-child {
+      padding-bottom: 0;
+    }
+
+    .step__marker {
+      position: absolute;
+      inset-block: 0;
+      left: 0;
+      width: 11px;
+      height: auto;
+      margin: 0;
+    }
+
+    /* 縦方向につながる線 */
+    .step__marker::before {
+      top: 16px;
+      bottom: -6px;
+      left: 5px;
+      right: auto;
+      width: 1px;
+      height: auto;
+      background: var(--line-on-dark);
+    }
+
+    .step:last-child .step__marker::before {
+      display: none;
+    }
+
+    .step__dot {
+      top: 5px;
+    }
+  }
+</style>

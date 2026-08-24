@@ -1,0 +1,185 @@
+---
+/**
+ * OGP画像はイバトコ本体のものをそのまま使うが、
+ * 配信元のファイル名は更新のたびに変わるため、リポジトリ内へ複製したものを参照する。
+ * イバトコ側のOGPを差し替えたときは public/ibatoco-ogp.png も更新する。
+ */
+const ibatoco = {
+  href: 'https://ibatoco.jp/',
+  ogp: '/ibatoco-ogp.png',
+};
+---
+
+<section class="project section" id="project">
+  <div class="wrap">
+    <div class="project__head reveal">
+      <p class="kicker">地域プロジェクト<span class="kicker__en">LOCAL PROJECT</span></p>
+      <h2 class="section-title">
+        <span class="phrase">茨城で、</span><span class="phrase">自分たちも実践しています。</span>
+      </h2>
+      <p class="section-lead measure">
+        支援するだけでなく、シクミベース自身が茨城でメディアを運営しています。
+        取材から公開、集客、更新までを回し続けるなかで得た手応えを、そのまま支援に持ち込んでいます。
+      </p>
+    </div>
+
+    <a
+      class="card reveal"
+      href={ibatoco.href}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div class="card__media">
+        <img
+          src={ibatoco.ogp}
+          alt="イバトコ｜茨城の“本当にいい”を、地元目線で。"
+          width="1200"
+          height="630"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <div class="card__body">
+        <p class="card__eyebrow">シクミベースが運営する茨城のローカルメディア</p>
+        <h3 class="card__title">イバトコ</h3>
+        <p class="card__text">
+          茨城の44市町村を歩いて取材するローカルメディア。食べる、出かける、泊まる、暮らす、整える、働く。
+          現地で会って聞いた茨城を届けています。
+        </p>
+        <span class="card__link">
+          <span class="card__domain">ibatoco.jp</span>
+          <span class="card__external">
+            別サイトへ移動します
+            <span class="card__arrow" aria-hidden="true">↗</span>
+          </span>
+        </span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<style>
+  .project {
+    background: var(--paper);
+  }
+
+  .kicker__en {
+    margin-left: 8px;
+    color: var(--text-mute);
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
+  .project__head {
+    max-width: 46em;
+  }
+
+  .card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+    margin-top: clamp(36px, 4.4vw, 60px);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+    overflow: hidden;
+    transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+
+  .card:hover {
+    border-color: var(--blue);
+    box-shadow: 0 14px 34px -20px rgba(10, 35, 80, 0.5);
+    transform: translateY(-3px);
+  }
+
+  .card__media {
+    background: var(--sky-soft);
+    border-inline-end: 1px solid var(--line);
+  }
+
+  /* OGP画像は 1200:630 の比率を保ったまま表示する（トリミングしない） */
+  .card__media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1200 / 630;
+    object-fit: contain;
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(24px, 2.8vw, 38px);
+  }
+
+  .card__eyebrow {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--blue-ink);
+  }
+
+  .card__title {
+    margin-top: 10px;
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 2rem);
+    color: var(--navy);
+  }
+
+  .card__text {
+    margin-top: 14px;
+    font-size: var(--fs-body-sm);
+    color: var(--text-mute);
+  }
+
+  .card__link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* 余白が潰れないよう、上の本文との最小距離を確保する */
+  .card__text + .card__link {
+    margin-top: clamp(24px, 3vw, 40px);
+  }
+
+  .card__domain {
+    font-size: var(--fs-body-sm);
+    font-weight: 700;
+    color: var(--navy);
+    font-feature-settings: normal;
+  }
+
+  .card__external {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .card__arrow {
+    transition: transform 0.25s var(--ease);
+  }
+
+  .card:hover .card__arrow {
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 860px) {
+    .card {
+      grid-template-columns: 1fr;
+    }
+
+    .card__media {
+      border-inline-end: 0;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>

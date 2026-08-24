@@ -1,0 +1,212 @@
+---
+import { ctaHref, contactLinkAttrs } from '../site.config';
+
+/** ファーストビューでは「4つの領域」だけを簡潔に示す。手順や工程は下のセクションに送る。 */
+const fields = [
+  { ja: 'Web制作', en: 'WEB' },
+  { ja: '集客・発信', en: 'MARKETING' },
+  { ja: 'AI・業務改善', en: 'AI / OPERATIONS' },
+  { ja: '地域事業', en: 'LOCAL' },
+];
+
+const ctaLink = ctaHref();
+const ctaAttrs = contactLinkAttrs();
+---
+
+<section class="hero" id="top">
+  <div class="wrap hero__inner">
+    <div class="hero__message">
+      <p class="hero__label">茨城から、中小企業と地域事業のWeb・集客・AIを支える</p>
+
+      <h1 class="hero__title"><span class="phrase">事業に、</span><em class="phrase">仕組みを。</em></h1>
+
+      <p class="hero__lead">
+        ホームページ、集客、日々の業務。<br />
+        ばらばらの取り組みをつなぎ、担当者が代わっても成果が積み上がる形に整えます。
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" href={ctaLink} {...ctaAttrs}>
+          相談する<span class="btn__arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="btn btn--ghost" href="#service">できることを見る</a>
+      </div>
+    </div>
+
+    <div class="hero__fields">
+      <p class="hero__fields-title">支援する4つの領域</p>
+      <ul class="field-list">
+        {fields.map((field) => (
+          <li class="field">
+            <span class="field__ja">{field.ja}</span>
+            <span class="field__en">{field.en}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="hero__fields-note">
+        必要な領域だけを小さく試し、効果が見えたものを続く形にします。
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  /* 淡いブルーの色面を右側に置いて「抜け」と非対称をつくる */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 58%;
+    inset-inline-end: -20vw;
+    background: var(--sky-soft);
+    pointer-events: none;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+    gap: clamp(40px, 5vw, 88px);
+    align-items: center;
+    padding-block: clamp(56px, 8vw, 116px);
+  }
+
+  .hero__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: var(--fs-body-sm);
+    font-weight: 700;
+    color: var(--blue-ink);
+    letter-spacing: 0.06em;
+  }
+
+  .hero__label::before {
+    content: '';
+    inline-size: 32px;
+    block-size: 3px;
+    background: var(--gold);
+    flex: none;
+  }
+
+  .hero__title {
+    margin: clamp(20px, 2.6vw, 32px) 0 0;
+    font-size: var(--fs-hero);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: 0.01em;
+    color: var(--navy);
+  }
+
+  .hero__title em {
+    font-style: normal;
+    color: var(--blue);
+  }
+
+  .hero__lead {
+    max-width: 34em;
+    margin-top: clamp(20px, 2.4vw, 28px);
+    font-size: var(--fs-lead);
+    color: var(--text-mute);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: clamp(28px, 3.2vw, 40px);
+  }
+
+  /* --- 右側：4領域のインデックス ---------------------------------------- */
+
+  .hero__fields {
+    border-top: 3px solid var(--gold);
+    padding-top: 22px;
+  }
+
+  .hero__fields-title {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: var(--blue-ink);
+  }
+
+  .field-list {
+    margin-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  .field {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .field__ja {
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .field__en {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--text-mute);
+    font-feature-settings: normal;
+    white-space: nowrap;
+  }
+
+  .hero__fields-note {
+    margin-top: 18px;
+    font-size: var(--fs-body-sm);
+    line-height: 1.8;
+    color: var(--text-mute);
+  }
+
+  /* --- レスポンシブ ------------------------------------------------------ */
+
+  @media (max-width: 900px) {
+    .hero::before {
+      inset-inline-start: 0;
+      inset-inline-end: 0;
+      inset-block-start: auto;
+      block-size: 46%;
+    }
+
+    .hero__inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .hero__lead {
+      max-width: none;
+    }
+
+    .hero__actions .btn {
+      flex: 1 1 200px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .hero__title {
+      line-height: 1.3;
+    }
+
+    .hero__actions .btn {
+      flex-basis: 100%;
+    }
+  }
+</style>
