@@ -58,3 +58,23 @@ export function contactLinkAttrs(): Record<string, string> {
     ? { target: '_blank', rel: 'noopener noreferrer' }
     : {};
 }
+
+/**
+ * アクセス解析。
+ *
+ * Cloudflare Web Analytics を使用します。Cookieを使わず個人を追跡しないため、
+ * 同意バナーは不要です。
+ *
+ * トークンの取得手順:
+ *   Cloudflareダッシュボード → Analytics & Logs → Web Analytics
+ *   → シクミベースのサイトを追加 → 表示されるスニペットの token 値をここへ貼る
+ *
+ * なお Cloudflare Pages の管理画面から Web Analytics を有効化すると
+ * ビーコンが自動挿入されます。その方式を使う場合は、二重計測を避けるため
+ * ここは null のままにしてください。
+ */
+export const analytics: {
+  cloudflareToken: string | null;
+} = {
+  cloudflareToken: null,
+};

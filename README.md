@@ -67,15 +67,53 @@ Cloudflare Pagesへ公開します。ビルドコマンドは `npm run build`、
 `.github/workflows/build.yml` は `main` への push / PR でビルドが通るかを確認するチェックのみです。
 公開はCloudflare PagesのGit連携で行われます（Actionsからのデプロイは設定していません）。
 
-### 現在のドメイン状況（2026年8月時点）
+### 現在のドメイン状況（2026年8月25日時点）
 
-- `https://shikumi-base.pages.dev/` … 本サイトが公開されている
-- `https://shikumi-base.com/` … 別サービス（studio.design）を向いており404
-- `https://www.shikumi-base.com/` … 名前解決されない
+- `https://shikumi-base.com/` … 本サイトを配信中（200）
+- `https://shikumi-base.pages.dev/` … 本サイトを配信中（200）
+- `https://www.shikumi-base.com/` … **525（SSLハンドシェイク失敗）**
 
-`shikumi-base.com` を本サイトへ向けるには、Cloudflare Pagesのカスタムドメイン接続と
-DNSの切り替えが必要です。`astro.config.mjs` の `site` と canonical は
-`https://shikumi-base.com` のままにしてあります。
+`www` はCloudflare Pagesのカスタムドメインに未登録です。
+Pagesプロジェクト → Custom domains → `www.shikumi-base.com` を追加し、
+証明書が発行されるのを待つと解消します。
+
+### robots.txt について
+
+本番の `/robots.txt` は、リポジトリ内の `public/robots.txt` の手前に
+Cloudflareの管理ブロック（Managed robots.txt / AI Crawl Control）が自動で注入されます。
+Googlebotは許可されたままなので検索インデックスには影響しませんが、
+GPTBot・ClaudeBot・Google-Extended などのAIクローラーは拒否されます。
+変更する場合はCloudflareダッシュボード側の設定です（リポジトリでは制御できません）。
+
+## アクセス解析
+
+Cloudflare Web Analytics を使用します。Cookieを使わず個人を追跡しないため、
+同意バナーおよびCookieポリシーは不要です。
+
+1. Cloudflareダッシュボード → Analytics & Logs → Web Analytics → サイトを追加（`shikumi-base.com`）
+2. 表示されたスニペットの `token` の値をコピー
+3. `src/site.config.ts` の `analytics.cloudflareToken` に貼り付ける
+4. コミットして push（Cloudflare Pagesが自動デプロイ）
+
+トークンが `null` の間は、ビーコンのスクリプトタグ自体が出力されません。
+
+> Pagesプロジェクトの管理画面から Web Analytics を有効化すると、
+> ビーコンが自動挿入されます。その方式を使う場合は二重計測を避けるため
+> `cloudflareToken` は `null` のままにしてください。
+
+## Search Console
+
+ドメインプロパティ（DNS認証）で登録します。`www` やサブドメインもまとめて検証されるため、
+サイト側のコード変更は不要です。
+
+1. Search Console → プロパティを追加 → **「ドメイン」** を選び `shikumi-base.com` を入力
+2. 表示された `google-site-verification=…` の値をコピー
+3. Cloudflare → `shikumi-base.com` → DNS → レコードを追加
+   - Type: `TXT` / Name: `@` / Content: コピーした値
+4. Search Consoleに戻って「確認」
+5. 左メニューの「サイトマップ」で `sitemap-index.xml` を送信
+
+サイトマップは `@astrojs/sitemap` がビルド時に生成し、`public/robots.txt` からも参照しています。
 
 ## 法人化後に更新する箇所
 

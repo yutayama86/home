@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { site } from '../site.config';
+import { site, analytics } from '../site.config';
 
 interface Props {
   title?: string;
@@ -68,5 +68,18 @@ const {
         targets.forEach((el) => io.observe(el));
       })();
     </script>
+
+    {/*
+      Cloudflare Web Analytics。トークン未設定のときは何も出力しない。
+      Cookieを使わないため同意バナーは不要。defer で描画を妨げない。
+    */}
+    {analytics.cloudflareToken && (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: analytics.cloudflareToken })}
+      />
+    )}
   </body>
 </html>
