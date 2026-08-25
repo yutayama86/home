@@ -9,6 +9,7 @@
     "start": "astro dev",
     "build": "astro build",
     "check": "astro check",
+    "og": "bash tools/build-og.sh",
     "preview": "astro preview",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=shikumi-base --branch=main",
     "astro": "astro"

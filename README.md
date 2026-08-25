@@ -85,6 +85,20 @@ Googlebotは許可されたままなので検索インデックスには影響�
 GPTBot・ClaudeBot・Google-Extended などのAIクローラーは拒否されます。
 変更する場合はCloudflareダッシュボード側の設定です（リポジトリでは制御できません）。
 
+## OGP画像
+
+SNSでシェアされたときに表示される画像は `public/og.png`（1200×630）です。
+版下は `tools/og-image.html` で、サイトのファーストビューと同じ構成にしてあります。
+
+文言やブランドを変更したら、版下を編集して再生成します。
+
+```bash
+npm run og
+```
+
+Google Chromeのヘッドレスモードで書き出すため、追加の依存パッケージは不要です。
+生成した `public/og.png` はリポジトリにコミットします（ビルド時には生成されません）。
+
 ## アクセス解析
 
 Cloudflare Web Analytics を使用します。Cookieを使わず個人を追跡しないため、

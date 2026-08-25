@@ -1,0 +1,164 @@
+<!doctype html>
+<!--
+  OGP画像（1200×630）の版下。
+  これ自体はサイトに配信されない。`npm run og` で public/og.png に書き出す。
+  文言やブランドを変えたときは、このファイルを直してから再生成する。
+-->
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      :root {
+        --navy: #0a2350;
+        --blue: #1668c9;
+        --blue-ink: #0f4f9e;
+        --sky-soft: #f2f7fc;
+        --gold: #c2a052;
+        --text-mute: #5b6c86;
+        --line: #dbe4ef;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+      }
+
+      body {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 372px;
+        background: #fff;
+        color: var(--navy);
+        font-family: "Helvetica Neue", "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+        font-feature-settings: "palt" 1;
+        overflow: hidden;
+      }
+
+      /* 右側の淡いブルーの色面（サイトのファーストビューと同じ構成） */
+      .panel {
+        background: var(--sky-soft);
+        padding: 64px 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .main {
+        padding: 64px 0 64px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .logo {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+
+      .label {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 8px;
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--blue-ink);
+      }
+
+      .label::before {
+        content: "";
+        width: 40px;
+        height: 4px;
+        background: var(--gold);
+        flex: none;
+      }
+
+      h1 {
+        font-size: 92px;
+        font-weight: 700;
+        line-height: 1.24;
+        letter-spacing: 0.01em;
+      }
+
+      h1 em {
+        font-style: normal;
+        color: var(--blue);
+      }
+
+      .lead {
+        margin-top: 24px;
+        font-size: 21px;
+        line-height: 1.75;
+        color: var(--text-mute);
+      }
+
+      .domain {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--navy);
+      }
+
+      .panel-title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        color: var(--blue-ink);
+        padding-bottom: 18px;
+        border-bottom: 3px solid var(--gold);
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        padding: 21px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 25px;
+        font-weight: 700;
+      }
+
+      li:last-child {
+        border-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div>
+        <p class="logo">シクミベース</p>
+        <p class="label">茨城から、中小企業と地域事業を支える</p>
+      </div>
+
+      <div>
+        <h1>事業に、<em>仕組みを。</em></h1>
+        <p class="lead">
+          ホームページ、集客、日々の業務。<br />
+          ばらばらの取り組みをつなぎ、成果が積み上がる形に。
+        </p>
+      </div>
+
+      <p class="domain">shikumi-base.com</p>
+    </div>
+
+    <div class="panel">
+      <p class="panel-title">支援する4つの領域</p>
+      <ul>
+        <li>Web制作</li>
+        <li>集客・発信</li>
+        <li>AI・業務改善</li>
+        <li>地域事業</li>
+      </ul>
+    </div>
+  </body>
+</html>
