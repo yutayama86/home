@@ -101,19 +101,34 @@ Google Chromeのヘッドレスモードで書き出すため、追加の依存�
 
 ## アクセス解析
 
-Cloudflare Web Analytics を使用します。Cookieを使わず個人を追跡しないため、
-同意バナーおよびCookieポリシーは不要です。
+2種類を併用しています。設定は `src/site.config.ts` の `analytics` にまとまっています。
 
-1. Cloudflareダッシュボード → Analytics & Logs → Web Analytics → サイトを追加（`shikumi-base.com`）
-2. 表示されたスニペットの `token` の値をコピー
-3. `src/site.config.ts` の `analytics.cloudflareToken` に貼り付ける
-4. コミットして push（Cloudflare Pagesが自動デプロイ）
+### Cloudflare Web Analytics
 
-トークンが `null` の間は、ビーコンのスクリプトタグ自体が出力されません。
+Cookieを使わず個人を追跡しない軽量な計測です。
+現在は **Cloudflare Pages 側の管理画面で有効化** しており、ビーコンはCloudflareが
+エッジで自動挿入します。そのため `cloudflareToken` は `null` のままにしてください。
 
-> Pagesプロジェクトの管理画面から Web Analytics を有効化すると、
-> ビーコンが自動挿入されます。その方式を使う場合は二重計測を避けるため
-> `cloudflareToken` は `null` のままにしてください。
+ここに値を入れるとタグが二重になり、二重計測になります。
+自前でタグを出す方式に切り替える場合のみ、Cloudflareダッシュボード →
+Analytics & Logs → Web Analytics で取得したトークンを設定します。
+
+### Google Analytics 4
+
+流入元やユーザー行動の詳細分析用です。測定ID（`G-` で始まる）を設定します。
+
+```ts
+export const analytics = {
+  cloudflareToken: null,
+  ga4MeasurementId: 'G-XXXXXXXXXX',
+};
+```
+
+測定IDの場所は GA4 → 管理 → データストリーム → 対象のウェブストリームです。
+`null` の間は、タグ自体が出力されません。
+
+> GA4はCookieを使うため、プライバシーポリシーでの説明が必要です。
+> Cloudflare Web Analytics だけの構成に戻す場合は `ga4MeasurementId` を `null` にします。
 
 ## Search Console
 

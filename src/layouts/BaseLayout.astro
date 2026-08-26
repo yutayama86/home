@@ -90,5 +90,32 @@ const ogImage = new URL('/og.png', site.url).href;
         data-cf-beacon={JSON.stringify({ token: analytics.cloudflareToken })}
       />
     )}
+
+    {/*
+      Google Analytics 4。測定ID未設定のときは何も出力しない。
+      body末尾に async で置き、初期表示を妨げないようにする。
+    */}
+    {analytics.ga4MeasurementId && (
+      <>
+        <script
+          is:inline
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${analytics.ga4MeasurementId}`}
+        />
+        {/*
+          define:vars を使うとAstroがスクリプトをIIFEで包むため、
+          gtag をグローバルに出すには window へ明示的に代入する必要がある。
+          （今後カスタムイベントを送るときに window.gtag が必要になる）
+        */}
+        <script is:inline define:vars={{ gaId: analytics.ga4MeasurementId }}>
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () {
+            window.dataLayer.push(arguments);
+          };
+          window.gtag('js', new Date());
+          window.gtag('config', gaId);
+        </script>
+      </>
+    )}
   </body>
 </html>
