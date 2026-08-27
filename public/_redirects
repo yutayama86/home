@@ -1,0 +1,6 @@
+# Cloudflare Pages のリダイレクト設定
+#
+# /sitemap.xml は Astro が生成しないパスだが、Pages のフォールバックにより
+# トップページのHTMLが 200 で返ってしまう。Search Console に過去この URL が
+# 登録されており、HTMLを渡し続けることになるため、正しいサイトマップへ送る。
+/sitemap.xml  /sitemap-index.xml  301
