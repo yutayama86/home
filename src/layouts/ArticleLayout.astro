@@ -155,6 +155,12 @@ const jsonLd = {
     padding-top: clamp(20px, 3vw, 32px);
   }
 
+  /* 見出しと本文の左右端を揃える。本文だけ狭いと記事の骨格がぶれる。 */
+  .article__head,
+  .crumbs-row {
+    max-width: calc(760px + var(--gutter) * 2);
+  }
+
   .article__head {
     padding-block: clamp(24px, 3.5vw, 40px) clamp(28px, 4vw, 44px);
     border-bottom: 1px solid var(--line);

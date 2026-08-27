@@ -99,6 +99,23 @@ const ogImage = new URL(image ?? '/og.png', site.url).href;
       })();
     </script>
 
+    <script is:inline>
+      /* CTAのクリックを計測する。data-cta の値で設置場所を区別し、
+         どの導線が問い合わせにつながったかを追えるようにする。 */
+      (() => {
+        document.addEventListener('click', (event) => {
+          const target = event.target.closest('[data-cta]');
+          if (!target || typeof window.gtag !== 'function') return;
+
+          window.gtag('event', 'cta_click', {
+            cta_location: target.dataset.cta,
+            cta_topic: target.dataset.ctaTopic || '',
+            page_path: location.pathname,
+          });
+        });
+      })();
+    </script>
+
     {/*
       Cloudflare Web Analytics。トークン未設定のときは何も出力しない。
       Cookieを使わないため同意バナーは不要。defer で描画を妨げない。

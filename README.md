@@ -27,37 +27,73 @@ npm run check
 
 ```
 src/
-  pages/index.astro       各セクションを並べるだけのページ
-  layouts/BaseLayout.astro  head・メタ情報・スクロール表示の共通処理
-  components/             セクション単位のコンポーネント
-    SiteHeader / Hero / About / Services /
-    Process / Project / Operator / Contact / SiteFooter
-  styles/global.css       デザイントークン（色・余白・文字サイズ・罫線）と共通パーツ
-  site.config.ts          サイト情報と問い合わせ導線の設定
+  content/                記事の実体（Markdown）
+    knowledge/            ナレッジ記事
+    case/                 事例
+  content.config.ts       記事のスキーマ。満たさない記事はビルドが通らない
+  data/taxonomy.ts        カテゴリとサービスの定義（ナビ・CTA・構造化データの元）
+  pages/                  ルーティング
+  layouts/                BaseLayout / PageLayout / ArticleLayout
+  components/             共通UI
+  styles/global.css       デザイントークンと記事本文のスタイル
+  site.config.ts          サイト情報・問い合わせ導線・アクセス解析の設定
+functions/api/contact.ts  問い合わせフォームの受け口（Cloudflare Pages Functions）
+scripts/                  品質チェックと毎日の改善判定
+docs/seo-log/             日々の変更履歴
 ```
+
+### 記事を追加する
+
+`src/content/knowledge/` に Markdown を置くだけです。URL、パンくず、構造化データ、
+関連記事、サービスへのCTAは frontmatter から自動生成されます。
+
+```bash
+npm run verify   # 型チェック → ビルド → 品質チェック
+```
+
+関連記事は `relatedArticles` を書けばそれが優先され、書かなければ
+カテゴリ・サービス・キーワードの重なりから自動で選ばれます。
+
+### 品質チェック
+
+`scripts/quality-check.mjs` が次を検査し、**1件でもエラーがあれば公開されません**。
+
+- 出典のない成果数値（「◯%向上」など）
+- 法人と誤認される表記（「株式会社シクミベース」「代表取締役」）
+- 法務・税務・成果の断定
+- 検索意図・主軸キーワードの未設定
+- サイト内リンクの欠如
+- title / description の長さ
+- 日本語で強調が反映されていない箇所（`**「〜」**` の flanking 問題）
+
+### 毎日の改善サイクル
+
+`.github/workflows/daily-content.yml` が毎朝7時（JST）に実行されます。
+
+1. Search Console からデータを取得
+2. 改善対象を判定（CTR低下 / 11〜30位 / 流入あり / 露出なし）
+3. `docs/seo-log/` に判断と根拠を記録
+4. 型チェック・ビルド・品質チェック
+5. Pull Request を作成
+
+**マージするまで公開されません。** 品質の最終判断は人が行う設計です。
+
+手動実行時にキーワードを指定すると、記事の下書きも生成します。
+生成物は必ず `draft: true` で出力されるため、内容を確認して
+`draft: false` に変えるまで公開されません。
 
 色・余白・文字サイズ・罫線は `src/styles/global.css` の CSS 変数で一元管理しています。
 個別の値を直接書かず、変数を更新してください。
 
-## 問い合わせ導線の設定
+## 問い合わせ導線
 
-`src/site.config.ts` の `contact` で管理しています。値を入れると、ヘッダー・ファーストビュー・
-問い合わせセクションのCTAがそのまま機能します。
+サイト内の `/contact/` にフォームを持ち、送信は `functions/api/contact.ts` が受けます。
+フォーム開始（`form_start`）と送信完了（`generate_lead`）をGA4で計測できます。
 
-```ts
-export const contact = {
-  formUrl: null,                    // フォームURL（設定すると優先される）
-  email: 'info@shikumi-base.com',   // 問い合わせ用メールアドレス
-};
-```
+CTAは設置場所ごとに `data-cta` を持ち、クリックが `cta_click` として記録されます。
+どの導線が問い合わせにつながったかを、GA4で追えます。
 
-導線の考え方：
-
-- ヘッダー・ファーストビューの「相談する」は問い合わせセクションへスクロールする
-  （いきなりメーラーを開かず、相談できる内容を読んでから送れるようにするため）
-- 問い合わせセクションの「メールで相談する」が実際の `mailto:` になる
-- `formUrl` を設定した場合は、ヘッダーとFVのCTAも直接フォームへ向かう
-- 両方 `null` の場合は、動かないボタンやダミーの連絡先を出さず、案内文だけを表示する
+相談内容は `?topic=` で引き継がれ、フォームの選択肢に初期反映されます。
 
 ## Deployment
 
@@ -67,15 +103,11 @@ Cloudflare Pagesへ公開します。ビルドコマンドは `npm run build`、
 `.github/workflows/build.yml` は `main` への push / PR でビルドが通るかを確認するチェックのみです。
 公開はCloudflare PagesのGit連携で行われます（Actionsからのデプロイは設定していません）。
 
-### 現在のドメイン状況（2026年8月25日時点）
+### 現在のドメイン状況
 
-- `https://shikumi-base.com/` … 本サイトを配信中（200）
-- `https://shikumi-base.pages.dev/` … 本サイトを配信中（200）
-- `https://www.shikumi-base.com/` … **525（SSLハンドシェイク失敗）**
-
-`www` はCloudflare Pagesのカスタムドメインに未登録です。
-Pagesプロジェクト → Custom domains → `www.shikumi-base.com` を追加し、
-証明書が発行されるのを待つと解消します。
+- `https://shikumi-base.com/` … 本サイトを配信中
+- `https://www.shikumi-base.com/` … 本サイトを配信中
+- `https://shikumi-base.pages.dev/` … 本サイトを配信中
 
 ### robots.txt について
 
@@ -129,6 +161,27 @@ export const analytics = {
 
 > GA4はCookieを使うため、プライバシーポリシーでの説明が必要です。
 > Cloudflare Web Analytics だけの構成に戻す場合は `ga4MeasurementId` を `null` にします。
+
+## 自動化に必要なシークレット
+
+GitHub リポジトリの Settings → Secrets and variables → Actions に設定します。
+
+| シークレット | 用途 | 未設定のときの挙動 |
+| --- | --- | --- |
+| `GSC_SERVICE_ACCOUNT_JSON` | Search Console API のサービスアカウント鍵 | サイト内の状態だけで改善対象を判定 |
+| `GSC_SITE_URL` | 対象プロパティ（`sc-domain:shikumi-base.com`） | 同上 |
+| `ANTHROPIC_API_KEY` | 記事の下書き生成 | 生成をスキップ（レポートとログは出る） |
+
+Cloudflare Pages 側（Settings → Environment variables）には、
+問い合わせフォームのために次が必要です。
+
+| 変数 | 用途 |
+| --- | --- |
+| `RESEND_API_KEY` | メール送信 |
+| `CONTACT_TO` | 通知の宛先 |
+| `CONTACT_FROM` | 送信元（Resendで認証済みドメイン） |
+
+未設定の場合、フォームは503を返し、ページ上のメールアドレスが代替手段になります。
 
 ## Search Console
 

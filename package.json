@@ -10,6 +10,9 @@
     "build": "astro build",
     "check": "astro check",
     "og": "bash tools/build-og.sh",
+    "quality": "node scripts/quality-check.mjs",
+    "growth": "node scripts/daily-growth.mjs",
+    "verify": "npm run check && npm run build && npm run quality",
     "preview": "astro preview",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=shikumi-base --branch=main",
     "astro": "astro"

@@ -23,6 +23,10 @@ const ibatoco = {
       </p>
     </div>
 
+    <p class="project__case">
+      <a href="/case/ibatoco/">イバトコの技術構成と運用の記録を読む →</a>
+    </p>
+
     <a
       class="card reveal"
       href={ibatoco.href}
@@ -73,6 +77,18 @@ const ibatoco = {
 
   .project__head {
     max-width: 46em;
+  }
+
+  .project__case {
+    margin-top: 20px;
+    font-size: var(--fs-body-sm);
+    font-weight: 700;
+  }
+
+  .project__case a {
+    color: var(--blue-ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .card {

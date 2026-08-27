@@ -56,7 +56,7 @@ const rows = [
         <article class="area reveal" data-delay={String(index)}>
           <header class="area__head">
             <span class="area__no" aria-hidden="true">{area.no}</span>
-            <h3 class="area__title">{area.ja}</h3>
+            <h3 class="area__title"><a href={`/service/${area.no === '01' ? 'web' : area.no === '02' ? 'sns' : 'ai-dx'}/`}>{area.ja}</a></h3>
             <span class="area__en">{area.en}</span>
           </header>
 
@@ -125,6 +125,12 @@ const rows = [
   .area__title {
     font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
     color: var(--navy);
+  }
+
+  .area__title a:hover {
+    color: var(--blue-ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .area__en {

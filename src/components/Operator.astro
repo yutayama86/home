@@ -32,6 +32,8 @@ import { site } from '../site.config';
         </p>
       </div>
 
+      <p class="operator__more"><a href="/about/">運営者について詳しく見る →</a></p>
+
       <aside class="operator__note">
         <h3>法人化前の表記について</h3>
         <p>
@@ -99,6 +101,18 @@ import { site } from '../site.config';
     gap: 1.1em;
     margin-top: clamp(20px, 2.4vw, 30px);
     max-width: 40em;
+  }
+
+  .operator__more {
+    margin-top: 20px;
+    font-size: var(--fs-body-sm);
+    font-weight: 700;
+  }
+
+  .operator__more a {
+    color: var(--blue-ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .operator__note {
