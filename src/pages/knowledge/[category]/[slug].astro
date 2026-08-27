@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import { selectRelated } from '../../../utils/related';
+
+export async function getStaticPaths() {
+  const all = await getCollection('knowledge');
+  const published = all.filter((entry) => !entry.data.draft);
+
+  return published.map((entry) => ({
+    params: { category: entry.data.category, slug: entry.id },
+    props: { entry, all: published },
+  }));
+}
+
+const { entry, all } = Astro.props;
+const { Content, headings } = await render(entry);
+const related = selectRelated(entry, all);
+---
+
+<ArticleLayout entry={entry} headings={headings} related={related}>
+  <Content />
+</ArticleLayout>

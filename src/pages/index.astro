@@ -1,6 +1,9 @@
 ---
+import { getCollection } from 'astro:content';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
 import Services from '../components/Services.astro';
@@ -8,19 +11,101 @@ import Process from '../components/Process.astro';
 import Project from '../components/Project.astro';
 import Operator from '../components/Operator.astro';
 import Contact from '../components/Contact.astro';
-import SiteFooter from '../components/SiteFooter.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+
+import { publishedSorted } from '../utils/related';
+import { site } from '../site.config';
+
+const latest = publishedSorted(await getCollection('knowledge')).slice(0, 4);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  url: site.url,
+  description: site.description,
+  logo: new URL('/og.png', site.url).href,
+  founder: { '@type': 'Person', name: site.operator },
+  areaServed: { '@type': 'AdministrativeArea', name: '茨城県' },
+  sameAs: ['https://ibatoco.jp/'],
+};
 ---
 
 <BaseLayout>
   <SiteHeader />
+
   <main id="main">
     <Hero />
     <About />
     <Services />
     <Process />
+
+    {latest.length > 0 && (
+      <section class="knowledge section" id="knowledge">
+        <div class="wrap">
+          <div class="knowledge__head reveal">
+            <p class="kicker">ナレッジ<span class="kicker__en">KNOWLEDGE</span></p>
+            <h2 class="section-title">
+              <span class="phrase">判断材料になる情報を、</span><span class="phrase">実務から。</span>
+            </h2>
+            <p class="section-lead measure">
+              費用の考え方、依頼先の選び方、始める順番。実際に決めるときに必要な情報をまとめています。
+            </p>
+          </div>
+
+          <div class="knowledge__list reveal">
+            {latest.map((article) => (
+              <ArticleCard
+                href={`/knowledge/${article.data.category}/${article.id}/`}
+                title={article.data.title}
+                description={article.data.description}
+                category={article.data.category}
+                publishedAt={article.data.publishedAt}
+                updatedAt={article.data.updatedAt}
+                firstParty={article.data.firstParty}
+              />
+            ))}
+          </div>
+
+          <p class="knowledge__more">
+            <a class="btn btn--ghost" href="/knowledge/">ナレッジをすべて見る</a>
+          </p>
+        </div>
+      </section>
+    )}
+
     <Project />
     <Operator />
     <Contact />
   </main>
+
   <SiteFooter />
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 </BaseLayout>
+
+<style>
+  .knowledge {
+    background: var(--paper);
+  }
+
+  .kicker__en {
+    margin-left: 8px;
+    color: var(--text-mute);
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
+  .knowledge__head {
+    max-width: 46em;
+  }
+
+  .knowledge__list {
+    margin-top: clamp(32px, 4vw, 48px);
+    border-top: 1px solid var(--line);
+  }
+
+  .knowledge__more {
+    margin-top: clamp(28px, 3.5vw, 40px);
+  }
+</style>

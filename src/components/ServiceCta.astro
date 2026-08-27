@@ -1,0 +1,122 @@
+---
+import { getService } from '../data/taxonomy';
+import type { ServiceId } from '../data/taxonomy';
+import { ctaHref } from '../site.config';
+
+interface Props {
+  /** 記事・事例から誘導するサービス。先頭が主導線になる。 */
+  services: ServiceId[];
+  /** 見出し。文脈に応じて変えられるようにしておく。 */
+  heading?: string;
+}
+
+const { services: ids, heading = 'この記事に関連するサービス' } = Astro.props;
+const list = ids.map(getService);
+const primary = list[0];
+---
+
+<aside class="cta">
+  <p class="cta__kicker">{heading}</p>
+
+  <div class="cta__services">
+    {list.map((service) => (
+      <a class="cta__service" href={`/service/${service.id}/`}>
+        <span class="cta__service-name">{service.name}</span>
+        <span class="cta__service-summary">{service.summary}</span>
+        <span class="cta__service-more" aria-hidden="true">詳しく見る →</span>
+      </a>
+    ))}
+  </div>
+
+  <div class="cta__action">
+    <p class="cta__lead">
+      「何から手を付けるべきか分からない」という段階でも大丈夫です。
+      いまの状況を伺って、着手する順番を一緒に整理するところから始めます。
+    </p>
+    <a
+      class="btn btn--primary"
+      href={ctaHref(primary.id)}
+      data-cta="article-footer"
+      data-cta-topic={primary.id}
+    >
+      {primary.ctaLabel}<span class="btn__arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</aside>
+
+<style>
+  .cta {
+    margin-top: clamp(48px, 6vw, 72px);
+    padding: clamp(24px, 3vw, 36px);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--blue);
+    border-radius: var(--radius);
+    background: var(--sky-soft);
+  }
+
+  .cta__kicker {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: var(--blue-ink);
+  }
+
+  .cta__services {
+    display: grid;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .cta__service {
+    display: grid;
+    gap: 6px;
+    padding: 18px 20px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .cta__service:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .cta__service-name {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .cta__service-summary {
+    font-size: var(--fs-body-sm);
+    color: var(--text-mute);
+  }
+
+  .cta__service-more {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .cta__action {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .cta__lead {
+    font-size: var(--fs-body-sm);
+    color: var(--text-mute);
+  }
+
+  .cta__action .btn {
+    margin-top: 18px;
+  }
+
+  @media (max-width: 560px) {
+    .cta__action .btn {
+      width: 100%;
+    }
+  }
+</style>

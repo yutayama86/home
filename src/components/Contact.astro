@@ -1,16 +1,12 @@
 ---
-import { contact, contactActionHref, contactLinkAttrs } from '../site.config';
+import { ctaHref } from '../site.config';
+import { services } from '../data/taxonomy';
 
-const topics = [
-  'ホームページを作り直したい',
-  'SNSやWeb集客を改善したい',
-  'AIを使って日々の業務を効率化したい',
-  'Web・集客・業務のどこから手を付けるべきか整理したい',
-  '茨城や地域に関するプロジェクトを一緒に進めたい',
+/** トップページ下部のCTA帯。相談内容ごとに入口を分けて、心理的な負担を下げる。 */
+const entries = [
+  ...services.map((s) => ({ topic: s.id, label: s.ctaLabel })),
+  { topic: 'organize', label: '自社の課題を整理したい' },
 ];
-
-const actionHref = contactActionHref();
-const ctaLabel = contact.formUrl ? '相談フォームへ' : 'メールで相談する';
 ---
 
 <section class="contact section on-dark" id="contact">
@@ -25,27 +21,28 @@ const ctaLabel = contact.formUrl ? '相談フォームへ' : 'メールで相談
         Web・集客・業務改善のどこから手を付けるとよいかを一緒に整理するところから始めます。
       </p>
 
-      {actionHref && (
-        <div class="contact__actions">
-          <a class="btn btn--on-dark" href={actionHref} {...contactLinkAttrs()}>
-            {ctaLabel}<span class="btn__arrow" aria-hidden="true">→</span>
-          </a>
-
-          {contact.email && (
-            <p class="contact__address">
-              <span class="contact__address-label">メール</span>
-              <a class="contact__address-link" href={`mailto:${contact.email}`}>{contact.email}</a>
-            </p>
-          )}
-        </div>
-      )}
+      <div class="contact__actions">
+        <a class="btn btn--on-dark" href={ctaHref()} data-cta="home-contact">
+          相談する<span class="btn__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
     </div>
 
     <div class="contact__topics reveal" data-delay="1">
-      <h3 class="contact__topics-title">たとえば、こんなご相談から</h3>
+      <h3 class="contact__topics-title">相談内容から選ぶ</h3>
       <ul class="topics">
-        {topics.map((topic) => (
-          <li class="topic">{topic}</li>
+        {entries.map((entry) => (
+          <li>
+            <a
+              class="topic"
+              href={ctaHref(entry.topic)}
+              data-cta="home-contact-topic"
+              data-cta-topic={entry.topic}
+            >
+              {entry.label}
+              <span class="topic__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
         ))}
       </ul>
     </div>
@@ -80,40 +77,7 @@ const ctaLabel = contact.formUrl ? '相談フォームへ' : 'メールで相談
   }
 
   .contact__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px 28px;
     margin-top: clamp(26px, 3vw, 36px);
-  }
-
-  .contact__address {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-  }
-
-  .contact__address-label {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: var(--ls-label);
-    color: var(--text-on-dark-mute);
-  }
-
-  .contact__address-link {
-    font-size: var(--fs-body-sm);
-    font-weight: 700;
-    color: #fff;
-    /* メールアドレスは欧文として自然に見せる */
-    font-feature-settings: normal;
-    letter-spacing: 0.01em;
-    border-bottom: 1px solid var(--line-on-dark-strong);
-    padding-bottom: 2px;
-    transition: border-color 0.2s var(--ease);
-  }
-
-  .contact__address-link:hover {
-    border-bottom-color: #fff;
   }
 
   .contact__topics-title {
@@ -129,26 +93,39 @@ const ctaLabel = contact.formUrl ? '相談フォームへ' : 'メールで相談
   }
 
   .topic {
-    position: relative;
-    padding: 15px 0 15px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 4px;
     border-bottom: 1px solid var(--line-on-dark);
     font-size: var(--fs-body-sm);
     font-weight: 700;
+    color: #fff;
+    transition: padding-left 0.25s var(--ease), color 0.2s var(--ease);
   }
 
-  .topic::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 1.05em;
-    width: 12px;
-    height: 2px;
-    background: var(--gold);
+  .topic:hover {
+    padding-left: 12px;
+    color: var(--sky);
+  }
+
+  .topic__arrow {
+    color: var(--gold);
+    transition: transform 0.25s var(--ease);
+  }
+
+  .topic:hover .topic__arrow {
+    transform: translateX(4px);
   }
 
   @media (max-width: 860px) {
     .contact__inner {
       grid-template-columns: 1fr;
+    }
+
+    .contact__actions .btn {
+      width: 100%;
     }
   }
 </style>

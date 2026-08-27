@@ -1,0 +1,108 @@
+---
+import { getCategory } from '../data/taxonomy';
+import type { CategoryId } from '../data/taxonomy';
+import { formatDate } from '../utils/format';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  category: CategoryId;
+  publishedAt: Date;
+  updatedAt?: Date;
+  firstParty?: boolean;
+}
+
+const { href, title, description, category, publishedAt, updatedAt, firstParty } = Astro.props;
+const cat = getCategory(category);
+const shown = updatedAt ?? publishedAt;
+---
+
+<article class="card">
+  <a class="card__link" href={href}>
+    <div class="card__meta">
+      <span class="card__category">{cat.name}</span>
+      {firstParty && <span class="card__badge">実践レポート</span>}
+    </div>
+
+    <h3 class="card__title">{title}</h3>
+    <p class="card__desc">{description}</p>
+
+    <div class="card__foot">
+      <time datetime={shown.toISOString()}>
+        {updatedAt ? `${formatDate(shown)} 更新` : formatDate(shown)}
+      </time>
+      <span class="card__more" aria-hidden="true">→</span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .card {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .card__link {
+    display: grid;
+    gap: 10px;
+    padding: clamp(20px, 2.4vw, 28px) 0;
+    transition: background-color 0.25s var(--ease);
+  }
+
+  .card__link:hover .card__title {
+    color: var(--blue-ink);
+  }
+
+  .card__link:hover .card__more {
+    transform: translateX(4px);
+  }
+
+  .card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card__category {
+    padding: 4px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--blue-ink);
+  }
+
+  .card__badge {
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--gold);
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+
+  .card__title {
+    font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+    color: var(--navy);
+    transition: color 0.2s var(--ease);
+  }
+
+  .card__desc {
+    font-size: var(--fs-body-sm);
+    color: var(--text-mute);
+  }
+
+  .card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-mute);
+  }
+
+  .card__more {
+    color: var(--blue);
+    transition: transform 0.25s var(--ease);
+  }
+</style>

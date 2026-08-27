@@ -369,3 +369,155 @@ li {
 .skip-link:focus-visible {
   transform: translateY(0);
 }
+
+/* ==========================================================================
+   記事本文（Markdownから生成される要素）
+   日本語の可読性を最優先し、見出しと本文の間隔で構造を伝える。
+   ========================================================================== */
+
+.prose {
+  font-size: var(--fs-body);
+  line-height: 1.95;
+}
+
+.prose > * + * {
+  margin-top: 1.6em;
+}
+
+.prose h2 {
+  margin-top: 2.6em;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid var(--navy);
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+  color: var(--navy);
+  /* 固定ヘッダーに隠れないように */
+  scroll-margin-top: calc(var(--header-h) + 20px);
+}
+
+.prose h3 {
+  margin-top: 2.2em;
+  padding-left: 14px;
+  border-left: 4px solid var(--blue);
+  font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.1875rem);
+  color: var(--navy);
+  scroll-margin-top: calc(var(--header-h) + 20px);
+}
+
+.prose h4 {
+  margin-top: 1.9em;
+  font-size: 1rem;
+  color: var(--navy);
+}
+
+.prose a {
+  color: var(--blue-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.prose a:hover {
+  color: var(--blue);
+}
+
+.prose strong {
+  font-weight: 700;
+  background-image: linear-gradient(transparent 66%, var(--sky) 66%);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose ul > li {
+  list-style: disc;
+}
+
+.prose ol > li {
+  list-style: decimal;
+}
+
+.prose li {
+  margin-top: 0.6em;
+}
+
+.prose li::marker {
+  color: var(--blue);
+}
+
+.prose blockquote {
+  padding: 4px 0 4px 20px;
+  border-left: 3px solid var(--line-strong);
+  color: var(--text-mute);
+}
+
+.prose code {
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  background: var(--sky);
+  font-size: 0.9em;
+  font-feature-settings: normal;
+}
+
+.prose pre {
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  background: var(--navy-deep);
+  color: #e8eefa;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+  color: inherit;
+}
+
+/* 表は横スクロールさせ、ページ全体が横に伸びないようにする */
+.prose .table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose table {
+  width: 100%;
+  min-width: 32em;
+  border-collapse: collapse;
+  font-size: var(--fs-body-sm);
+}
+
+.prose th,
+.prose td {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose thead th {
+  background: var(--sky-soft);
+  color: var(--navy);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.prose hr {
+  margin-block: 2.6em;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.prose img {
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+}
+
+.prose figcaption {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--text-mute);
+  text-align: center;
+}

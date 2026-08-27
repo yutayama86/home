@@ -1,0 +1,142 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import { publishedCases } from '../../utils/related';
+import { getService } from '../../data/taxonomy';
+
+const cases = publishedCases(await getCollection('case'));
+---
+
+<PageLayout
+  title="事例｜シクミベース"
+  description="シクミベースが実際に取り組んだプロジェクトの記録です。うまくいったことだけでなく、判断の背景と残った課題もあわせて公開しています。"
+  kicker="CASE"
+  heading="実際に手を動かした記録。"
+  lead="成果だけを並べるのではなく、何を課題と捉え、どう判断し、何が残ったかを書いています。自社で運営しているプロジェクトも公開ケーススタディとして扱います。"
+  crumbs={[{ label: 'ホーム', href: '/' }, { label: '事例' }]}
+>
+  <div class="wrap body">
+    {cases.length === 0 ? (
+      <p class="empty">事例を準備しています。</p>
+    ) : (
+      <ul class="cases">
+        {cases.map((item) => (
+          <li>
+            <a class="case" href={`/case/${item.id}/`}>
+              <div class="case__meta">
+                <span class="case__client">{item.data.client}</span>
+                {item.data.isOwnProject && <span class="case__badge">自社運営</span>}
+              </div>
+              <h2 class="case__title">{item.data.title}</h2>
+              <p class="case__desc">{item.data.description}</p>
+              <p class="case__challenge">
+                <span class="case__challenge-label">課題</span>
+                {item.data.challenge}
+              </p>
+              <div class="case__services">
+                {item.data.relatedServices.map((id) => (
+                  <span class="case__service">{getService(id).shortName}</span>
+                ))}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</PageLayout>
+
+<style>
+  .body {
+    max-width: calc(900px + var(--gutter) * 2);
+    padding-top: clamp(36px, 4.5vw, 56px);
+  }
+
+  .empty {
+    color: var(--text-mute);
+  }
+
+  .cases {
+    display: grid;
+    gap: 18px;
+  }
+
+  .case {
+    display: grid;
+    gap: 10px;
+    padding: clamp(22px, 2.8vw, 32px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .case:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .case__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .case__client {
+    padding: 4px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--blue-ink);
+  }
+
+  .case__badge {
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--gold);
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+
+  .case__title {
+    font-size: clamp(1.125rem, 1rem + 0.7vw, 1.4375rem);
+    color: var(--navy);
+  }
+
+  .case__desc {
+    font-size: var(--fs-body-sm);
+    color: var(--text-mute);
+  }
+
+  .case__challenge {
+    padding: 12px 16px;
+    background: var(--sky-soft);
+    border-radius: var(--radius);
+    font-size: 0.8125rem;
+    color: var(--text);
+  }
+
+  .case__challenge-label {
+    display: inline-block;
+    margin-right: 8px;
+    font-weight: 700;
+    color: var(--blue-ink);
+  }
+
+  .case__services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .case__service {
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--sky);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--blue-ink);
+  }
+</style>

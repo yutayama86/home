@@ -1,0 +1,123 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { categories } from '../../data/taxonomy';
+import { publishedSorted } from '../../utils/related';
+
+const articles = publishedSorted(await getCollection('knowledge'));
+
+const countByCategory = (id: string) =>
+  articles.filter((a) => a.data.category === id).length;
+---
+
+<PageLayout
+  title="ナレッジ｜シクミベース"
+  description="中小企業・地域企業のWeb、集客、AI・業務改善について、実務から得た判断材料をまとめています。一般論ではなく、何から手を付けるかを決められる情報を扱います。"
+  kicker="KNOWLEDGE"
+  heading="判断材料になる情報を、実務から。"
+  lead="「SEOとは」のような一般論ではなく、費用の考え方、依頼先の選び方、始める順番など、実際に決めるときに必要な情報を扱っています。"
+  crumbs={[{ label: 'ホーム', href: '/' }, { label: 'ナレッジ' }]}
+>
+  <section class="wrap categories">
+    <h2 class="visually-hidden">カテゴリ</h2>
+    <ul class="categories__list">
+      {categories.map((category) => (
+        <li>
+          <a class="category-card" href={`/knowledge/${category.id}/`}>
+            <span class="category-card__name">{category.name}</span>
+            <span class="category-card__count">{countByCategory(category.id)}記事</span>
+            <span class="category-card__desc">{category.description}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap list">
+    <h2 class="list__title">すべての記事</h2>
+
+    {articles.length === 0 ? (
+      <p class="list__empty">記事を準備しています。</p>
+    ) : (
+      <div class="list__items">
+        {articles.map((article) => (
+          <ArticleCard
+            href={`/knowledge/${article.data.category}/${article.id}/`}
+            title={article.data.title}
+            description={article.data.description}
+            category={article.data.category}
+            publishedAt={article.data.publishedAt}
+            updatedAt={article.data.updatedAt}
+            firstParty={article.data.firstParty}
+          />
+        ))}
+      </div>
+    )}
+  </section>
+</PageLayout>
+
+<style>
+  .categories {
+    padding-top: clamp(36px, 4.5vw, 56px);
+  }
+
+  .categories__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+
+  .category-card {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    height: 100%;
+    padding: 20px 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .category-card:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .category-card__name {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .category-card__count {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--blue);
+  }
+
+  .category-card__desc {
+    margin-top: 4px;
+    font-size: 0.8125rem;
+    line-height: 1.85;
+    color: var(--text-mute);
+  }
+
+  .list {
+    padding-top: clamp(48px, 6vw, 72px);
+  }
+
+  .list__title {
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+    color: var(--navy);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--navy);
+  }
+
+  .list__empty {
+    padding: 32px 0;
+    color: var(--text-mute);
+  }
+</style>

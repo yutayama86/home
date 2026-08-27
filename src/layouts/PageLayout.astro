@@ -1,0 +1,89 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import type { Crumb } from '../components/Breadcrumbs.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  crumbs?: Crumb[];
+  /** ページ最上部の見出しブロックを出すか。記事ページは自前で組むので false。 */
+  showHeader?: boolean;
+  heading?: string;
+  lead?: string;
+  kicker?: string;
+  ogType?: 'website' | 'article';
+  /** 検索結果から除外したいページ（サンクスページなど）。 */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  crumbs,
+  showHeader = true,
+  heading,
+  lead,
+  kicker,
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogType={ogType}
+  noindex={noindex}
+>
+  <SiteHeader />
+
+  <main id="main">
+    {crumbs && crumbs.length > 0 && (
+      <div class="wrap crumbs-row">
+        <Breadcrumbs items={crumbs} />
+      </div>
+    )}
+
+    {showHeader && heading && (
+      <header class="page-head">
+        <div class="wrap">
+          {kicker && <p class="kicker">{kicker}</p>}
+          <h1 class="page-head__title">{heading}</h1>
+          {lead && <p class="page-head__lead measure">{lead}</p>}
+        </div>
+      </header>
+    )}
+
+    <slot />
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .crumbs-row {
+    padding-top: clamp(20px, 3vw, 32px);
+  }
+
+  .page-head {
+    padding-block: clamp(28px, 4vw, 48px) clamp(32px, 4.5vw, 56px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head__title {
+    font-size: var(--fs-h2);
+    color: var(--navy);
+  }
+
+  .page-head__lead {
+    margin-top: clamp(16px, 2vw, 22px);
+    font-size: var(--fs-lead);
+    color: var(--text-mute);
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import ServiceCta from '../../../components/ServiceCta.astro';
+import { categories, getCategory } from '../../../data/taxonomy';
+import { publishedSorted } from '../../../utils/related';
+
+export async function getStaticPaths() {
+  const all = publishedSorted(await getCollection('knowledge'));
+
+  return categories.map((category) => ({
+    params: { category: category.id },
+    props: {
+      category,
+      articles: all.filter((a) => a.data.category === category.id),
+    },
+  }));
+}
+
+const { category, articles } = Astro.props;
+const cat = getCategory(category.id);
+---
+
+<PageLayout
+  title={`${cat.name}｜ナレッジ｜シクミベース`}
+  description={cat.description}
+  kicker="KNOWLEDGE"
+  heading={cat.name}
+  lead={cat.description}
+  crumbs={[
+    { label: 'ホーム', href: '/' },
+    { label: 'ナレッジ', href: '/knowledge/' },
+    { label: cat.name },
+  ]}
+>
+  <section class="wrap list">
+    {articles.length === 0 ? (
+      <p class="list__empty">このカテゴリの記事は準備中です。</p>
+    ) : (
+      <div class="list__items">
+        {articles.map((article) => (
+          <ArticleCard
+            href={`/knowledge/${article.data.category}/${article.id}/`}
+            title={article.data.title}
+            description={article.data.description}
+            category={article.data.category}
+            publishedAt={article.data.publishedAt}
+            updatedAt={article.data.updatedAt}
+            firstParty={article.data.firstParty}
+          />
+        ))}
+      </div>
+    )}
+
+    <ServiceCta
+      services={[cat.primaryService]}
+      heading={`${cat.name}に関する相談先`}
+    />
+
+    <nav class="others" aria-label="他のカテゴリ">
+      <p class="others__title">他のカテゴリ</p>
+      <ul>
+        {categories
+          .filter((c) => c.id !== cat.id)
+          .map((c) => (
+            <li><a href={`/knowledge/${c.id}/`}>{c.name}</a></li>
+          ))}
+      </ul>
+    </nav>
+  </section>
+</PageLayout>
+
+<style>
+  .list {
+    padding-top: clamp(36px, 4.5vw, 56px);
+    max-width: calc(860px + var(--gutter) * 2);
+  }
+
+  .list__empty {
+    padding: 32px 0;
+    color: var(--text-mute);
+  }
+
+  .others {
+    margin-top: clamp(40px, 5vw, 56px);
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+
+  .others__title {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: var(--blue-ink);
+  }
+
+  .others ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .others a {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-body-sm);
+    font-weight: 700;
+    color: var(--navy);
+    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  .others a:hover {
+    border-color: var(--blue);
+    color: var(--blue-ink);
+  }
+</style>

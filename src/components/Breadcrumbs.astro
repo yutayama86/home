@@ -1,0 +1,84 @@
+---
+import { site } from '../site.config';
+
+export interface Crumb {
+  label: string;
+  /** 最後の項目（現在地）は href を省く。 */
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+
+/* 構造化データ。現在地を含めた全階層を送る。 */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.label,
+    ...(item.href ? { item: new URL(item.href, site.url).href } : {}),
+  })),
+};
+---
+
+<nav class="breadcrumbs" aria-label="パンくずリスト">
+  <ol>
+    {items.map((item, index) => (
+      <li>
+        {item.href ? (
+          <a href={item.href}>{item.label}</a>
+        ) : (
+          <span aria-current="page">{item.label}</span>
+        )}
+        {index < items.length - 1 && <span class="sep" aria-hidden="true">/</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+
+<style>
+  .breadcrumbs {
+    font-size: 0.75rem;
+    color: var(--text-mute);
+  }
+
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  a {
+    color: var(--text-mute);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--line-strong);
+  }
+
+  a:hover {
+    color: var(--blue-ink);
+  }
+
+  [aria-current='page'] {
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .sep {
+    color: var(--line-strong);
+  }
+</style>

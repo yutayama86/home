@@ -1,0 +1,304 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+
+import BaseLayout from './BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ServiceCta from '../components/ServiceCta.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+
+import { getCategory } from '../data/taxonomy';
+import { site } from '../site.config';
+import { formatDate } from '../utils/format';
+
+interface Props {
+  entry: CollectionEntry<'knowledge'>;
+  headings: MarkdownHeading[];
+  related: CollectionEntry<'knowledge'>[];
+}
+
+const { entry, headings, related } = Astro.props;
+const { data } = entry;
+const category = getCategory(data.category);
+
+const url = new URL(`/knowledge/${data.category}/${entry.id}/`, site.url).href;
+
+/* 目次はH2のみ。H3まで出すと日本語では長くなりすぎて読み飛ばされる。 */
+const toc = headings.filter((h) => h.depth === 2);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.publishedAt.toISOString(),
+  dateModified: (data.updatedAt ?? data.publishedAt).toISOString(),
+  author: {
+    '@type': 'Person',
+    name: site.operator,
+    url: new URL('/about/', site.url).href,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: site.name,
+    url: site.url,
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  image: new URL('/og.png', site.url).href,
+  inLanguage: 'ja',
+};
+---
+
+<BaseLayout
+  title={`${data.title}｜シクミベース`}
+  description={data.description}
+  canonical={url}
+  ogType="article"
+  publishedTime={data.publishedAt}
+  modifiedTime={data.updatedAt}
+>
+  <SiteHeader />
+
+  <main id="main">
+    <div class="wrap crumbs-row">
+      <Breadcrumbs
+        items={[
+          { label: 'ホーム', href: '/' },
+          { label: 'ナレッジ', href: '/knowledge/' },
+          { label: category.name, href: `/knowledge/${category.id}/` },
+          { label: data.title },
+        ]}
+      />
+    </div>
+
+    <article class="article">
+      <header class="wrap article__head">
+        <div class="article__meta">
+          <a class="article__category" href={`/knowledge/${category.id}/`}>{category.name}</a>
+          {data.firstParty && <span class="article__badge">実践レポート</span>}
+        </div>
+
+        <h1 class="article__title">{data.title}</h1>
+
+        <div class="article__dates">
+          <time datetime={data.publishedAt.toISOString()}>
+            公開 {formatDate(data.publishedAt)}
+          </time>
+          {data.updatedAt && (
+            <time datetime={data.updatedAt.toISOString()}>
+              更新 {formatDate(data.updatedAt)}
+            </time>
+          )}
+        </div>
+
+        <p class="article__intent">
+          <span class="article__intent-label">この記事が答える問い</span>
+          {data.intent}
+        </p>
+      </header>
+
+      <div class="wrap article__body-wrap">
+        {toc.length > 1 && (
+          <nav class="toc" aria-label="目次">
+            <p class="toc__title">目次</p>
+            <ol>
+              {toc.map((heading) => (
+                <li><a href={`#${heading.slug}`}>{heading.text}</a></li>
+              ))}
+            </ol>
+          </nav>
+        )}
+
+        <div class="prose">
+          <slot />
+        </div>
+
+        <ServiceCta services={data.relatedServices} />
+
+        {related.length > 0 && (
+          <section class="related">
+            <h2 class="related__title">関連する記事</h2>
+            <div class="related__list">
+              {related.map((item) => (
+                <ArticleCard
+                  href={`/knowledge/${item.data.category}/${item.id}/`}
+                  title={item.data.title}
+                  description={item.data.description}
+                  category={item.data.category}
+                  publishedAt={item.data.publishedAt}
+                  updatedAt={item.data.updatedAt}
+                  firstParty={item.data.firstParty}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        <p class="article__author">
+          この記事は、{site.operator}（シクミベース）が執筆しています。
+          シクミベースは個人で運営する事業ブランドです。
+          <a href="/about/">運営者について</a>
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <SiteFooter />
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+</BaseLayout>
+
+<style>
+  .crumbs-row {
+    padding-top: clamp(20px, 3vw, 32px);
+  }
+
+  .article__head {
+    padding-block: clamp(24px, 3.5vw, 40px) clamp(28px, 4vw, 44px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .article__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .article__category {
+    padding: 5px 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--blue-ink);
+  }
+
+  .article__badge {
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--gold);
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+
+  .article__title {
+    margin-top: 16px;
+    font-size: clamp(1.625rem, 1.2rem + 1.9vw, 2.5rem);
+    color: var(--navy);
+    line-height: 1.4;
+  }
+
+  .article__dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 16px;
+    font-size: 0.75rem;
+    color: var(--text-mute);
+  }
+
+  .article__intent {
+    margin-top: 22px;
+    padding: 16px 20px;
+    background: var(--sky-soft);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: var(--fs-body-sm);
+    color: var(--text);
+  }
+
+  .article__intent-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: var(--blue-ink);
+  }
+
+  .article__body-wrap {
+    max-width: calc(760px + var(--gutter) * 2);
+    padding-top: clamp(32px, 4vw, 48px);
+  }
+
+  .toc {
+    padding: clamp(20px, 2.4vw, 28px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    margin-bottom: clamp(32px, 4vw, 44px);
+  }
+
+  .toc__title {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: var(--blue-ink);
+  }
+
+  .toc ol {
+    margin-top: 12px;
+    counter-reset: toc;
+    display: grid;
+    gap: 2px;
+  }
+
+  .toc li {
+    counter-increment: toc;
+  }
+
+  .toc a {
+    display: block;
+    padding: 7px 0 7px 30px;
+    position: relative;
+    font-size: var(--fs-body-sm);
+    color: var(--text);
+    transition: color 0.2s var(--ease);
+  }
+
+  .toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .toc a:hover {
+    color: var(--blue-ink);
+  }
+
+  .related {
+    margin-top: clamp(48px, 6vw, 72px);
+  }
+
+  .related__title {
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+    color: var(--navy);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--navy);
+  }
+
+  .related__list {
+    margin-top: 4px;
+  }
+
+  .article__author {
+    margin-top: clamp(40px, 5vw, 56px);
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 0.8125rem;
+    line-height: 1.9;
+    color: var(--text-mute);
+  }
+
+  .article__author a {
+    color: var(--blue-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

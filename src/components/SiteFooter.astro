@@ -1,35 +1,61 @@
 ---
-const currentYear = new Date().getFullYear();
+import { services, categories } from '../data/taxonomy';
+import { site, ctaHref } from '../site.config';
 
-const links = [
-  { href: '#about', label: '私たちについて' },
-  { href: '#service', label: 'できること' },
-  { href: '#process', label: '進め方' },
-  { href: '#project', label: 'イバトコ' },
-  { href: '#profile', label: '運営者' },
-  { href: '#contact', label: 'ご相談について' },
-];
+const currentYear = new Date().getFullYear();
 ---
 
 <footer class="footer on-dark">
-  <div class="wrap footer__inner">
-    <div class="footer__brand">
-      <p class="footer__logo">シクミベース</p>
-      <p class="footer__tagline">事業に、仕組みを。</p>
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__logo">シクミベース</p>
+        <p class="footer__tagline">事業に、仕組みを。</p>
+        <p class="footer__note">
+          茨城から、中小企業と地域事業のWeb・集客・AIを支える事業ブランドです。
+        </p>
+        <a class="btn btn--on-dark footer__cta" href={ctaHref()} data-cta="footer">
+          相談する<span class="btn__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="footer__cols">
+        <nav class="footer__col" aria-label="サービス">
+          <p class="footer__heading">サービス</p>
+          <ul>
+            {services.map((service) => (
+              <li><a href={`/service/${service.id}/`}>{service.name}</a></li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="ナレッジ">
+          <p class="footer__heading">ナレッジ</p>
+          <ul>
+            {categories.map((category) => (
+              <li><a href={`/knowledge/${category.id}/`}>{category.name}</a></li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="サイト情報">
+          <p class="footer__heading">サイト情報</p>
+          <ul>
+            <li><a href="/case/">事例</a></li>
+            <li><a href="/about/">運営者について</a></li>
+            <li><a href="/contact/">お問い合わせ</a></li>
+            <li><a href="/privacy/">プライバシーポリシー</a></li>
+          </ul>
+        </nav>
+      </div>
     </div>
 
-    <nav class="footer__nav" aria-label="フッターメニュー">
-      <ul>
-        {links.map((link) => (
-          <li><a href={link.href}>{link.label}</a></li>
-        ))}
-      </ul>
-    </nav>
-  </div>
-
-  <div class="wrap footer__meta">
-    <p class="footer__note">個人で運営する事業ブランドです（法人化前）。</p>
-    <p class="footer__copy">© {currentYear} シクミベース</p>
+    <div class="footer__meta">
+      <p>
+        シクミベースは、{site.operator}が個人で運営する事業ブランドです（法人化前）。
+      </p>
+      <p class="footer__copy">© {currentYear} シクミベース</p>
+    </div>
   </div>
 </footer>
 
@@ -38,13 +64,13 @@ const links = [
     background: var(--navy-deep);
     color: var(--text-on-dark);
     padding-block: clamp(48px, 5vw, 72px) 28px;
+    margin-top: clamp(64px, 8vw, 112px);
   }
 
-  .footer__inner {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 32px;
+  .footer__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: clamp(36px, 5vw, 72px);
     padding-bottom: clamp(32px, 4vw, 48px);
     border-bottom: 1px solid var(--line-on-dark);
   }
@@ -61,21 +87,48 @@ const links = [
     color: var(--text-on-dark-mute);
   }
 
-  .footer__nav ul {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, auto));
-    gap: 10px clamp(24px, 4vw, 56px);
+  .footer__note {
+    margin-top: 16px;
+    max-width: 26em;
+    font-size: 0.8125rem;
+    line-height: 1.9;
+    color: var(--text-on-dark-mute);
   }
 
-  .footer__nav a {
+  .footer__cta {
+    margin-top: 22px;
+  }
+
+  .footer__cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .footer__heading {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: var(--ls-label);
+    color: #fff;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line-on-dark);
+  }
+
+  .footer__col ul {
+    margin-top: 12px;
+    display: grid;
+    gap: 4px;
+  }
+
+  .footer__col a {
     display: inline-block;
-    padding: 4px 0;
+    padding: 5px 0;
     font-size: var(--fs-body-sm);
     color: var(--text-on-dark-mute);
     transition: color 0.2s var(--ease);
   }
 
-  .footer__nav a:hover {
+  .footer__col a:hover {
     color: #fff;
   }
 
@@ -89,9 +142,16 @@ const links = [
     color: var(--text-on-dark-mute);
   }
 
-  @media (max-width: 600px) {
-    .footer__nav ul {
+  @media (max-width: 860px) {
+    .footer__top {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .footer__cols {
+      grid-template-columns: 1fr;
+      gap: 22px;
     }
   }
 </style>

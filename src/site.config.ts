@@ -17,46 +17,24 @@ export const site = {
 /**
  * 問い合わせ導線。
  *
- * `formUrl` か `email` のどちらかに値を入れると、
- * ヘッダー・ファーストビュー・問い合わせセクションのCTAがそのまま機能します。
- * 両方 null の間は、動かないボタンを出さずに相談内容の案内だけを表示します。
+ * サイト内の /contact/ にフォームを持ち、送信は Cloudflare Pages Functions
+ * （functions/api/contact.ts）が受けます。フォーム開始・完了までGA4で計測できます。
  *
- * 例:
- *   formUrl: 'https://forms.gle/xxxxxxxx',
- *   email: 'contact@shikumi-base.com',
+ * `email` はフォームが使えない場合の代替手段としてページ下部に表示します。
  */
 export const contact: {
-  formUrl: string | null;
+  /** サイト内フォームのパス。 */
+  formPath: string;
+  /** 代替の連絡先。null なら表示しない。 */
   email: string | null;
 } = {
-  formUrl: null,
+  formPath: '/contact/',
   email: 'info@shikumi-base.com',
 };
 
-/** 問い合わせ先が実際に用意されているか。 */
-export const hasContactChannel = Boolean(contact.formUrl || contact.email);
-
-/**
- * ヘッダー・ファーストビューのCTAリンク先。
- * メールの場合はいきなりメーラーを開かず、
- * 相談できる内容を読んでもらってから送れるよう問い合わせセクションへ送る。
- */
-export function ctaHref(): string {
-  return contact.formUrl ?? '#contact';
-}
-
-/** 問い合わせセクション内の実行ボタンのリンク先。 */
-export function contactActionHref(): string | null {
-  if (contact.formUrl) return contact.formUrl;
-  if (contact.email) return `mailto:${contact.email}`;
-  return null;
-}
-
-/** 外部フォームなら新しいタブで開く。 */
-export function contactLinkAttrs(): Record<string, string> {
-  return contact.formUrl
-    ? { target: '_blank', rel: 'noopener noreferrer' }
-    : {};
+/** すべてのCTAのリンク先。相談内容は遷移先で選ぶ。 */
+export function ctaHref(topic?: string): string {
+  return topic ? `${contact.formPath}?topic=${topic}` : contact.formPath;
 }
 
 /**
