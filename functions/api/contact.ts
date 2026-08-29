@@ -83,7 +83,10 @@ export const onRequestPost = async ({ request, env }: RequestContext): Promise<R
     return json(400, { message: 'ご相談内容が長すぎます（5000文字以内）' });
   }
 
-  const { RESEND_API_KEY, CONTACT_TO, CONTACT_FROM } = env;
+  // 貼り付け時に混入しがちな前後の空白・改行を落とす
+  const RESEND_API_KEY = env.RESEND_API_KEY?.trim();
+  const CONTACT_TO = env.CONTACT_TO?.trim();
+  const CONTACT_FROM = env.CONTACT_FROM?.trim();
   if (!RESEND_API_KEY || !CONTACT_TO || !CONTACT_FROM) {
     // 設定漏れを検知できるようログに残す
     console.error('送信設定が未設定のため送信できません', {
@@ -130,12 +133,13 @@ export const onRequestPost = async ({ request, env }: RequestContext): Promise<R
 
     if (!response.ok) {
       const detail = await response.text();
+      // 設定ミスの切り分けに必要なので、原因はログに残す
       console.error('メール送信に失敗しました', response.status, detail);
-      return json(502, { message: '送信処理に失敗しました' });
+      return json(500, { message: '送信処理に失敗しました' });
     }
   } catch (error) {
     console.error('メール送信で例外が発生しました', error);
-    return json(502, { message: '送信処理に失敗しました' });
+    return json(500, { message: '送信処理に失敗しました' });
   }
 
   return json(200, { ok: true });
