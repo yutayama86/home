@@ -20,7 +20,7 @@ const topics = [
   crumbs={[{ label: 'ホーム', href: '/' }, { label: 'お問い合わせ' }]}
 >
   <div class="wrap body">
-    <form class="form" id="contact-form" novalidate>
+    <form class="form" id="contact-form" novalidate data-fallback-email={contact.email ?? ''}>
       <div class="field">
         <label for="topic">ご相談の種類<span class="req">必須</span></label>
         <select id="topic" name="topic" required>
@@ -66,7 +66,7 @@ const topics = [
         <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
       </div>
 
-      <p class="form__error" id="form-error" role="alert" hidden></p>
+      <div class="form__error" id="form-error" role="alert" hidden></div>
 
       <button class="btn btn--primary form__submit" type="submit">
         送信する<span class="btn__arrow" aria-hidden="true">→</span>
@@ -232,7 +232,13 @@ const topics = [
     white-space: nowrap;
   }
 
+  .form__fallback {
+    margin-top: 14px;
+  }
+
   .form__error {
+    display: grid;
+    justify-items: start;
     padding: 14px 18px;
     border-radius: var(--radius);
     background: #fdecea;
@@ -375,8 +381,22 @@ const topics = [
       track('form_start', { form_id: 'contact', topic: topicField ? topicField.value : '' });
     });
 
-    const showError = (message) => {
-      errorBox.textContent = message;
+    const showError = (message, fallbackHref) => {
+      errorBox.textContent = '';
+
+      const text = document.createElement('p');
+      text.textContent = message;
+      errorBox.appendChild(text);
+
+      if (fallbackHref) {
+        const link = document.createElement('a');
+        link.className = 'btn btn--primary form__fallback';
+        link.href = fallbackHref;
+        link.textContent = 'メールで送る';
+        link.dataset.cta = 'contact-fallback';
+        errorBox.appendChild(link);
+      }
+
       errorBox.hidden = false;
       errorBox.scrollIntoView({ block: 'center', behavior: 'smooth' });
     };
@@ -400,8 +420,9 @@ const topics = [
       submit.disabled = true;
       submit.textContent = '送信中…';
 
+      const data = Object.fromEntries(new FormData(form).entries());
+
       try {
-        const data = Object.fromEntries(new FormData(form).entries());
         const response = await fetch('/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -410,18 +431,54 @@ const topics = [
 
         if (!response.ok) {
           const body = await response.json().catch(() => ({}));
-          throw new Error(body.message || '送信に失敗しました');
+          const error = new Error(body.message || '送信に失敗しました');
+          error.status = response.status;
+          throw error;
         }
 
         track('generate_lead', { form_id: 'contact', topic: data.topic });
         location.href = '/contact/thanks/';
       } catch (error) {
-        showError(
-          '送信できませんでした。時間をおいて再度お試しいただくか、メールでご連絡ください。'
-        );
+        // 入力内容を失わせないよう、そのままメールで送れる導線を出す
+        const fallback = mailtoFallback(data);
+
+        if (error.status === 400) {
+          // 入力内容の不備はそのまま伝える
+          showError(error.message, null);
+        } else {
+          showError(
+            'ただいまフォームからの送信ができません。お手数ですが、下のボタンからメールでお送りください。入力いただいた内容はそのまま引き継がれます。',
+            fallback
+          );
+        }
+
+        track('form_error', { form_id: 'contact', status: error.status || 0 });
         submit.disabled = false;
         submit.innerHTML = '送信する<span class="btn__arrow" aria-hidden="true">→</span>';
       }
     });
+
+    /** 入力内容を本文に載せた mailto: を組み立てる。 */
+    function mailtoFallback(data) {
+      const email = form.dataset.fallbackEmail;
+      if (!email) return null;
+
+      const topicLabel =
+        topicField?.options[topicField.selectedIndex]?.text ?? data.topic ?? '';
+
+      const body = [
+        `ご相談の種類: ${topicLabel}`,
+        `お名前: ${data.name ?? ''}`,
+        `会社名・屋号: ${data.company || '（未記入）'}`,
+        `メールアドレス: ${data.email ?? ''}`,
+        '',
+        '--- ご相談内容 ---',
+        data.message ?? '',
+      ].join('\n');
+
+      return `mailto:${email}?subject=${encodeURIComponent(
+        `【お問い合わせ】${topicLabel}`
+      )}&body=${encodeURIComponent(body)}`;
+    }
   })();
 </script>
