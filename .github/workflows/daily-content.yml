@@ -69,18 +69,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          branch="automation/daily-seo-$(date -u +%F)"
+          report_date="$(TZ=Asia/Tokyo date +%F)"
+          branch="automation/daily-seo-${report_date}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$branch"
           git add docs/seo-log src/content/knowledge
-          git commit -m "Daily SEO report and content draft $(date -u +%F)"
+          git commit -m "Daily SEO report and content draft ${report_date}"
           git push --force-with-lease origin "$branch"
           gh pr create \
             --base main \
             --head "$branch" \
-            --title "Daily SEO report and content draft $(date -u +%F)" \
+            --title "Daily SEO report and content draft ${report_date}" \
             --body "Search Consoleを基にした日次レポートと記事下書きです。記事は draft: true のため、内容確認後に公開設定を変更してください。" \
             || gh pr edit "$branch" \
-              --title "Daily SEO report and content draft $(date -u +%F)" \
+              --title "Daily SEO report and content draft ${report_date}" \
               --body "Search Consoleを基にした日次レポートと記事下書きです。記事は draft: true のため、内容確認後に公開設定を変更してください。"
