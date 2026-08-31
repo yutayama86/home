@@ -12,6 +12,7 @@
     "og": "bash tools/build-og.sh",
     "quality": "node scripts/quality-check.mjs",
     "growth": "node scripts/daily-growth.mjs",
+    "topic": "node scripts/select-daily-topic.mjs",
     "verify": "npm run check && npm run build && npm run quality",
     "preview": "astro preview",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=shikumi-base --branch=main",
