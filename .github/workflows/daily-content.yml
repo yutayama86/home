@@ -1,0 +1,86 @@
+name: Daily SEO and content
+
+on:
+  schedule:
+    # 毎朝7:00（JST）= 前日22:00（UTC）
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: daily-seo-content
+  cancel-in-progress: false
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    env:
+      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+      GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create daily SEO report
+        run: npm run growth
+
+      - name: Select article topic
+        id: topic
+        run: npm run topic
+
+      - name: Generate article draft
+        if: steps.topic.outputs.has_topic == 'true' && env.ANTHROPIC_API_KEY != ''
+        run: >-
+          node scripts/generate-article.mjs
+          --category "${{ steps.topic.outputs.category }}"
+          --keyword "${{ steps.topic.outputs.keyword }}"
+          --slug "${{ steps.topic.outputs.slug }}"
+
+      - name: Verify all changes
+        run: npm run verify
+
+      - name: Check whether anything changed
+        id: changes
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create or update daily pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="automation/daily-seo-$(date -u +%F)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add docs/seo-log src/content/knowledge
+          git commit -m "Daily SEO report and content draft $(date -u +%F)"
+          git push --force-with-lease origin "$branch"
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "Daily SEO report and content draft $(date -u +%F)" \
+            --body "Search Consoleを基にした日次レポートと記事下書きです。記事は draft: true のため、内容確認後に公開設定を変更してください。" \
+            || gh pr edit "$branch" \
+              --title "Daily SEO report and content draft $(date -u +%F)" \
+              --body "Search Consoleを基にした日次レポートと記事下書きです。記事は draft: true のため、内容確認後に公開設定を変更してください。"
