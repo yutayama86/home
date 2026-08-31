@@ -15,7 +15,8 @@
 import { writeFileSync, existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, basename } from 'node:path';
 
-const MODEL = 'claude-opus-5';
+// モデル名はGitHub Actionsの変数で更新できるようにし、コード変更を不要にする。
+const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514';
 const KNOWLEDGE_DIR = 'src/content/knowledge';
 
 function arg(name) {
