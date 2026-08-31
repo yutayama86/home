@@ -21,7 +21,12 @@ import { isConfigured, fetchSearchAnalytics } from './lib/gsc.mjs';
 const KNOWLEDGE_DIR = 'src/content/knowledge';
 const LOG_DIR = 'docs/seo-log';
 
-const today = new Date().toISOString().slice(0, 10);
+const today = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+}).format(new Date());
 const dryRun = process.argv.includes('--dry-run');
 
 /* --- 記事の読み込み --------------------------------------------------- */
