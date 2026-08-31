@@ -27,6 +27,12 @@ function arg(name) {
 const category = arg('category');
 const keyword = arg('keyword');
 const slug = arg('slug') ?? (keyword ? slugify(keyword) : null);
+const publishedAt = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+}).format(new Date());
 
 if (!category || !keyword || !slug) {
   console.error('使い方: node scripts/generate-article.mjs --category <id> --keyword "<キーワード>" [--slug <slug>]');
@@ -115,7 +121,7 @@ intent: （この記事が答える検索意図を1文で）
 primaryKeyword: ${keyword}
 keywords:
   - （関連キーワード）
-publishedAt: ${new Date().toISOString().slice(0, 10)}
+publishedAt: ${publishedAt}
 relatedServices:
   - （web / sns / ai-dx から1つ以上）
 firstParty: false
