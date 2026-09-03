@@ -41,7 +41,7 @@ jobs:
           workload_identity_provider: projects/663019962404/locations/global/workloadIdentityPools/github-actions/providers/github-home
           service_account: shikumi-base-automation@ibatoco-seo.iam.gserviceaccount.com
           token_format: access_token
-          access_token_scopes: >-
+          access_token_scopes: |
             https://www.googleapis.com/auth/webmasters.readonly
             https://www.googleapis.com/auth/analytics.readonly
 
