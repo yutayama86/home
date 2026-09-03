@@ -245,6 +245,26 @@ function checkGeneratedEditorialQuality(file, data, body) {
   if (found.length > 0) {
     addError(file, `一般論・機械的な表現が残っています: ${found.join('、')}`);
   }
+
+  const inventedProductClaims = [
+    ['有料診断を無料とする誤記', /無料(?:診断|で提供)/],
+    ['既製ツールとしての誤記', /(?:一括管理|案件管理)ツール|入力画面/],
+    ['未定義の連携先', /Slack|Teams|Chatwork/],
+    ['未定義の自動割り振り', /自動割り振り|自動振り分け/],
+    ['未定義のリアルタイム処理', /リアルタイム/],
+    ['未定義の定時処理', /毎(?:朝|晩|日)\s*\d{1,2}(?::\d{2})?時/],
+    ['未定義の対応期限', /\d+\s*(?:時間|h|日|分)(?:以内|未満|後)/i],
+    ['未定義の金額基準', /\d+(?:[,.]\d+)?\s*万円(?:以上|以下|超|未満)/],
+    ['未定義の件数基準', /(?:月|毎月|月間)\s*\d+\s*件(?:以上|以下|未満)/],
+    ['未定義のカスタマイズ保証', /カスタマイズ可能/],
+  ];
+  for (const [label, pattern] of inventedProductClaims) {
+    if (pattern.test(body)) addError(file, `${label}が含まれています`);
+  }
+
+  if (!body.includes('税別55,000円')) {
+    addError(file, '見積フォロー漏れ診断の価格「税別55,000円」が明記されていません');
+  }
 }
 
 /** メタ情報の長さ。検索結果での省略を避ける。 */
