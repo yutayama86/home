@@ -96,7 +96,18 @@ jobs:
           --response-file "${{ runner.temp }}/article-response.md"
 
       - name: Verify all changes
+        id: verify
+        continue-on-error: true
         run: npm run verify
+
+      - name: Remove rejected article and keep the report
+        if: steps.article.outcome == 'success' && steps.verify.outcome == 'failure'
+        run: |
+          article_path="src/content/knowledge/${{ steps.topic.outputs.slug }}.md"
+          if [ -f "$article_path" ]; then
+            rm -- "$article_path"
+          fi
+          npm run verify
 
       - name: Check whether anything changed
         id: changes
@@ -138,7 +149,8 @@ jobs:
       - name: Stop when article generation fails
         if: >-
           always() && steps.topic.outputs.has_topic == 'true' &&
-          (steps.inference.outcome != 'success' || steps.article.outcome != 'success')
+          (steps.inference.outcome != 'success' || steps.article.outcome != 'success' ||
+          steps.verify.outcome != 'success')
         run: |
           echo "::error::記事の生成または品質確認に失敗しました。日次レポートのPRは作成済みです。"
           exit 1

@@ -189,10 +189,55 @@ if (!markdown.startsWith('---')) {
   process.exit(1);
 }
 
-// 公開はPRのマージで制御する。プレビューと品質検査の対象にするため、記事自体は公開候補にする。
-if (!/^draft:\s*false$/m.test(markdown)) {
-  markdown = markdown.replace(/^draft:\s*true$/m, 'draft: false');
+const frontmatterMatch = markdown.match(/^---\s*\n([\s\S]*?)\n---\s*\n?/);
+if (!frontmatterMatch) {
+  console.error('frontmatter の終端が見つからないため保存を中止します。');
+  process.exit(1);
 }
+
+const modelFrontmatter = frontmatterMatch[1];
+const body = markdown.slice(frontmatterMatch[0].length).trim();
+if (body.length < 800) {
+  console.error('記事本文が短すぎるため保存を中止します。');
+  process.exit(1);
+}
+
+const field = (name) => {
+  const value = modelFrontmatter.match(new RegExp(`^${name}:\\s*(.+)$`, 'm'))?.[1]?.trim() ?? '';
+  return value.replace(/^['"]|['"]$/g, '').trim();
+};
+
+const compact = (value) => value.replace(/\s+/g, ' ').trim();
+const title = compact(field('title') || `${keyword}｜住宅リフォーム会社の実務ポイント`).slice(0, 60);
+let description = compact(field('description'));
+const fallbackDescription = `住宅リフォーム会社が「${keyword}」を進める前に、問い合わせ受付・現地調査・見積後フォローのどこを整え、何を測るべきかを実務目線で整理します。`;
+if (description.length < 60) description = fallbackDescription;
+description = description.slice(0, 140);
+const intent = compact(
+  field('intent') || `住宅リフォーム会社が${keyword}を実務で進めるための手順と判断基準を知る`
+);
+const relatedService = category === 'ai' ? 'ai-dx' : category === 'sns' ? 'sns' : 'web';
+const yaml = (value) => JSON.stringify(value);
+
+// スキーマに関わる値はモデルへ委ねず、検証済みの入力から毎回組み直す。
+markdown = `---
+title: ${yaml(title)}
+description: ${yaml(description)}
+category: ${category}
+intent: ${yaml(intent)}
+primaryKeyword: ${yaml(keyword)}
+keywords:
+  - ${yaml(keyword)}
+  - ${yaml(`${keyword} 進め方`)}
+  - ${yaml('リフォーム会社 反響対応')}
+publishedAt: ${publishedAt}
+relatedServices:
+  - ${relatedService}
+firstParty: false
+draft: false
+---
+
+${body}`;
 
 writeFileSync(outPath, `${markdown}\n`, 'utf-8');
 console.log(`公開候補を作成しました: ${outPath}`);
