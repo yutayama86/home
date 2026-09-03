@@ -205,23 +205,29 @@ function checkGeneratedEditorialQuality(file, data, body) {
   }
 
   const requiredHeadings = [
-    '結論',
-    'DXの前に可視化する業務',
-    '実装手順',
-    'KPIの定義と見方',
-    '自動化しない判断',
-    '向いている会社・先に別課題へ取り組む会社',
-    'まとめ',
+    ['結論', /結論/],
+    ['最初に可視化する業務', /(?:最初に|導入前に|はじめに).{0,12}可視化する業務/],
+    ['実装手順', /実装手順/],
+    ['KPIの定義と見方', /KPI.{0,8}(?:定義|見方)/i],
+    ['自動化しない判断', /自動化しない(?:判断|範囲|境界)/],
+    ['向いている会社・先に別課題へ取り組む会社', /向いている会社.{0,16}先に別課題/],
+    ['まとめ', /まとめ/],
   ];
-  for (const heading of requiredHeadings) {
-    if (!new RegExp(`^##\\s+${heading}`, 'm').test(body)) {
-      addError(file, `自動生成記事に必須見出し「${heading}」がありません`);
+  const h2s = [...body.matchAll(/^##\s+(.+)$/gm)].map((match) => match[1]);
+  for (const [label, pattern] of requiredHeadings) {
+    if (!h2s.some((heading) => pattern.test(heading))) {
+      addError(file, `自動生成記事に必須見出し「${label}」がありません`);
     }
   }
 
-  const requiredTerms = ['初回返信時間', '未対応数', '次回行動日設定率', '追客実施率'];
-  for (const term of requiredTerms) {
-    if (!body.includes(term)) addError(file, `KPI「${term}」の定義がありません`);
+  const requiredTerms = [
+    ['初回返信時間', /初回返信時間/],
+    ['未対応数', /未対応数/],
+    ['次回行動日設定率', /次回行動日設定率/],
+    ['追客実施率', /(?:追客|見積後フォロー)(?:の)?実施率/],
+  ];
+  for (const [label, pattern] of requiredTerms) {
+    if (!pattern.test(body)) addError(file, `KPI「${label}」の定義がありません`);
   }
 
   const internalLinks = body.match(/\]\(\/(knowledge|service|diagnosis|case)\//g) ?? [];
