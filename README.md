@@ -81,7 +81,7 @@ npm run verify   # 型チェック → ビルド → 品質チェック
 5. 型チェック・ビルド・品質チェック
 6. Pull Request を作成
 
-**マージするまで公開されません。** 記事はGitHub Modelsで生成し、`draft: false` の公開候補としてPRに載り、型・ビルド・品質検査を通過します。内容と根拠を人が確認し、PRをマージするとCloudflare Pagesへ自動公開されます。AI原稿を無確認で公開する設定にはしていません。
+**マージするまで公開されません。** 記事はCloudflare Workers AIで生成し、`draft: false` の公開候補としてPRに載り、型・ビルド・品質検査を通過します。内容と根拠を人が確認し、PRをマージするとCloudflare Pagesへ自動公開されます。AI原稿を無確認で公開する設定にはしていません。
 
 導線に詰まりがある場合（判定ルールC）は新規記事を増やさず、既存ページの改善を優先します。設定済みのGA4またはSearch Consoleからデータを取得できない場合も、誤った判断を避けるため記事生成を停止し、エラーをレポートしてワークフローを失敗として表示します。
 
@@ -178,7 +178,7 @@ Search ConsoleとGA4は、GitHub ActionsのWorkload Identity Federationで認証
 
 サービスアカウントには、Search Consoleの対象プロパティとGA4プロパティの閲覧権限が必要です。取得に失敗した日はワークフローを失敗として通知し、データなしの判断で記事を量産しません。
 
-記事生成はGitHub Actionsの短時間トークンとGitHub Modelsを使うため、外部AIのAPIキーは不要です。ワークフローには `models: read` を付与し、記事の書き込みとPR作成は対象リポジトリ内に限定します。
+記事生成はCloudflare Workers AIを使います。GitHub Actionsのシークレット `CLOUDFLARE_AI_API_TOKEN` には、シクミBASE日次記事専用のWorkers AIトークンを設定します。アカウントIDはワークフロー内で固定し、記事の書き込みとPR作成は対象リポジトリ内に限定します。
 
 Cloudflare Pages 側（Settings → Environment variables）には、
 問い合わせフォームのために次が必要です。

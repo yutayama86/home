@@ -313,7 +313,7 @@ Search ConsoleとGA4は、GitHub ActionsのOIDCとGoogle Cloud Workload Identity
 
 サービスアカウントには、対象のSearch ConsoleプロパティとGA4プロパティの閲覧権限が必要です。API取得失敗時は日次処理を失敗にし、計測不能を見逃しません。
 
-記事生成は `actions/ai-inference` とGitHub Modelsを利用します。ワークフローの短時間 `GITHUB_TOKEN` に `models: read` を付与するため、外部AIのAPIキーは不要です。
+記事生成はCloudflare Workers AIを利用します。GitHub Actionsのシークレット `CLOUDFLARE_AI_API_TOKEN` には、日次記事専用のWorkers AIトークンを設定します。アカウントIDはワークフローに固定し、トークンはログやリポジトリへ出しません。
 
 ---
 
@@ -405,7 +405,7 @@ Search Console（ドメインプロパティ `shikumi-base.com`）と連携済�
 5. 型チェック・ビルド・品質チェック
 6. Pull Request を作成
 
-**マージするまで公開されません。** GitHub Modelsで生成した記事は `draft: false` の公開候補としてPRへ載せ、型・ビルド・品質検査を通過させます。内容と根拠を人が確認してPRをマージすると、Cloudflare Pagesへ自動公開されます。AI原稿の無確認公開は禁止です。
+**マージするまで公開されません。** Cloudflare Workers AIで生成した記事は `draft: false` の公開候補としてPRへ載せ、型・ビルド・品質検査を通過させます。内容と根拠を人が確認してPRをマージすると、Cloudflare Pagesへ自動公開されます。AI原稿の無確認公開は禁止です。
 
 ### 判定ルール
 

@@ -9,7 +9,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  models: read
   id-token: write
 
 concurrency:
@@ -32,7 +31,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit --no-fund
 
       - name: Authenticate to Google Cloud
         id: google-auth
@@ -73,16 +72,17 @@ jobs:
           --slug "${{ steps.topic.outputs.slug }}"
           --prompt-output "${{ runner.temp }}/article-prompt.md"
 
-      - name: Generate article with GitHub Models
+      - name: Generate article with Cloudflare Workers AI
         id: inference
         if: steps.prompt.outcome == 'success'
         continue-on-error: true
-        uses: actions/ai-inference@v2.1.1
-        with:
-          prompt-file: ${{ runner.temp }}/article-prompt.md
-          model: openai/gpt-4.1
-          max-completion-tokens: 7000
-          temperature: 0.2
+        env:
+          CLOUDFLARE_ACCOUNT_ID: e384269f44b7b1195054555fa2cd89ab
+          CLOUDFLARE_AI_API_TOKEN: ${{ secrets.CLOUDFLARE_AI_API_TOKEN }}
+        run: >-
+          node scripts/infer-article.mjs
+          --prompt-file "${{ runner.temp }}/article-prompt.md"
+          --output-file "${{ runner.temp }}/article-response.md"
 
       - name: Save article publication candidate
         id: article
@@ -93,7 +93,7 @@ jobs:
           --category "${{ steps.topic.outputs.category }}"
           --keyword "${{ steps.topic.outputs.keyword }}"
           --slug "${{ steps.topic.outputs.slug }}"
-          --response-file "${{ steps.inference.outputs.response-file }}"
+          --response-file "${{ runner.temp }}/article-response.md"
 
       - name: Verify all changes
         run: npm run verify
