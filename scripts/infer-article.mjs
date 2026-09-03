@@ -13,7 +13,7 @@ const promptFile = arg('prompt-file');
 const outputFile = arg('output-file');
 const accountId = process.env.CLOUDFLARE_ACCOUNT_ID?.trim();
 const apiToken = process.env.CLOUDFLARE_AI_API_TOKEN?.trim();
-const model = process.env.CLOUDFLARE_AI_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+const model = process.env.CLOUDFLARE_AI_MODEL || '@cf/openai/gpt-oss-120b';
 
 if (!promptFile || !outputFile) {
   console.error('使い方: node scripts/infer-article.mjs --prompt-file <path> --output-file <path>');
@@ -45,12 +45,14 @@ const response = await fetch(endpoint, {
       {
         role: 'system',
         content:
-          'あなたは日本の中小企業向けBtoBコンテンツ編集者です。指示された形式と事実制約を厳守し、完成原稿だけを返してください。',
+          'あなたは住宅リフォーム会社の反響対応を理解する日本語BtoB編集者です。一般論、同語反復、未検証の効果断定を排し、現場で実行できる完成原稿だけを返してください。',
       },
       { role: 'user', content: prompt },
     ],
-    temperature: 0.2,
-    max_tokens: 7000,
+    temperature: 0.1,
+    repetition_penalty: 1.1,
+    frequency_penalty: 0.2,
+    max_tokens: 6500,
     stream: false,
   }),
 });

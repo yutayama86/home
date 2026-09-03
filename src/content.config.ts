@@ -31,6 +31,8 @@ const knowledge = defineCollection({
 
     /** 一次情報（自社の実践）に基づく記事かどうか。一覧で優先表示する。 */
     firstParty: z.boolean().default(false),
+    /** 日次ワークフローでAI生成した公開候補か。追加の編集品質検査に使う。 */
+    generated: z.boolean().default(false),
 
     draft: z.boolean().default(false),
   }),

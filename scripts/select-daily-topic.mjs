@@ -148,7 +148,9 @@ const pending = topics.filter(([, keyword, slug]) => {
 
 const focusTokens = focusKeyword.split(/\s+/).filter((token) => token.length >= 2);
 const score = ([category, keyword]) => {
-  const categoryScore = focusCategory && category === focusCategory ? 100 : 0;
+  // まだ表示データがないRule Eの日に既存記事のカテゴリへ寄せると、
+  // 商談から遠い一般論を量産しやすい。初期は並び順（商談への近さ）を優先する。
+  const categoryScore = focusRule !== 'E' && focusCategory && category === focusCategory ? 100 : 0;
   const keywordScore = focusTokens.reduce((sum, token) => sum + (keyword.includes(token) ? 10 : 0), 0);
   return categoryScore + keywordScore;
 };

@@ -195,6 +195,52 @@ function checkVerbosity(file, body) {
   }
 }
 
+/** 自動生成候補は、人手記事より厳しい実務品質ゲートを通す。 */
+function checkGeneratedEditorialQuality(file, data, body) {
+  if (String(data.generated ?? '').replace(/["']/g, '') !== 'true') return;
+
+  const chars = body.replace(/\s/g, '').length;
+  if (chars < 2200) {
+    addError(file, `自動生成記事が短すぎます（約${chars}文字 / 2,200以上）`);
+  }
+
+  const requiredHeadings = [
+    '結論',
+    'DXの前に可視化する業務',
+    '実装手順',
+    'KPIの定義と見方',
+    '自動化しない判断',
+    '向いている会社・先に別課題へ取り組む会社',
+    'まとめ',
+  ];
+  for (const heading of requiredHeadings) {
+    if (!new RegExp(`^##\\s+${heading}`, 'm').test(body)) {
+      addError(file, `自動生成記事に必須見出し「${heading}」がありません`);
+    }
+  }
+
+  const requiredTerms = ['初回返信時間', '未対応数', '次回行動日設定率', '追客実施率'];
+  for (const term of requiredTerms) {
+    if (!body.includes(term)) addError(file, `KPI「${term}」の定義がありません`);
+  }
+
+  const internalLinks = body.match(/\]\(\/(knowledge|service|diagnosis|case)\//g) ?? [];
+  if (internalLinks.length < 3) {
+    addError(file, `自動生成記事の内部リンクが不足しています（${internalLinks.length}件 / 3件以上）`);
+  }
+
+  const vaguePhrases = [
+    '実現することができます',
+    '慎重な検討が必要です',
+    '基盤が整っていない会社',
+    '住宅リフォーム会社のあなたは',
+  ];
+  const found = vaguePhrases.filter((phrase) => body.includes(phrase));
+  if (found.length > 0) {
+    addError(file, `一般論・機械的な表現が残っています: ${found.join('、')}`);
+  }
+}
+
 /** メタ情報の長さ。検索結果での省略を避ける。 */
 function checkMeta(file, data) {
   const title = String(data.title ?? '');
@@ -267,6 +313,7 @@ for (const file of files) {
   checkRiskyAssertions(file, body);
   checkStructure(file, data, body);
   checkVerbosity(file, body);
+  checkGeneratedEditorialQuality(file, data, body);
 }
 
 // 記事以外の販売ページやフォームにも、法人誤認表記を持ち込ませない。
