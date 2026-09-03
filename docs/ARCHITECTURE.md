@@ -5,7 +5,7 @@
 > **⚠️ このファイルに認証情報は含めていません。**
 > APIキー・パスワードの類は絶対にここへ書かないでください。第三者に渡す前提のファイルです。
 
-最終更新：2026年8月31日
+最終更新：2026年9月1日
 
 ---
 
@@ -15,7 +15,7 @@
 | --- | --- |
 | サイト名 | シクミベース |
 | 公開URL | https://shikumi-base.com |
-| 目的 | 検索・SNSからの流入を問い合わせにつなげる反響営業型サイト |
+| 目的 | 住宅リフォーム会社向け「リフォーム反響OS 30」と有料診断の適格問い合わせを獲得する反響営業型サイト |
 | 運営 | 山野辺 雄太（個人事業。**法人ではない**） |
 | リポジトリ | https://github.com/yutayama86/home |
 | ローカル | `~/Desktop/shikumi-base` |
@@ -81,7 +81,9 @@ shikumi-base/
 │   │   ├── case/index.astro
 │   │   ├── case/[slug].astro
 │   │   ├── service/index.astro
+│   │   ├── service/reform-lead-os.astro
 │   │   ├── service/[id].astro
+│   │   ├── diagnosis/reform-lead.astro
 │   │   ├── contact/index.astro
 │   │   └── contact/thanks.astro
 │   │
@@ -123,8 +125,10 @@ shikumi-base/
 ├── scripts/
 │   ├── quality-check.mjs     記事の品質ゲート（CIで実行）
 │   ├── daily-growth.mjs      改善対象の自動判定＋レポート
-│   ├── generate-article.mjs  記事の下書き生成（Claude API）
-│   └── lib/gsc.mjs           Search Console API クライアント
+│   ├── generate-article.mjs  記事の公開候補生成（Claude API）
+│   └── lib/
+│       ├── gsc.mjs           Search Console API クライアント
+│       └── ga4.mjs           GA4 Data API クライアント
 │
 ├── tools/
 │   ├── og-image.html         OGP画像の版下
@@ -234,14 +238,18 @@ draft: false                 # true の間は公開されない
 ```
 記事・サービスページのCTA（data-cta 属性つき）
   ↓
-/contact/  →  最初の入力で form_start
+/contact/  →  最初の入力で contact_form_start
   ↓
 POST /api/contact  →  Cloudflare Pages Functions
+  ↓
+Cloudflare Turnstile で正規の操作かを検証
   ↓
 Resend 経由で info@shikumi-base.com へ送信
   ↓
 /contact/thanks/  （generate_lead）
 ```
+
+`?topic=reform-audit` または `?topic=reform-os` の場合だけ、会社サイトURL、電話番号、事業区分、月間反響数、平均工事単価、過去90日の営業数字、責任者参加の確認項目を表示します。サーバー側でも同じ項目を必須検証します。
 
 ### 設定ファイル
 
@@ -286,18 +294,26 @@ export const contact = {
 | `RESEND_API_KEY` | Resend の APIキー | **シークレット** |
 | `CONTACT_TO` | 通知の宛先 | シークレット（テキスト推奨） |
 | `CONTACT_FROM` | 送信元アドレス | シークレット（テキスト推奨） |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstileのサーバー検証キー | **シークレット** |
 
 **変更後は必ず再デプロイが必要です。** 保存しただけでは反映されません。
 
 > **落とし穴：** Cloudflareのシークレットは書き込み専用です。**変数名をリネームすると値が消えます。** また、空になったシークレットに値を再設定しても反映されないことがあります。その場合は**行を削除して新規追加**してください。
 
-### GitHub Actions（Settings → Secrets and variables → Actions）
+### GitHub Actions（Google認証）
 
-| シークレット | 用途 | 未設定時 |
-| --- | --- | --- |
-| `GSC_SERVICE_ACCOUNT_JSON` | Search Console API | サイト内状態のみで判定 |
-| `GSC_SITE_URL` | `sc-domain:shikumi-base.com` | 同上 |
-| `ANTHROPIC_API_KEY` | 記事下書き生成 | 生成をスキップ |
+Search ConsoleとGA4は、GitHub ActionsのOIDCとGoogle Cloud Workload Identity Federationを使って認証します。サービスアカウントの長期JSON鍵はGitHubへ保存しません。
+
+| 項目 | 設定値 |
+| --- | --- |
+| Workload Identity Provider | `projects/663019962404/locations/global/workloadIdentityPools/github-actions/providers/github-home` |
+| サービスアカウント | `shikumi-base-automation@ibatoco-seo.iam.gserviceaccount.com` |
+| Search Console | `sc-domain:shikumi-base.com` |
+| GA4プロパティID | `516899437` |
+
+サービスアカウントには、対象のSearch ConsoleプロパティとGA4プロパティの閲覧権限が必要です。API取得失敗時は日次処理を失敗にし、計測不能を見逃しません。
+
+記事生成は `actions/ai-inference` とGitHub Modelsを利用します。ワークフローの短時間 `GITHUB_TOKEN` に `models: read` を付与するため、外部AIのAPIキーは不要です。
 
 ---
 
@@ -365,9 +381,14 @@ Search Console（ドメインプロパティ `shikumi-base.com`）と連携済�
 | イベント | 発火タイミング |
 | --- | --- |
 | `cta_click` | CTAクリック（`data-cta` に設置場所、`data-cta-topic` に相談内容） |
-| `form_start` | フォームへの最初の入力 |
+| `contact_form_start` | 問い合わせフォームへの最初の入力 |
 | `generate_lead` | 送信成功 |
 | `form_error` | 送信失敗 |
+| `view_offer` | 主力商品・有料診断ページの表示 |
+| `diagnosis_form_start` | 見積フォロー漏れ診断フォームへの最初の入力 |
+| `diagnosis_application` | 見積フォロー漏れ診断の送信成功 |
+
+氏名、会社名、メールアドレス、電話番号、会社サイトURLはGA4へ送りません。事業区分や反響数帯など、適合判定に使う区分値だけをイベントパラメータへ送ります。
 
 ---
 
@@ -377,13 +398,14 @@ Search Console（ドメインプロパティ `shikumi-base.com`）と連携済�
 
 `.github/workflows/daily-content.yml` が毎朝7時（JST）に実行されます。
 
-1. Search Console からデータ取得
-2. 改善対象を判定
-3. `docs/seo-log/` に判断と根拠を記録
-4. 型チェック・ビルド・品質チェック
-5. Pull Request を作成
+1. Search ConsoleとGA4からデータ取得
+2. 検索順位・CTRに加え、セッション→CTA→フォーム開始→問い合わせ完了の詰まりを判定
+3. 判定ルール・カテゴリ・検索語に合う商談直結キーワードを90日分の候補から選定
+4. `docs/seo-log/` に判断と根拠を記録
+5. 型チェック・ビルド・品質チェック
+6. Pull Request を作成
 
-**マージするまで公開されません。** 生成された記事は必ず `draft: true` で出力されます。
+**マージするまで公開されません。** GitHub Modelsで生成した記事は `draft: false` の公開候補としてPRへ載せ、型・ビルド・品質検査を通過させます。内容と根拠を人が確認してPRをマージすると、Cloudflare Pagesへ自動公開されます。AI原稿の無確認公開は禁止です。
 
 ### 判定ルール
 
@@ -391,10 +413,13 @@ Search Console（ドメインプロパティ `shikumi-base.com`）と連携済�
 | --- | --- | --- |
 | A | 表示100以上でCTR 2%未満 | title / description の見直し |
 | B | 平均掲載順位 11〜30位 | 内容追加・内部リンク強化 |
+| C | 流入があるのにCTA・フォーム・問い合わせの次段階へ進まない | 導線・フォーム改善 |
 | D | クリック10件以上 | 派生キーワードの記事を追加 |
 | E | 表示10未満 | 統合・リライト・削除の検討 |
 
-Search Console が未設定の期間は、内部リンク数とカテゴリごとの記事数から判断します。
+Search Console が未設定の期間は、内部リンク数とカテゴリごとの記事数から判断します。GA4が未設定でも検索側の判定は継続します。
+
+ルールC（流入後の導線詰まり）の場合は新規記事を作らず、既存導線の改善を優先します。設定済みのGA4またはSearch Console APIで取得エラーが起きた場合も、誤ったデータで公開候補を作らないよう記事生成を止め、エラー内容を日次レポートに残したうえでActionsを失敗として表示します。
 
 ---
 
@@ -422,7 +447,7 @@ Search Console が未設定の期間は、内部リンク数とカテゴリご�
 
 ---
 
-## 14. 現在のURL一覧（23ページ）
+## 14. 現在のURL一覧（26ページ）
 
 ```
 /
@@ -443,9 +468,12 @@ Search Console が未設定の期間は、内部リンク数とカテゴリご�
 /case/ibatoco/
 
 /service/
+/service/reform-lead-os/  リフォーム反響OS 30
 /service/web/             Web改善・制作
 /service/sns/             SNS運用・仕組み化
 /service/ai-dx/           AI・業務改善
+
+/diagnosis/reform-lead/   見積フォロー漏れ診断
 ```
 
 ---

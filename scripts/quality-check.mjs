@@ -16,6 +16,7 @@ import { join, basename } from 'node:path';
 import { execSync } from 'node:child_process';
 
 const CONTENT_DIRS = ['src/content/knowledge', 'src/content/case'];
+const SITE_SOURCE_DIRS = ['src/pages', 'src/components', 'src/layouts', 'functions'];
 
 const errors = [];
 const warnings = [];
@@ -62,6 +63,22 @@ function listArticles() {
   return files;
 }
 
+/** 公開ページとフォームAPIのソースを列挙する。 */
+function listSiteSources() {
+  const walk = (dir) => {
+    if (!existsSync(dir)) return [];
+    const files = [];
+    for (const item of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, item.name);
+      if (item.isDirectory()) files.push(...walk(full));
+      else if (/\.(?:astro|ts|tsx|js|mjs)$/.test(item.name)) files.push(full);
+    }
+    return files;
+  };
+
+  return SITE_SOURCE_DIRS.flatMap(walk);
+}
+
 function changedArticles() {
   try {
     const output = execSync('git diff --name-only HEAD~1 HEAD', { encoding: 'utf-8' });
@@ -78,8 +95,10 @@ function changedArticles() {
 
 /** 事実に基づかない数字が書かれていないかの手がかりを探す。 */
 function checkUnsourcedNumbers(file, body) {
-  // 「◯%向上」「◯倍」「◯件増加」など、成果を示す数値表現
-  const claims = body.match(/\d+(?:\.\d+)?\s*(?:%|％|倍|割)\s*(?:向上|増加|改善|削減|減少|アップ|増)/g);
+  // 「10件増」「100万円改善」「3日短縮」なども含む成果数値表現
+  const claims = body.match(
+    /\d+(?:[.,]\d+)?\s*(?:件|円|万円|億円|日|時間|分|%|％|倍|割)\s*(?:向上|増加|改善|削減|減少|短縮|アップ|上昇|低下|獲得|達成|回復|増え|減り)/g
+  );
   if (!claims) return;
 
   for (const claim of new Set(claims)) {
@@ -248,6 +267,11 @@ for (const file of files) {
   checkRiskyAssertions(file, body);
   checkStructure(file, data, body);
   checkVerbosity(file, body);
+}
+
+// 記事以外の販売ページやフォームにも、法人誤認表記を持ち込ませない。
+for (const file of listSiteSources()) {
+  checkCorporateWording(file, readFileSync(file, 'utf-8'));
 }
 
 checkRenderedEmphasis();

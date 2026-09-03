@@ -9,6 +9,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  models: read
+  id-token: write
 
 concurrency:
   group: daily-seo-content
@@ -17,11 +19,6 @@ concurrency:
 jobs:
   daily:
     runs-on: ubuntu-latest
-    env:
-      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
-      GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,20 +34,66 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Authenticate to Google Cloud
+        id: google-auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/663019962404/locations/global/workloadIdentityPools/github-actions/providers/github-home
+          service_account: shikumi-base-automation@ibatoco-seo.iam.gserviceaccount.com
+          token_format: access_token
+          access_token_scopes: >-
+            https://www.googleapis.com/auth/webmasters.readonly
+            https://www.googleapis.com/auth/analytics.readonly
+
       - name: Create daily SEO report
+        id: growth
+        continue-on-error: true
+        env:
+          GOOGLE_ACCESS_TOKEN: ${{ steps.google-auth.outputs.access_token }}
+          GSC_SITE_URL: sc-domain:shikumi-base.com
+          GA4_PROPERTY_ID: '516899437'
         run: npm run growth
 
       - name: Select article topic
         id: topic
-        run: npm run topic
+        if: steps.growth.outcome == 'success'
+        run: >-
+          node scripts/select-daily-topic.mjs
+          --focus-rule "${{ steps.growth.outputs.focus_rule }}"
+          --focus-category "${{ steps.growth.outputs.focus_category }}"
+          --focus-keyword "${{ steps.growth.outputs.focus_keyword }}"
 
-      - name: Generate article draft
-        if: steps.topic.outputs.has_topic == 'true' && env.ANTHROPIC_API_KEY != ''
+      - name: Prepare article prompt
+        id: prompt
+        if: steps.growth.outcome == 'success' && steps.topic.outputs.has_topic == 'true'
         run: >-
           node scripts/generate-article.mjs
           --category "${{ steps.topic.outputs.category }}"
           --keyword "${{ steps.topic.outputs.keyword }}"
           --slug "${{ steps.topic.outputs.slug }}"
+          --prompt-output "${{ runner.temp }}/article-prompt.md"
+
+      - name: Generate article with GitHub Models
+        id: inference
+        if: steps.prompt.outcome == 'success'
+        continue-on-error: true
+        uses: actions/ai-inference@v2.1.1
+        with:
+          prompt-file: ${{ runner.temp }}/article-prompt.md
+          model: openai/gpt-4.1
+          max-completion-tokens: 7000
+          temperature: 0.2
+
+      - name: Save article publication candidate
+        id: article
+        if: steps.inference.outcome == 'success'
+        continue-on-error: true
+        run: >-
+          node scripts/generate-article.mjs
+          --category "${{ steps.topic.outputs.category }}"
+          --keyword "${{ steps.topic.outputs.keyword }}"
+          --slug "${{ steps.topic.outputs.slug }}"
+          --response-file "${{ steps.inference.outputs.response-file }}"
 
       - name: Verify all changes
         run: npm run verify
@@ -81,7 +124,21 @@ jobs:
             --base main \
             --head "$branch" \
             --title "Daily SEO report and content draft ${report_date}" \
-            --body "Search Consoleを基にした日次レポートと記事下書きです。記事は draft: true のため、内容確認後に公開設定を変更してください。" \
-            || gh pr edit "$branch" \
+            --body "Search Console・GA4を基にした日次レポートと記事の公開候補です。型・ビルド・品質検査は通過済みです。内容と根拠を確認し、問題なければこのPRをマージするとCloudflare Pagesへ公開されます。" \
+          || gh pr edit "$branch" \
               --title "Daily SEO report and content draft ${report_date}" \
-              --body "Search Consoleを基にした日次レポートと記事下書きです。記事は draft: true のため、内容確認後に公開設定を変更してください。"
+              --body "Search Console・GA4を基にした日次レポートと記事の公開候補です。型・ビルド・品質検査は通過済みです。内容と根拠を確認し、問題なければこのPRをマージするとCloudflare Pagesへ公開されます。"
+
+      - name: Stop when configured analytics is unavailable
+        if: always() && steps.growth.outcome == 'failure'
+        run: |
+          echo "::error::設定済みのSearch ConsoleまたはGA4からデータを取得できませんでした。Actions Summaryの原因を確認してください。"
+          exit 1
+
+      - name: Stop when article generation fails
+        if: >-
+          always() && steps.topic.outputs.has_topic == 'true' &&
+          (steps.inference.outcome != 'success' || steps.article.outcome != 'success')
+        run: |
+          echo "::error::記事の生成または品質確認に失敗しました。日次レポートのPRは作成済みです。"
+          exit 1

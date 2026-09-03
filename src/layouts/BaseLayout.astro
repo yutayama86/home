@@ -60,7 +60,7 @@ const ogImage = new URL(image ?? '/og.png', site.url).href;
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="シクミベース｜事業に、仕組みを。 Web制作・集客・発信・AI・業務改善・地域事業" />
+    <meta property="og:image:alt" content="シクミベース｜住宅リフォーム会社の反響・見積フォローを仕組み化" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
 
@@ -111,6 +111,7 @@ const ogImage = new URL(image ?? '/og.png', site.url).href;
             cta_location: target.dataset.cta,
             cta_topic: target.dataset.ctaTopic || '',
             page_path: location.pathname,
+            transport_type: 'beacon',
           });
         });
       })();

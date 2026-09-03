@@ -4,23 +4,35 @@ import { services } from '../../data/taxonomy';
 import { contact } from '../../site.config';
 
 const topics = [
+  { value: 'reform-audit', label: '見積フォロー漏れ診断（税別55,000円）の適合確認' },
+  { value: 'reform-os', label: 'リフォーム反響OS 30の導入相談' },
   ...services.map((s) => ({ value: s.id, label: s.name })),
   { value: 'organize', label: 'どこから手を付けるべきか整理したい' },
   { value: 'local', label: '茨城・地域のプロジェクトを一緒に進めたい' },
   { value: 'other', label: 'その他' },
 ];
+
+// Turnstile のサイトキーは公開情報。シークレットキーは Cloudflare の環境変数だけに保存する。
+const turnstileSiteKey = '0x4AAAAAAEmB3I5NAyMoIF6c';
 ---
 
 <PageLayout
   title="お問い合わせ｜シクミベース"
-  description="Web・集客・AI活用・業務改善についてのご相談を受け付けています。依頼内容が固まっていない段階でも、何から始めるべきかを一緒に整理します。"
+  description="見積フォロー漏れ診断、リフォーム反響OS 30、Web・AI活用についてのご相談窓口です。診断は対象条件を確認してから正式受付となります。"
   kicker="CONTACT"
-  heading="何から始めるか、一緒に整理します。"
-  lead="依頼内容が固まっていなくても大丈夫です。いまの状況を伺ったうえで、Web・集客・業務改善のどこから手を付けるとよいかを整理するところから始めます。"
+  heading="現状を確認し、次の一手を決めます。"
+  lead="見積フォロー漏れ診断は、申込内容から対象条件を確認したあとに正式受付となります。申込時点では費用は発生しません。"
   crumbs={[{ label: 'ホーム', href: '/' }, { label: 'お問い合わせ' }]}
 >
   <div class="wrap body">
-    <form class="form" id="contact-form" novalidate data-fallback-email={contact.email ?? ''}>
+    <form
+      class="form"
+      id="contact-form"
+      method="post"
+      action="/api/contact"
+      novalidate
+      data-fallback-email={contact.email ?? ''}
+    >
       <div class="field">
         <label for="topic">ご相談の種類<span class="req">必須</span></label>
         <select id="topic" name="topic" required>
@@ -31,23 +43,94 @@ const topics = [
 
       <div class="field">
         <label for="name">お名前<span class="req">必須</span></label>
-        <input type="text" id="name" name="name" required autocomplete="name" />
+        <input type="text" id="name" name="name" required maxlength="100" autocomplete="name" />
       </div>
 
       <div class="field">
-        <label for="company">会社名・屋号<span class="opt">任意</span></label>
-        <input type="text" id="company" name="company" autocomplete="organization" />
+        <label for="company">会社名・屋号<span class="req">必須</span></label>
+        <input type="text" id="company" name="company" required maxlength="200" autocomplete="organization" />
       </div>
 
       <div class="field">
         <label for="email">メールアドレス<span class="req">必須</span></label>
-        <input type="email" id="email" name="email" required autocomplete="email" />
+        <input type="email" id="email" name="email" required maxlength="254" autocomplete="email" />
       </div>
+
+      <fieldset class="product-fields" id="product-fields" hidden>
+        <legend>診断・反響OSの事前確認</legend>
+        <p class="product-fields__lead">
+          合わない実装を避けるため、現在の事業と反響状況を確認します。回答内容だけで契約が確定することはありません。
+        </p>
+
+        <div class="field">
+          <label for="companyUrl">会社サイトURL<span class="req">必須</span></label>
+          <input type="url" id="companyUrl" name="companyUrl" maxlength="500" inputmode="url" autocomplete="url" data-product-required />
+        </div>
+
+        <div class="field">
+          <label for="phone">電話番号<span class="req">必須</span></label>
+          <input type="tel" id="phone" name="phone" maxlength="40" inputmode="tel" autocomplete="tel" data-product-required />
+        </div>
+
+        <div class="field">
+          <label for="businessType">主な事業<span class="req">必須</span></label>
+          <select id="businessType" name="businessType" data-product-required>
+            <option value="">選択してください</option>
+            <option value="exterior-painting">外壁塗装</option>
+            <option value="roof">屋根工事</option>
+            <option value="home-renovation">住宅リフォーム</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="monthlyLeads">Web・LINE等の月間反響数<span class="req">必須</span></label>
+          <select id="monthlyLeads" name="monthlyLeads" data-product-required>
+            <option value="">選択してください</option>
+            <option value="0-4">0〜4件</option>
+            <option value="5-9">5〜9件</option>
+            <option value="10-19">10〜19件</option>
+            <option value="20-plus">20件以上</option>
+            <option value="unknown">把握していない</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="averageOrder">平均工事単価<span class="req">必須</span></label>
+          <select id="averageOrder" name="averageOrder" data-product-required>
+            <option value="">選択してください</option>
+            <option value="under-80">80万円未満</option>
+            <option value="80-149">80万〜149万円</option>
+            <option value="150-plus">150万円以上</option>
+            <option value="unknown">把握していない</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="hasSalesData">過去90日の反響・現調・見積・受注数<span class="req">必須</span></label>
+          <select id="hasSalesData" name="hasSalesData" data-product-required>
+            <option value="">選択してください</option>
+            <option value="yes">確認できる</option>
+            <option value="partial">一部なら確認できる</option>
+            <option value="no">確認できない</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="decisionMaker">責任者の参加<span class="req">必須</span></label>
+          <select id="decisionMaker" name="decisionMaker" data-product-required>
+            <option value="">選択してください</option>
+            <option value="yes">社長または担当責任者が参加できる</option>
+            <option value="consult">社内確認が必要</option>
+            <option value="no">参加できない</option>
+          </select>
+        </div>
+      </fieldset>
 
       <div class="field">
         <label for="message">ご相談内容<span class="req">必須</span></label>
-        <textarea id="message" name="message" rows="8" required
-          placeholder="現在の状況や、困っていることをお書きください。まとまっていない状態でも構いません。"></textarea>
+        <textarea id="message" name="message" rows="8" required maxlength="5000"
+          placeholder="現在の問い合わせ受付、案件管理、見積後フォローで困っていることをお書きください。"></textarea>
       </div>
 
       <div class="field field--check">
@@ -66,10 +149,25 @@ const topics = [
         <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
       </div>
 
+      <div class="security-check">
+        <div
+          class="cf-turnstile"
+          data-sitekey={turnstileSiteKey}
+          data-action="contact"
+          data-theme="light"
+          data-language="ja"
+        ></div>
+        <p>迷惑送信を防ぐため、Cloudflareによる安全確認を行います。</p>
+      </div>
+
+      <noscript>
+        <p class="form__noscript">フォーム送信にはJavaScriptが必要です。無効にしている場合は、右側のメール窓口をご利用ください。</p>
+      </noscript>
+
       <div class="form__error" id="form-error" role="alert" hidden></div>
 
       <button class="btn btn--primary form__submit" type="submit">
-        送信する<span class="btn__arrow" aria-hidden="true">→</span>
+        内容を送信する<span class="btn__arrow" aria-hidden="true">→</span>
       </button>
 
       <p class="form__note">
@@ -79,20 +177,21 @@ const topics = [
 
     <aside class="side">
       <section class="side__block">
-        <h2 class="side__title">こんなご相談から</h2>
+        <h2 class="side__title">主なご相談</h2>
         <ul class="side__list">
-          <li>ホームページを作り直したい</li>
-          <li>SNSやWeb集客を改善したい</li>
-          <li>AIを使って日々の業務を効率化したい</li>
-          <li>Web・集客・業務のどこから手を付けるべきか整理したい</li>
-          <li>茨城や地域に関するプロジェクトを一緒に進めたい</li>
+          <li>問い合わせの初回返信が遅れている</li>
+          <li>案件情報がメール・LINE・紙・Excelに分散している</li>
+          <li>見積提出後の次回連絡日が決まっていない</li>
+          <li>リフォーム反響OS 30の対象になるか確認したい</li>
+          <li>Web・AI活用など、その他の支援を相談したい</li>
         </ul>
       </section>
 
       <section class="side__block">
         <h2 class="side__title">お約束</h2>
         <ul class="side__list side__list--check">
-          <li>相談の段階で費用はかかりません</li>
+          <li>申込フォームの送信時点では費用はかかりません</li>
+          <li>対象条件と実施内容を確認してから正式受付します</li>
           <li>無理に契約をおすすめすることはありません</li>
           <li>お受けできない場合は、その理由をお伝えします</li>
         </ul>
@@ -166,6 +265,8 @@ const topics = [
 
   input[type='text'],
   input[type='email'],
+  input[type='url'],
+  input[type='tel'],
   select,
   textarea {
     width: 100%;
@@ -188,6 +289,34 @@ const topics = [
 
   textarea {
     resize: vertical;
+  }
+
+  .product-fields {
+    display: grid;
+    gap: 22px;
+    margin: 4px 0;
+    padding: clamp(20px, 2.8vw, 30px);
+    border: 1px solid var(--line-strong);
+    border-top: 4px solid var(--gold);
+    border-radius: var(--radius);
+    background: var(--sky-soft);
+  }
+
+  .product-fields[hidden] {
+    display: none;
+  }
+
+  .product-fields legend {
+    padding: 0 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .product-fields__lead {
+    margin-bottom: 2px;
+    font-size: 0.8125rem;
+    color: var(--text-mute);
   }
 
   input[aria-invalid='true'],
@@ -245,6 +374,18 @@ const topics = [
     border: 1px solid #f5c6c2;
     color: #a32b1c;
     font-size: var(--fs-body-sm);
+  }
+
+  .security-check {
+    display: grid;
+    gap: 8px;
+    justify-items: start;
+  }
+
+  .security-check p,
+  .form__noscript {
+    font-size: 0.75rem;
+    color: var(--text-mute);
   }
 
   .form__submit {
@@ -354,6 +495,8 @@ const topics = [
   }
 </style>
 
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <script is:inline>
   (() => {
     const form = document.getElementById('contact-form');
@@ -368,17 +511,40 @@ const topics = [
     // URLの ?topic= を初期選択に反映し、どのCTAから来たかを引き継ぐ
     const topicParam = new URLSearchParams(location.search).get('topic');
     const topicField = form.querySelector('#topic');
+    const productFields = form.querySelector('#product-fields');
+    const productRequired = [...form.querySelectorAll('[data-product-required]')];
+    const isProductTopic = () =>
+      topicField && ['reform-audit', 'reform-os'].includes(topicField.value);
+
     if (topicParam && topicField) {
       const match = [...topicField.options].find((o) => o.value === topicParam);
       if (match) topicField.value = topicParam;
     }
 
-    // 最初の入力で form_start を1度だけ送る
+    const updateProductFields = () => {
+      const active = isProductTopic();
+      if (productFields) productFields.hidden = !active;
+      productRequired.forEach((field) => {
+        field.disabled = !active;
+        field.required = active;
+      });
+      submit.innerHTML = active
+        ? '診断の適合確認を申し込む<span class="btn__arrow" aria-hidden="true">→</span>'
+        : '内容を送信する<span class="btn__arrow" aria-hidden="true">→</span>';
+    };
+
+    updateProductFields();
+    topicField?.addEventListener('change', updateProductFields);
+
+    // GA4の自動収集と重複しない独自イベントを、最初の入力時に1度だけ送る
     let started = false;
     form.addEventListener('input', () => {
       if (started) return;
       started = true;
-      track('form_start', { form_id: 'contact', topic: topicField ? topicField.value : '' });
+      track('contact_form_start', { form_id: 'contact', topic: topicField ? topicField.value : '' });
+      if (topicField?.value === 'reform-audit') {
+        track('diagnosis_form_start', { offer_id: 'reform-lead-audit' });
+      }
     });
 
     const showError = (message, fallbackHref) => {
@@ -436,8 +602,37 @@ const topics = [
           throw error;
         }
 
-        track('generate_lead', { form_id: 'contact', topic: data.topic });
-        location.href = '/contact/thanks/';
+        if (data.topic === 'reform-audit') {
+          track('diagnosis_application', {
+            offer_id: 'reform-lead-audit',
+            monthly_leads_band: data.monthlyLeads || '',
+            average_order_band: data.averageOrder || '',
+          });
+        }
+
+        // 完了イベントを送信する前に画面遷移して計測が欠けないよう、
+        // GA4のコールバックかタイムアウトの早い方でサンクスページへ進む。
+        let redirected = false;
+        const redirect = () => {
+          if (redirected) return;
+          redirected = true;
+          location.href = '/contact/thanks/';
+        };
+
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'generate_lead', {
+            form_id: 'contact',
+            topic: data.topic,
+            business_type: data.businessType || '',
+            monthly_leads_band: data.monthlyLeads || '',
+            average_order_band: data.averageOrder || '',
+            event_callback: redirect,
+            event_timeout: 1500,
+          });
+          setTimeout(redirect, 1600);
+        } else {
+          redirect();
+        }
       } catch (error) {
         // 入力内容を失わせないよう、そのままメールで送れる導線を出す
         const fallback = mailtoFallback(data);
@@ -454,7 +649,7 @@ const topics = [
 
         track('form_error', { form_id: 'contact', status: error.status || 0 });
         submit.disabled = false;
-        submit.innerHTML = '送信する<span class="btn__arrow" aria-hidden="true">→</span>';
+        updateProductFields();
       }
     });
 
@@ -471,10 +666,17 @@ const topics = [
         `お名前: ${data.name ?? ''}`,
         `会社名・屋号: ${data.company || '（未記入）'}`,
         `メールアドレス: ${data.email ?? ''}`,
+        data.companyUrl ? `会社サイト: ${data.companyUrl}` : null,
+        data.phone ? `電話番号: ${data.phone}` : null,
+        data.businessType ? `主な事業: ${data.businessType}` : null,
+        data.monthlyLeads ? `月間反響数: ${data.monthlyLeads}` : null,
+        data.averageOrder ? `平均工事単価: ${data.averageOrder}` : null,
+        data.hasSalesData ? `過去90日の数字: ${data.hasSalesData}` : null,
+        data.decisionMaker ? `責任者の参加: ${data.decisionMaker}` : null,
         '',
         '--- ご相談内容 ---',
         data.message ?? '',
-      ].join('\n');
+      ].filter((line) => line !== null).join('\n');
 
       return `mailto:${email}?subject=${encodeURIComponent(
         `【お問い合わせ】${topicLabel}`

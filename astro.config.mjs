@@ -70,7 +70,7 @@ export default defineConfig({
           item.lastmod = newest.toISOString();
           item.changefreq = 'weekly';
           item.priority = 1.0;
-        } else if (item.url.includes('/service/')) {
+        } else if (item.url.includes('/service/') || item.url.includes('/diagnosis/')) {
           // 問い合わせに最も近いページ
           item.changefreq = 'monthly';
           item.priority = 0.9;

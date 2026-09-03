@@ -1,51 +1,55 @@
 ---
-import { ctaHref } from '../site.config';
-import { services } from '../data/taxonomy';
-
-/** トップページ下部のCTA帯。相談内容ごとに入口を分けて、心理的な負担を下げる。 */
-const entries = [
-  ...services.map((s) => ({ topic: s.id, label: s.ctaLabel })),
-  { topic: 'organize', label: '自社の課題を整理したい' },
+const deliverables = [
+  '現在の問い合わせ経路図',
+  '初回返信と見積フォローの現状',
+  '取りこぼし候補と改善優先順位',
+  '30日実装案と固定見積',
 ];
 ---
 
 <section class="contact section on-dark" id="contact">
   <div class="wrap contact__inner">
     <div class="contact__body reveal">
-      <p class="kicker">ご相談について<span class="kicker__en">CONTACT</span></p>
+      <p class="kicker">導入前診断<span class="kicker__en">DIAGNOSIS</span></p>
       <h2 class="contact__title">
-        <span class="phrase">何から始めるか、</span><span class="phrase">一緒に整理します。</span>
+        <span class="phrase">まず、見積フォローが</span><br />
+        <span class="phrase">止まる場所を特定します。</span>
       </h2>
       <p class="contact__lead measure">
-        依頼内容が固まっていなくても大丈夫です。いまの状況を伺ったうえで、
-        Web・集客・業務改善のどこから手を付けるとよいかを一緒に整理するところから始めます。
+        現在の問い合わせ経路、初回返信、案件台帳、見積後の連絡状況を確認し、
+        取りこぼし候補と改善順序をまとめます。無料提案ではなく、自社で利用できる診断資料として納品します。
       </p>
 
+      <div class="contact__price">
+        <span>見積フォロー漏れ診断</span>
+        <strong>55,000円<small>（税別）</small></strong>
+        <span>実装契約時は同額を実装費から控除</span>
+      </div>
+
       <div class="contact__actions">
-        <a class="btn btn--on-dark" href={ctaHref()} data-cta="home-contact">
-          相談する<span class="btn__arrow" aria-hidden="true">→</span>
+        <a class="btn btn--on-dark" href="/diagnosis/reform-lead/" data-cta="home-diagnosis-detail">
+          診断内容と申込条件を見る<span class="btn__arrow" aria-hidden="true">→</span>
         </a>
       </div>
     </div>
 
-    <div class="contact__topics reveal" data-delay="1">
-      <h3 class="contact__topics-title">相談内容から選ぶ</h3>
-      <ul class="topics">
-        {entries.map((entry) => (
-          <li>
-            <a
-              class="topic"
-              href={ctaHref(entry.topic)}
-              data-cta="home-contact-topic"
-              data-cta-topic={entry.topic}
-            >
-              {entry.label}
-              <span class="topic__arrow" aria-hidden="true">→</span>
-            </a>
-          </li>
-        ))}
+    <aside class="contact__deliverables reveal" data-delay="1">
+      <h3>診断でお渡しするもの</h3>
+      <ul>
+        {deliverables.map((item) => <li>{item}</li>)}
       </ul>
-    </div>
+      <p>
+        申込時点では費用は確定しません。対象条件と実施内容を確認し、支払方法をご案内したあとに正式受付となります。
+      </p>
+      <a
+        class="contact__direct"
+        href="/contact/?topic=reform-audit"
+        data-cta="home-diagnosis-apply"
+        data-cta-topic="reform-audit"
+      >
+        診断の適合確認を申し込む →
+      </a>
+    </aside>
   </div>
 </section>
 
@@ -62,7 +66,7 @@ const entries = [
 
   .contact__inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
     gap: clamp(36px, 5vw, 80px);
     align-items: start;
   }
@@ -76,47 +80,77 @@ const entries = [
     color: var(--text-on-dark-mute);
   }
 
+  .contact__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 18px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line-on-dark);
+    font-size: 0.75rem;
+    color: var(--text-on-dark-mute);
+  }
+
+  .contact__price strong {
+    font-size: clamp(1.45rem, 1.2rem + 1vw, 2rem);
+    color: #fff;
+  }
+
+  .contact__price small {
+    font-size: 0.6875rem;
+  }
+
   .contact__actions {
     margin-top: clamp(26px, 3vw, 36px);
   }
 
-  .contact__topics-title {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+  .contact__deliverables {
+    padding: clamp(24px, 3vw, 34px);
+    border-top: 3px solid var(--gold);
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .contact__deliverables h3 {
+    font-size: 1rem;
+  }
+
+  .contact__deliverables ul {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .contact__deliverables li {
+    position: relative;
+    padding-left: 24px;
+    font-size: var(--fs-body-sm);
     color: var(--text-on-dark-mute);
   }
 
-  .topics {
-    margin-top: 16px;
-    border-top: 1px solid var(--line-on-dark);
+  .contact__deliverables li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
   }
 
-  .topic {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 16px 4px;
-    border-bottom: 1px solid var(--line-on-dark);
+  .contact__deliverables p {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-on-dark);
+    font-size: 0.75rem;
+    color: var(--text-on-dark-mute);
+  }
+
+  .contact__direct {
+    display: inline-block;
+    margin-top: 18px;
     font-size: var(--fs-body-sm);
     font-weight: 700;
-    color: #fff;
-    transition: padding-left 0.25s var(--ease), color 0.2s var(--ease);
-  }
-
-  .topic:hover {
-    padding-left: 12px;
-    color: var(--sky);
-  }
-
-  .topic__arrow {
-    color: var(--gold);
-    transition: transform 0.25s var(--ease);
-  }
-
-  .topic:hover .topic__arrow {
-    transform: translateX(4px);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   @media (max-width: 860px) {

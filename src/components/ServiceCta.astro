@@ -10,14 +10,23 @@ interface Props {
   heading?: string;
 }
 
-const { services: ids, heading = 'この記事に関連するサービス' } = Astro.props;
+const { services: ids, heading = '住宅リフォーム会社の方へ' } = Astro.props;
 const list = ids.map(getService);
-const primary = list[0];
 ---
 
 <aside class="cta">
   <p class="cta__kicker">{heading}</p>
 
+  <a class="cta__flagship" href="/service/reform-lead-os/" data-cta="article-product">
+    <span class="cta__flagship-label">主力サービス</span>
+    <span class="cta__service-name">リフォーム反響OS 30</span>
+    <span class="cta__service-summary">
+      問い合わせへの受信確認、現調前情報、案件台帳、見積後3回のフォローを30日で本番稼働させます。
+    </span>
+    <span class="cta__service-more" aria-hidden="true">対象範囲と価格を見る →</span>
+  </a>
+
+  <p class="cta__related-label">この記事に関連するその他の支援</p>
   <div class="cta__services">
     {list.map((service) => (
       <a class="cta__service" href={`/service/${service.id}/`}>
@@ -30,16 +39,16 @@ const primary = list[0];
 
   <div class="cta__action">
     <p class="cta__lead">
-      「何から手を付けるべきか分からない」という段階でも大丈夫です。
-      いまの状況を伺って、着手する順番を一緒に整理するところから始めます。
+      まず、問い合わせから見積後までのどこで対応が止まっているかを診断し、
+      改善優先順位と30日実装案を資料としてお渡しします。
     </p>
     <a
       class="btn btn--primary"
-      href={ctaHref(primary.id)}
-      data-cta="article-footer"
-      data-cta-topic={primary.id}
+      href={ctaHref('reform-audit')}
+      data-cta="article-diagnosis"
+      data-cta-topic="reform-audit"
     >
-      {primary.ctaLabel}<span class="btn__arrow" aria-hidden="true">→</span>
+      診断の適合確認を申し込む<span class="btn__arrow" aria-hidden="true">→</span>
     </a>
   </div>
 </aside>
@@ -65,6 +74,34 @@ const primary = list[0];
     display: grid;
     gap: 12px;
     margin-top: 18px;
+  }
+
+  .cta__flagship {
+    display: grid;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 20px;
+    border: 1px solid var(--line-strong);
+    border-top: 3px solid var(--gold);
+    background: var(--paper);
+    transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .cta__flagship:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .cta__flagship-label,
+  .cta__related-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--blue-ink);
+  }
+
+  .cta__related-label {
+    margin-top: 24px;
   }
 
   .cta__service {

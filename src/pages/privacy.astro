@@ -2,7 +2,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 import { site, contact } from '../site.config';
 
-const updated = '2026年8月26日';
+const updated = '2026年9月1日';
 ---
 
 <PageLayout
@@ -23,7 +23,7 @@ const updated = '2026年8月26日';
       <p>当サイトでは、次の情報を取得します。</p>
       <ul>
         <li>
-          <strong>お問い合わせフォームに入力された情報</strong>：ご相談の種類、お名前、会社名・屋号、メールアドレス、ご相談内容
+          <strong>お問い合わせフォームに入力された情報</strong>：ご相談の種類、お名前、会社名・屋号、メールアドレス、ご相談内容。診断・反響OSへのお申し込みでは、会社サイトURL、電話番号、事業区分、月間反響数・平均工事単価の区分、営業数字の確認可否、責任者の参加可否
         </li>
         <li>
           <strong>アクセスに関する情報</strong>：閲覧されたページ、参照元、利用ブラウザ・OS、おおよその地域、滞在時間など
@@ -46,12 +46,21 @@ const updated = '2026年8月26日';
         ただし、法令に基づく開示請求があった場合を除きます。
       </p>
 
+      <h2>外部サービスへの取扱いの委託</h2>
+      <p>
+        フォーム送信、メール通知、サイト配信、アクセス解析のため、Cloudflare、Resend、Googleの各サービスを利用します。
+        各サービスには、その処理に必要な範囲で情報が送信されます。当サイトは、利用目的に照らして必要なサービスを選定し、設定を管理します。
+      </p>
+
       <h2>アクセス解析ツールとCookieについて</h2>
 
       <h3>Google アナリティクス（GA4）</h3>
       <p>
         当サイトでは、利用状況を把握するためにGoogle社のアクセス解析ツール「Google アナリティクス」を使用しています。
         Google アナリティクスは、Cookieを使用して個人を特定しない形で情報を収集します。
+      </p>
+      <p>
+        CTAクリック、フォーム開始、送信完了、エラーなどのイベントも計測します。フォームに入力された氏名、会社名、メールアドレス、電話番号、会社サイトURLは送信せず、事業区分や件数帯など個人を直接特定しない区分値のみを計測に使用します。
       </p>
       <p>
         収集された情報は、Google社のプライバシーポリシーに基づいて管理されます。詳細は
@@ -76,6 +85,16 @@ const updated = '2026年8月26日';
       <p>
         当サイトでは、Cloudflare社の「Web Analytics」も併用しています。
         こちらはCookieを使用せず、個人を追跡しない方式で、ページの表示回数などを集計します。
+      </p>
+
+      <h3>Cloudflare Turnstile</h3>
+      <p>
+        お問い合わせフォームへの迷惑送信や不正利用を防ぐため、Cloudflare社の「Turnstile」を使用しています。
+        検証に必要な範囲で、IPアドレス、端末・ブラウザに関する情報、操作情報などがCloudflare社へ送信される場合があります。詳細は
+        <a href="https://www.cloudflare.com/ja-jp/privacypolicy/" target="_blank" rel="noopener noreferrer">
+          Cloudflareのプライバシーポリシー
+        </a>
+        をご確認ください。
       </p>
 
       <h3>Google Search Console</h3>

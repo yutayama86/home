@@ -5,8 +5,10 @@
  * サービスアカウントのJWT署名から自前で行う（Node標準の crypto のみ使用）。
  *
  * 必要な環境変数:
- *   GSC_SERVICE_ACCOUNT_JSON  サービスアカウント鍵のJSON文字列
+ *   GOOGLE_ACCESS_TOKEN       GitHub Actions のWorkload Identityで発行する短時間トークン
  *   GSC_SITE_URL              対象プロパティ（例: sc-domain:shikumi-base.com）
+ *
+ * ローカル確認時のみ、GSC_SERVICE_ACCOUNT_JSON も後方互換として使用できる。
  */
 
 import { createSign } from 'node:crypto';
@@ -59,7 +61,10 @@ async function getAccessToken(credentials) {
 
 /** Search Console の設定が揃っているか。 */
 export function isConfigured() {
-  return Boolean(process.env.GSC_SERVICE_ACCOUNT_JSON && process.env.GSC_SITE_URL);
+  return Boolean(
+    (process.env.GOOGLE_ACCESS_TOKEN || process.env.GSC_SERVICE_ACCOUNT_JSON) &&
+      process.env.GSC_SITE_URL
+  );
 }
 
 /**
@@ -70,17 +75,24 @@ export function isConfigured() {
  */
 export async function fetchSearchAnalytics({ dimensions = ['page'], days = 28, rowLimit = 500 } = {}) {
   if (!isConfigured()) {
-    throw new Error('GSC_SERVICE_ACCOUNT_JSON と GSC_SITE_URL が設定されていません');
+    throw new Error('Google認証情報と GSC_SITE_URL が設定されていません');
   }
 
-  const credentials = JSON.parse(process.env.GSC_SERVICE_ACCOUNT_JSON);
-  const token = await getAccessToken(credentials);
+  const token = process.env.GOOGLE_ACCESS_TOKEN
+    ? process.env.GOOGLE_ACCESS_TOKEN
+    : await getAccessToken(JSON.parse(process.env.GSC_SERVICE_ACCOUNT_JSON));
   const siteUrl = process.env.GSC_SITE_URL;
 
-  // Search Console のデータは2〜3日遅れるため、終端を3日前にとる
+  // Search Console のデータは2〜3日遅れるため、JST基準で終端を3日前にとる
   const end = new Date(Date.now() - 3 * 86400000);
-  const start = new Date(end.getTime() - days * 86400000);
-  const iso = (d) => d.toISOString().slice(0, 10);
+  const start = new Date(end.getTime() - (days - 1) * 86400000);
+  const iso = (d) =>
+    new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Tokyo',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(d);
 
   const response = await fetch(
     `https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,

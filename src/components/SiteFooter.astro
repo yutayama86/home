@@ -10,12 +10,17 @@ const currentYear = new Date().getFullYear();
     <div class="footer__top">
       <div class="footer__brand">
         <p class="footer__logo">シクミベース</p>
-        <p class="footer__tagline">事業に、仕組みを。</p>
+        <p class="footer__tagline">反響対応を、誰かの記憶に任せない。</p>
         <p class="footer__note">
-          茨城から、中小企業と地域事業のWeb・集客・AIを支える事業ブランドです。
+          茨城・近隣の住宅リフォーム会社へ、問い合わせから見積フォローまでの営業フローを実装します。
         </p>
-        <a class="btn btn--on-dark footer__cta" href={ctaHref()} data-cta="footer">
-          相談する<span class="btn__arrow" aria-hidden="true">→</span>
+        <a
+          class="btn btn--on-dark footer__cta"
+          href={ctaHref('reform-audit')}
+          data-cta="footer-diagnosis"
+          data-cta-topic="reform-audit"
+        >
+          診断を申し込む<span class="btn__arrow" aria-hidden="true">→</span>
         </a>
       </div>
 
@@ -23,6 +28,8 @@ const currentYear = new Date().getFullYear();
         <nav class="footer__col" aria-label="サービス">
           <p class="footer__heading">サービス</p>
           <ul>
+            <li><a href="/service/reform-lead-os/">リフォーム反響OS 30</a></li>
+            <li><a href="/diagnosis/reform-lead/">見積フォロー漏れ診断</a></li>
             {services.map((service) => (
               <li><a href={`/service/${service.id}/`}>{service.name}</a></li>
             ))}

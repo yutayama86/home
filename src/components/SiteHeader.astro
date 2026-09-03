@@ -3,7 +3,8 @@ import { ctaHref } from '../site.config';
 import { services } from '../data/taxonomy';
 
 const nav = [
-  { href: '/service/', label: 'サービス' },
+  { href: '/service/reform-lead-os/', label: '反響OS 30' },
+  { href: '/diagnosis/reform-lead/', label: '導入前診断' },
   { href: '/knowledge/', label: 'ナレッジ' },
   { href: '/case/', label: '事例' },
   { href: '/about/', label: '運営者' },
@@ -31,7 +32,12 @@ const isActive = (href: string) => current === href || current.startsWith(href);
           </li>
         ))}
       </ul>
-      <a class="btn btn--primary nav__cta" href={ctaHref()} data-cta="header">相談する</a>
+      <a
+        class="btn btn--primary nav__cta"
+        href={ctaHref('reform-audit')}
+        data-cta="header-diagnosis"
+        data-cta-topic="reform-audit"
+      >診断を申し込む</a>
     </nav>
 
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
@@ -48,15 +54,20 @@ const isActive = (href: string) => current === href || current.startsWith(href);
         ))}
       </ul>
 
-      <p class="mobile-menu__sub">サービス</p>
+      <p class="mobile-menu__sub">その他の支援</p>
       <ul class="mobile-menu__list mobile-menu__list--sub">
         {services.map((service) => (
           <li><a href={`/service/${service.id}/`}>{service.name}</a></li>
         ))}
       </ul>
 
-      <a class="btn btn--primary mobile-menu__cta" href={ctaHref()} data-cta="mobile-menu">
-        相談する
+      <a
+        class="btn btn--primary mobile-menu__cta"
+        href={ctaHref('reform-audit')}
+        data-cta="mobile-menu-diagnosis"
+        data-cta-topic="reform-audit"
+      >
+        診断を申し込む
       </a>
     </nav>
   </div>

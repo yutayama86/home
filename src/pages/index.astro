@@ -20,14 +20,26 @@ const latest = publishedSorted(await getCollection('knowledge')).slice(0, 4);
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: site.name,
-  url: site.url,
-  description: site.description,
-  logo: new URL('/og.png', site.url).href,
-  founder: { '@type': 'Person', name: site.operator },
-  areaServed: { '@type': 'AdministrativeArea', name: '茨城県' },
-  sameAs: ['https://ibatoco.jp/'],
+  '@graph': [
+    {
+      '@type': 'Organization',
+      name: site.name,
+      url: site.url,
+      description: site.description,
+      logo: new URL('/og.png', site.url).href,
+      founder: { '@type': 'Person', name: site.operator },
+      areaServed: { '@type': 'AdministrativeArea', name: '茨城県および近隣地域' },
+      sameAs: ['https://ibatoco.jp/'],
+    },
+    {
+      '@type': 'Service',
+      name: 'リフォーム反響OS 30',
+      serviceType: '住宅リフォーム会社向け反響対応・見積フォローの業務設計と実装',
+      url: new URL('/service/reform-lead-os/', site.url).href,
+      provider: { '@type': 'Organization', name: site.name, url: site.url },
+      audience: { '@type': 'BusinessAudience', audienceType: '外壁塗装・屋根・住宅リフォーム会社' },
+    },
+  ],
 };
 ---
 

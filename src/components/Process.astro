@@ -1,33 +1,59 @@
 ---
 const steps = [
-  { no: '01', title: '見つける', body: '事業と顧客を理解し、本当に解くべき課題を見つける。' },
-  { no: '02', title: '小さく試す', body: '最小単位で形にし、実際の反応から学ぶ。' },
-  { no: '03', title: 'つなげる', body: '制作・集客・業務を、ひと続きの導線にする。' },
-  { no: '04', title: '積み上げる', body: '成果を手順・データ・資産として残す。' },
+  {
+    no: '01',
+    days: 'DAY 1–3',
+    title: '現状確認',
+    body: '問い合わせ経路、対応手順、利用ツール、過去90日の営業数字を確認します。',
+  },
+  {
+    no: '02',
+    days: 'DAY 4–10',
+    title: '設計',
+    body: '対象フロー、必要項目、通知、担当者、人が承認する箇所を確定します。',
+  },
+  {
+    no: '03',
+    days: 'DAY 11–24',
+    title: '実装・テスト',
+    body: 'フォーム、台帳、自動返信、通知、見積フォロー、計測を設定して試験します。',
+  },
+  {
+    no: '04',
+    days: 'DAY 25–30',
+    title: '検収・引き継ぎ',
+    body: '実際の動作を確認し、操作動画と研修で担当者が再現できる状態にします。',
+  },
 ];
 ---
 
 <section class="process section--tight section on-dark" id="process">
   <div class="wrap">
     <div class="process__head reveal">
-      <p class="kicker">進め方<span class="kicker__en">PROCESS</span></p>
+      <p class="kicker">30日の進め方<span class="kicker__en">PROCESS</span></p>
       <h2 class="section-title">
-        <span class="phrase">ご相談から改善まで、</span><span class="phrase">ひと続きで進めます。</span>
+        <span class="phrase">設計だけで終わらせず、</span><span class="phrase">実際に動くところまで。</span>
       </h2>
+      <p class="section-lead measure">
+        必要なアクセス権限と確認回答が予定どおり提供されることを前提に、ひとつの営業フローを本番稼働させます。
+      </p>
     </div>
 
     <ol class="steps">
       {steps.map((step, index) => (
         <li class="step reveal" data-delay={String(index)}>
-          <div class="step__marker" aria-hidden="true">
-            <span class="step__dot"></span>
-          </div>
+          <div class="step__marker" aria-hidden="true"><span class="step__dot"></span></div>
+          <span class="step__days">{step.days}</span>
           <span class="step__no">STEP {step.no}</span>
           <h3 class="step__title">{step.title}</h3>
           <p class="step__body">{step.body}</p>
         </li>
       ))}
     </ol>
+
+    <p class="process__note reveal">
+      顧客側の確認遅延や外部サービス障害がある場合は日程を再調整します。見積金額、契約判断、重要な顧客連絡は人が確認・承認します。
+    </p>
   </div>
 </section>
 
@@ -43,7 +69,7 @@ const steps = [
   }
 
   .process__head {
-    max-width: 42em;
+    max-width: 52em;
   }
 
   .steps {
@@ -57,7 +83,6 @@ const steps = [
     position: relative;
   }
 
-  /* 各ステップの上に、つながりを示す罫線と点を置く */
   .step__marker {
     position: relative;
     height: 11px;
@@ -69,7 +94,6 @@ const steps = [
     position: absolute;
     top: 5px;
     left: 0;
-    /* 隣のカラムまで線を伸ばして、流れが途切れないようにする */
     right: calc(-1 * clamp(20px, 2.6vw, 40px));
     height: 1px;
     background: var(--line-on-dark);
@@ -96,13 +120,20 @@ const steps = [
     background: var(--gold);
   }
 
+  .step__days {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
   .step__no {
     display: block;
-    font-size: 0.6875rem;
+    margin-top: 2px;
+    font-size: 0.625rem;
     font-weight: 700;
     letter-spacing: var(--ls-label);
     color: var(--text-on-dark-mute);
-    font-feature-settings: normal;
   }
 
   .step__title {
@@ -113,11 +144,17 @@ const steps = [
   .step__body {
     margin-top: 10px;
     font-size: var(--fs-body-sm);
-    line-height: 1.8;
     color: var(--text-on-dark-mute);
   }
 
-  /* --- タブレット：2列 --------------------------------------------------- */
+  .process__note {
+    margin-top: clamp(32px, 4vw, 48px);
+    padding-top: 18px;
+    border-top: 1px solid var(--line-on-dark);
+    font-size: 0.75rem;
+    color: var(--text-on-dark-mute);
+  }
+
   @media (max-width: 900px) and (min-width: 641px) {
     .steps {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -129,7 +166,6 @@ const steps = [
     }
   }
 
-  /* --- スマートフォン：縦の流れ ------------------------------------------ */
   @media (max-width: 640px) {
     .steps {
       display: block;
@@ -154,7 +190,6 @@ const steps = [
       margin: 0;
     }
 
-    /* 縦方向につながる線 */
     .step__marker::before {
       top: 16px;
       bottom: -6px;

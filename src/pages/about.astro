@@ -19,7 +19,7 @@ const jsonLd = {
 
 <PageLayout
   title="運営者について｜シクミベース"
-  description="シクミベースは、山野辺雄太が個人で運営する事業ブランドです。Web制作・ディレクションを軸に、SEO、SNS運用、AI活用、業務改善までを扱っています。"
+  description="シクミベースは、山野辺雄太が個人で運営する事業ブランドです。住宅リフォーム会社の反響対応と見積フォローの仕組み化を中心に支援します。"
   kicker="ABOUT"
   heading="運営者について"
   crumbs={[{ label: 'ホーム', href: '/' }, { label: '運営者について' }]}
@@ -84,6 +84,12 @@ const jsonLd = {
     <section class="block">
       <h2 class="block__title">扱っている領域</h2>
       <ul class="services">
+        <li>
+          <a href="/service/reform-lead-os/">
+            <span class="services__name">リフォーム反響OS 30</span>
+            <span class="services__summary">住宅リフォーム会社の問い合わせ対応、案件管理、見積フォロー、KPI計測を30日で本番稼働させます。</span>
+          </a>
+        </li>
         {services.map((service) => (
           <li>
             <a href={`/service/${service.id}/`}>
@@ -101,7 +107,7 @@ const jsonLd = {
         <div><dt>名称</dt><dd>シクミベース</dd></div>
         <div><dt>運営者</dt><dd>{site.operator}</dd></div>
         <div><dt>所在</dt><dd>東京・茨城</dd></div>
-        <div><dt>事業内容</dt><dd>Web制作・改善、SNS運用支援、AI活用・業務改善支援、地域メディア運営</dd></div>
+        <div><dt>事業内容</dt><dd>住宅リフォーム会社の反響対応・見積フォローの仕組み化、Web制作・改善、AI活用・業務改善支援、地域メディア運営</dd></div>
         <div><dt>運営メディア</dt><dd>
           <a href="https://ibatoco.jp/" target="_blank" rel="noopener noreferrer">
             イバトコ（ibatoco.jp）<span aria-hidden="true"> ↗</span>
@@ -112,21 +118,21 @@ const jsonLd = {
       <div class="notice">
         <h3>法人化前の表記について</h3>
         <p>
-          シクミベースは、2026年8月現在、法人ではなく{site.operator}が個人で運営する事業ブランドです。
-          「株式会社」「代表取締役」といった法人格を示す表記は使用していません。
+          シクミベースは、現在、法人ではなく{site.operator}が個人で運営する事業ブランドです。
+          法人格があるように誤認される表記は使用していません。
           法人設立後に、運営主体・会社情報・契約主体などの表記を更新します。
         </p>
       </div>
     </section>
 
     <section class="cta">
-      <h2 class="cta__title">ご相談をお待ちしています</h2>
+      <h2 class="cta__title">見積フォローが止まる場所を特定します</h2>
       <p class="cta__lead">
-        依頼内容が固まっていない段階でも構いません。いまの状況を伺い、
-        何から手を付けるとよいかを一緒に整理します。
+        現在の問い合わせ経路、案件台帳、見積後の連絡状況を確認し、
+        改善優先順位と30日実装案を診断資料として納品します。
       </p>
-      <a class="btn btn--primary" href={ctaHref()} data-cta="about">
-        相談する<span class="btn__arrow" aria-hidden="true">→</span>
+      <a class="btn btn--primary" href={ctaHref('reform-audit')} data-cta="about-diagnosis" data-cta-topic="reform-audit">
+        診断の適合確認を申し込む<span class="btn__arrow" aria-hidden="true">→</span>
       </a>
     </section>
   </div>

@@ -1,51 +1,66 @@
 ---
-import { ctaHref } from '../site.config';
-
-/** ファーストビューでは「4つの領域」だけを簡潔に示す。手順や工程は下のセクションに送る。 */
-const fields = [
-  { ja: 'Web制作', en: 'WEB' },
-  { ja: '集客・発信', en: 'MARKETING' },
-  { ja: 'AI・業務改善', en: 'AI / OPERATIONS' },
-  { ja: '地域事業', en: 'LOCAL' },
+const stages = [
+  { no: '01', label: '新規反響', note: 'Web・LINE' },
+  { no: '02', label: '初回返信', note: '受信確認' },
+  { no: '03', label: '現地調査', note: '事前情報' },
+  { no: '04', label: '見積提出', note: '次回行動日' },
+  { no: '05', label: '追客', note: '3回の型' },
 ];
-
-const ctaLink = ctaHref();
 ---
 
 <section class="hero" id="top">
   <div class="wrap hero__inner">
-    <div class="hero__message">
-      <p class="hero__label">茨城から、中小企業と地域事業のWeb・集客・AIを支える</p>
+    <div class="hero__message reveal">
+      <p class="hero__label">茨城・近隣の外壁塗装／屋根／住宅リフォーム会社向け</p>
 
-      <h1 class="hero__title"><span class="phrase">事業に、</span><em class="phrase">仕組みを。</em></h1>
+      <h1 class="hero__title">
+        <span class="phrase">反響対応を、</span><br />
+        <em class="phrase">誰かの記憶に任せない。</em>
+      </h1>
 
       <p class="hero__lead">
-        ホームページ、集客、日々の業務。<br />
-        ばらばらの取り組みをつなぎ、担当者が代わっても成果が積み上がる形に整えます。
+        Web・LINEから届いた新規問い合わせへの受信確認、現調前の情報回収、
+        案件台帳、見積後3回のフォローまで。30日で動く、ひと続きの営業フローに整えます。
       </p>
 
       <div class="hero__actions">
-        <a class="btn btn--primary" href={ctaLink} data-cta="hero">
-          相談する<span class="btn__arrow" aria-hidden="true">→</span>
+        <a class="btn btn--primary" href="/diagnosis/reform-lead/" data-cta="hero-diagnosis">
+          反響漏れ診断を見る<span class="btn__arrow" aria-hidden="true">→</span>
         </a>
-        <a class="btn btn--ghost" href="/service/">できることを見る</a>
+        <a class="btn btn--ghost" href="/service/reform-lead-os/" data-cta="hero-product">
+          30日実装の内容を見る
+        </a>
       </div>
-    </div>
 
-    <div class="hero__fields">
-      <p class="hero__fields-title">支援する4つの領域</p>
-      <ul class="field-list">
-        {fields.map((field) => (
-          <li class="field">
-            <span class="field__ja">{field.ja}</span>
-            <span class="field__en">{field.en}</span>
-          </li>
-        ))}
+      <ul class="hero__facts" aria-label="サービスの要点">
+        <li><strong>30日</strong><span>本番稼働まで</span></li>
+        <li><strong>1本</strong><span>対象営業フロー</span></li>
+        <li><strong>人が承認</strong><span>見積・契約判断</span></li>
       </ul>
-      <p class="hero__fields-note">
-        必要な領域だけを小さく試し、効果が見えたものを続く形にします。
+
+      <p class="hero__note">
+        売上・受注数・SEO順位を保証するサービスではありません。合意した運用が動く状態を検収します。
       </p>
     </div>
+
+    <aside class="hero__flow reveal" data-delay="1" aria-label="反響対応の流れ">
+      <div class="hero__flow-head">
+        <p class="hero__flow-kicker">REFORM LEAD OS 30</p>
+        <h2>反響から追客までを、<br />1本の流れへ。</h2>
+      </div>
+
+      <ol class="flow-list">
+        {stages.map((stage) => (
+          <li class="flow-item">
+            <span class="flow-item__no">{stage.no}</span>
+            <span class="flow-item__label">{stage.label}</span>
+            <span class="flow-item__note">{stage.note}</span>
+          </li>
+        ))}
+      </ol>
+
+      <p class="hero__flow-foot">未対応と次回行動日を、一覧で確認</p>
+    </aside>
   </div>
 </section>
 
@@ -57,12 +72,11 @@ const ctaLink = ctaHref();
     overflow: hidden;
   }
 
-  /* 淡いブルーの色面を右側に置いて「抜け」と非対称をつくる */
   .hero::before {
     content: '';
     position: absolute;
     inset-block: 0;
-    inset-inline-start: 58%;
+    inset-inline-start: 63%;
     inset-inline-end: -20vw;
     background: var(--sky-soft);
     pointer-events: none;
@@ -72,10 +86,10 @@ const ctaLink = ctaHref();
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
-    gap: clamp(40px, 5vw, 88px);
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    gap: clamp(42px, 5vw, 84px);
     align-items: center;
-    padding-block: clamp(56px, 8vw, 116px);
+    padding-block: clamp(56px, 7.5vw, 108px);
   }
 
   .hero__label {
@@ -85,7 +99,7 @@ const ctaLink = ctaHref();
     font-size: var(--fs-body-sm);
     font-weight: 700;
     color: var(--blue-ink);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
   }
 
   .hero__label::before {
@@ -97,11 +111,9 @@ const ctaLink = ctaHref();
   }
 
   .hero__title {
-    margin: clamp(20px, 2.6vw, 32px) 0 0;
-    font-size: var(--fs-hero);
-    font-weight: 700;
-    line-height: 1.24;
-    letter-spacing: 0.01em;
+    margin-top: clamp(20px, 2.6vw, 32px);
+    font-size: clamp(2.5rem, 1.55rem + 4vw, 5rem);
+    line-height: 1.2;
     color: var(--navy);
   }
 
@@ -111,7 +123,7 @@ const ctaLink = ctaHref();
   }
 
   .hero__lead {
-    max-width: 34em;
+    max-width: 38em;
     margin-top: clamp(20px, 2.4vw, 28px);
     font-size: var(--fs-lead);
     color: var(--text-mute);
@@ -121,91 +133,152 @@ const ctaLink = ctaHref();
     display: flex;
     flex-wrap: wrap;
     gap: 14px;
-    margin-top: clamp(28px, 3.2vw, 40px);
+    margin-top: clamp(28px, 3.2vw, 38px);
   }
 
-  /* --- 右側：4領域のインデックス ---------------------------------------- */
-
-  .hero__fields {
-    border-top: 3px solid var(--gold);
-    padding-top: 22px;
-  }
-
-  .hero__fields-title {
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: var(--ls-label);
-    color: var(--blue-ink);
-  }
-
-  .field-list {
-    margin-top: 14px;
+  .hero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 0;
+    margin-top: 32px;
+    padding-top: 20px;
     border-top: 1px solid var(--line);
   }
 
-  .field {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 15px 0;
-    border-bottom: 1px solid var(--line);
+  .hero__facts li {
+    display: grid;
+    gap: 1px;
+    min-width: 130px;
+    padding-inline: 18px;
+    border-inline-end: 1px solid var(--line);
   }
 
-  .field__ja {
-    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-    font-weight: 700;
+  .hero__facts li:first-child {
+    padding-inline-start: 0;
+  }
+
+  .hero__facts li:last-child {
+    border-inline-end: 0;
+  }
+
+  .hero__facts strong {
+    font-size: 0.9375rem;
     color: var(--navy);
   }
 
-  .field__en {
+  .hero__facts span,
+  .hero__note {
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: var(--text-mute);
+  }
+
+  .hero__note {
+    max-width: 50em;
+    margin-top: 16px;
+  }
+
+  .hero__flow {
+    padding: clamp(24px, 3vw, 34px);
+    border-top: 4px solid var(--gold);
+    background: var(--navy);
+    color: var(--text-on-dark);
+    box-shadow: 0 24px 48px -32px rgba(10, 35, 80, 0.75);
+  }
+
+  .hero__flow-kicker {
     font-size: 0.625rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
-    color: var(--text-mute);
-    font-feature-settings: normal;
+    letter-spacing: 0.16em;
+    color: var(--text-on-dark-mute);
+  }
+
+  .hero__flow h2 {
+    margin-top: 10px;
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+  }
+
+  .flow-list {
+    margin-top: 24px;
+    border-top: 1px solid var(--line-on-dark);
+  }
+
+  .flow-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 30px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line-on-dark);
+  }
+
+  .flow-item__no {
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    color: var(--text-on-dark-mute);
+  }
+
+  .flow-item__label {
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  .flow-item__note {
+    font-size: 0.6875rem;
+    color: var(--text-on-dark-mute);
     white-space: nowrap;
   }
 
-  .hero__fields-note {
+  .hero__flow-foot {
     margin-top: 18px;
-    font-size: var(--fs-body-sm);
-    line-height: 1.8;
-    color: var(--text-mute);
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.09);
+    border-left: 2px solid var(--gold);
+    font-size: 0.75rem;
+    color: var(--text-on-dark-mute);
   }
 
-  /* --- レスポンシブ ------------------------------------------------------ */
-
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     .hero::before {
       inset-inline-start: 0;
       inset-inline-end: 0;
       inset-block-start: auto;
-      block-size: 46%;
+      block-size: 38%;
     }
 
     .hero__inner {
       grid-template-columns: 1fr;
-      gap: 40px;
       align-items: start;
     }
 
-    .hero__lead {
-      max-width: none;
-    }
-
-    .hero__actions .btn {
-      flex: 1 1 200px;
+    .hero__flow {
+      width: min(100%, 680px);
     }
   }
 
-  @media (max-width: 420px) {
-    .hero__title {
-      line-height: 1.3;
+  @media (max-width: 560px) {
+    .hero__actions .btn {
+      width: 100%;
     }
 
-    .hero__actions .btn {
-      flex-basis: 100%;
+    .hero__facts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero__facts li,
+    .hero__facts li:first-child {
+      padding-inline: 0 12px;
+    }
+
+    .hero__facts li:nth-child(2) {
+      border-inline-end: 0;
+      padding-inline-start: 12px;
+    }
+
+    .hero__facts li:last-child {
+      grid-column: 1 / -1;
     }
   }
 </style>

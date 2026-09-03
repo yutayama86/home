@@ -1,10 +1,12 @@
 # シクミベース
 
-中小企業・地域企業のWeb・集客・業務を、継続的に成果が積み上がる仕組みに整える事業ブランド「シクミベース」の公式サイトです。
+茨城・近隣の住宅リフォーム会社向けに、問い合わせ対応、案件管理、見積フォローを仕組み化する事業ブランド「シクミベース」の公式サイトです。
+
+主力商品は `リフォーム反響OS 30`。導入前商品は税別55,000円の `見積フォロー漏れ診断` です。
 
 ## 現在の位置づけ
 
-2026年8月現在、シクミベースは法人ではなく、山野辺雄太が個人で運営する事業ブランドです。
+現在、シクミベースは法人ではなく、山野辺雄太が個人で運営する事業ブランドです。
 法人設立後は、運営主体・会社情報・契約主体などの表記を更新します。
 
 ## Tech
@@ -33,6 +35,8 @@ src/
   content.config.ts       記事のスキーマ。満たさない記事はビルドが通らない
   data/taxonomy.ts        カテゴリとサービスの定義（ナビ・CTA・構造化データの元）
   pages/                  ルーティング
+    service/reform-lead-os.astro   主力商品ページ
+    diagnosis/reform-lead.astro    導入前診断ページ
   layouts/                BaseLayout / PageLayout / ArticleLayout
   components/             共通UI
   styles/global.css       デザイントークンと記事本文のスタイル
@@ -70,17 +74,16 @@ npm run verify   # 型チェック → ビルド → 品質チェック
 
 `.github/workflows/daily-content.yml` が毎朝7時（JST）に実行されます。
 
-1. Search Console からデータを取得
-2. 改善対象を判定（CTR低下 / 11〜30位 / 流入あり / 露出なし）
-3. `docs/seo-log/` に判断と根拠を記録
-4. 型チェック・ビルド・品質チェック
-5. Pull Request を作成
+1. Search Console と GA4 からデータを取得
+2. 改善対象を判定（CTR低下 / 11〜30位 / 流入あり / CTA・フォーム離脱 / 露出なし）
+3. 判定結果に合う商談直結キーワードを90日分の候補から選定
+4. `docs/seo-log/` に判断と根拠を記録
+5. 型チェック・ビルド・品質チェック
+6. Pull Request を作成
 
-**マージするまで公開されません。** 品質の最終判断は人が行う設計です。
+**マージするまで公開されません。** 記事はGitHub Modelsで生成し、`draft: false` の公開候補としてPRに載り、型・ビルド・品質検査を通過します。内容と根拠を人が確認し、PRをマージするとCloudflare Pagesへ自動公開されます。AI原稿を無確認で公開する設定にはしていません。
 
-手動実行時にキーワードを指定すると、記事の下書きも生成します。
-生成物は必ず `draft: true` で出力されるため、内容を確認して
-`draft: false` に変えるまで公開されません。
+導線に詰まりがある場合（判定ルールC）は新規記事を増やさず、既存ページの改善を優先します。設定済みのGA4またはSearch Consoleからデータを取得できない場合も、誤った判断を避けるため記事生成を停止し、エラーをレポートしてワークフローを失敗として表示します。
 
 色・余白・文字サイズ・罫線は `src/styles/global.css` の CSS 変数で一元管理しています。
 個別の値を直接書かず、変数を更新してください。
@@ -88,12 +91,13 @@ npm run verify   # 型チェック → ビルド → 品質チェック
 ## 問い合わせ導線
 
 サイト内の `/contact/` にフォームを持ち、送信は `functions/api/contact.ts` が受けます。
-フォーム開始（`form_start`）と送信完了（`generate_lead`）をGA4で計測できます。
+フォーム開始（`contact_form_start`）と送信完了（`generate_lead`）をGA4で計測できます。見積フォロー漏れ診断では、`diagnosis_form_start` と `diagnosis_application` も計測します。
 
 CTAは設置場所ごとに `data-cta` を持ち、クリックが `cta_click` として記録されます。
 どの導線が問い合わせにつながったかを、GA4で追えます。
 
 相談内容は `?topic=` で引き継がれ、フォームの選択肢に初期反映されます。
+`reform-audit` / `reform-os` の場合だけ、事業区分、月間反響数、平均工事単価、過去90日の営業数字、責任者参加などの適合確認項目を表示します。個人情報はGA4へ送信しません。
 
 ## Deployment
 
@@ -162,15 +166,19 @@ export const analytics = {
 > GA4はCookieを使うため、プライバシーポリシーでの説明が必要です。
 > Cloudflare Web Analytics だけの構成に戻す場合は `ga4MeasurementId` を `null` にします。
 
-## 自動化に必要なシークレット
+## 自動化のGoogle認証
 
-GitHub リポジトリの Settings → Secrets and variables → Actions に設定します。
+Search ConsoleとGA4は、GitHub ActionsのWorkload Identity Federationで認証します。実行時だけ有効な短時間トークンを使うため、GitHubにサービスアカウントのJSON鍵を保存しません。
 
-| シークレット | 用途 | 未設定のときの挙動 |
-| --- | --- | --- |
-| `GSC_SERVICE_ACCOUNT_JSON` | Search Console API のサービスアカウント鍵 | サイト内の状態だけで改善対象を判定 |
-| `GSC_SITE_URL` | 対象プロパティ（`sc-domain:shikumi-base.com`） | 同上 |
-| `ANTHROPIC_API_KEY` | 記事の下書き生成 | 生成をスキップ（レポートとログは出る） |
+対象はワークフロー内で固定しています。
+
+- Search Console: `sc-domain:shikumi-base.com`
+- GA4プロパティID: `516899437`
+- Google Cloudサービスアカウント: `shikumi-base-automation@ibatoco-seo.iam.gserviceaccount.com`
+
+サービスアカウントには、Search Consoleの対象プロパティとGA4プロパティの閲覧権限が必要です。取得に失敗した日はワークフローを失敗として通知し、データなしの判断で記事を量産しません。
+
+記事生成はGitHub Actionsの短時間トークンとGitHub Modelsを使うため、外部AIのAPIキーは不要です。ワークフローには `models: read` を付与し、記事の書き込みとPR作成は対象リポジトリ内に限定します。
 
 Cloudflare Pages 側（Settings → Environment variables）には、
 問い合わせフォームのために次が必要です。
@@ -180,8 +188,9 @@ Cloudflare Pages 側（Settings → Environment variables）には、
 | `RESEND_API_KEY` | メール送信 |
 | `CONTACT_TO` | 通知の宛先 |
 | `CONTACT_FROM` | 送信元（Resendで認証済みドメイン） |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstileによる迷惑送信防止 |
 
-未設定の場合、フォームは503を返し、ページ上のメールアドレスが代替手段になります。
+`RESEND_API_KEY` または `TURNSTILE_SECRET_KEY` が未設定の場合、フォームは503を返し、ページ上のメールアドレスが代替手段になります。Turnstileのサイトキーは公開情報のため、フォーム側に直接設定しています。
 
 ## Search Console
 

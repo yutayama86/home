@@ -1,16 +1,16 @@
 ---
-const principles = [
+const gaps = [
   {
-    title: '決める',
-    body: 'WebサイトやSNS、AIの導入自体は目的にしません。売上、時間、品質のどこを変えるのかを先に決めます。',
+    title: '返信が遅れる',
+    body: 'メールやLINEの確認が後回しになり、誰が返したかも追えない。',
   },
   {
-    title: 'つなぐ',
-    body: '発信、集客、更新、社内業務。別々に動きがちな仕事を、ひと続きの流れとしてつなぎます。',
+    title: '情報が揃わない',
+    body: '写真、施工場所、希望時期を現調直前に聞き直している。',
   },
   {
-    title: '積み上げる',
-    body: '人の努力だけに依存させません。手順とデータを残し、続けるほど成果が積み上がる状態をつくります。',
+    title: '見積後が止まる',
+    body: '次に連絡する日が決まらず、案件が担当者の記憶から抜ける。',
   },
 ];
 ---
@@ -18,26 +18,30 @@ const principles = [
 <section class="about section" id="about">
   <div class="wrap">
     <div class="about__head reveal">
-      <p class="kicker">私たちについて<span class="kicker__en">ABOUT</span></p>
+      <p class="kicker">先に直すこと<span class="kicker__en">FIRST PRIORITY</span></p>
       <h2 class="about__statement">
-        導入することではなく、<br />
-        <strong>続くようにすること</strong>が仕事です。
+        <span class="phrase">反響を増やす前に、</span><br />
+        <strong class="phrase">いま届いている反響を逃さない。</strong>
       </h2>
       <p class="about__lead measure">
-        発信も集客も更新も、人に依存していると、事業が伸びるほど忙しくなります。
-        シクミベースは点在する仕事を整理し、無理なく続けられる形に変えていきます。
+        問い合わせがメール、LINE、電話、紙、Excelに分かれると、初回返信や見積後の連絡は
+        担当者の記憶に頼り始めます。まず、届いた反響を確認し、追い、改善できる土台をつくります。
       </p>
     </div>
 
-    <ol class="principles">
-      {principles.map((item, index) => (
-        <li class="principle reveal" data-delay={String(index)}>
-          <span class="principle__no" aria-hidden="true">0{index + 1}</span>
-          <h3 class="principle__title">{item.title}</h3>
-          <p class="principle__body">{item.body}</p>
+    <ol class="gaps">
+      {gaps.map((item, index) => (
+        <li class="gap reveal" data-delay={String(index)}>
+          <span class="gap__no" aria-hidden="true">0{index + 1}</span>
+          <h3 class="gap__title">{item.title}</h3>
+          <p class="gap__body">{item.body}</p>
         </li>
       ))}
     </ol>
+
+    <p class="about__bridge reveal">
+      リフォーム反響OS 30は、この3つの分断を、ひとつの営業フローとしてつなぎます。
+    </p>
   </div>
 </section>
 
@@ -54,7 +58,7 @@ const principles = [
   }
 
   .about__head {
-    max-width: 46em;
+    max-width: 50em;
   }
 
   .about__statement {
@@ -62,8 +66,6 @@ const principles = [
     color: var(--navy);
   }
 
-  /* 文字の下に淡いブルーの帯を敷いて強調する。
-     背景グラデーションなので、折り返しても各行に正しく帯がつく。 */
   .about__statement strong {
     font-weight: 700;
     background-image: linear-gradient(transparent 66%, var(--sky) 66%);
@@ -75,65 +77,71 @@ const principles = [
     color: var(--text-mute);
   }
 
-  .principles {
+  .gaps {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0;
     margin-top: clamp(44px, 5vw, 72px);
     border-top: 1px solid var(--line);
   }
 
-  .principle {
+  .gap {
     padding: clamp(28px, 3vw, 40px) clamp(20px, 2.4vw, 34px);
     border-inline-end: 1px solid var(--line);
   }
 
-  .principle:first-child {
+  .gap:first-child {
     padding-inline-start: 0;
   }
 
-  .principle:last-child {
+  .gap:last-child {
     border-inline-end: 0;
     padding-inline-end: 0;
   }
 
-  .principle__no {
+  .gap__no {
     display: block;
     font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: var(--ls-label);
     color: var(--blue);
-    font-feature-settings: normal;
   }
 
-  .principle__title {
+  .gap__title {
     margin-top: 14px;
     font-size: var(--fs-h3);
     color: var(--navy);
   }
 
-  .principle__body {
+  .gap__body {
     margin-top: 12px;
     font-size: var(--fs-body-sm);
     color: var(--text-mute);
   }
 
+  .about__bridge {
+    margin-top: 4px;
+    padding: 18px 22px;
+    border-left: 3px solid var(--gold);
+    background: var(--sky-soft);
+    font-weight: 700;
+    color: var(--navy);
+  }
+
   @media (max-width: 860px) {
-    .principles {
+    .gaps {
       grid-template-columns: 1fr;
     }
 
-    .principle,
-    .principle:first-child,
-    .principle:last-child {
+    .gap,
+    .gap:first-child,
+    .gap:last-child {
       padding: 26px 0;
       border-inline-end: 0;
       border-bottom: 1px solid var(--line);
     }
 
-    .principle:last-child {
+    .gap:last-child {
       border-bottom: 0;
-      padding-bottom: 0;
     }
   }
 </style>
