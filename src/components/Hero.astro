@@ -1,52 +1,52 @@
 ---
 const stages = [
-  { no: '01', label: '新規反響', note: 'Web・LINE' },
-  { no: '02', label: '初回返信', note: '受信確認' },
-  { no: '03', label: '現地調査', note: '事前情報' },
-  { no: '04', label: '見積提出', note: '次回行動日' },
-  { no: '05', label: '追客', note: '3回の型' },
+  { no: '01', label: '整理', note: '課題・業務' },
+  { no: '02', label: '設計', note: '導線・役割' },
+  { no: '03', label: '実装', note: 'Web・AI等' },
+  { no: '04', label: '計測', note: '数字・行動' },
+  { no: '05', label: '標準化', note: '再現・改善' },
 ];
 ---
 
 <section class="hero" id="top">
   <div class="wrap hero__inner">
     <div class="hero__message reveal">
-      <p class="hero__label">茨城・近隣の外壁塗装／屋根／住宅リフォーム会社向け</p>
+      <p class="hero__label">中小企業・地域企業の仕組み化支援</p>
 
       <h1 class="hero__title">
-        <span class="phrase">反響対応を、</span><br />
-        <em class="phrase">誰かの記憶に任せない。</em>
+        <span class="phrase">仕組みで、</span><br />
+        <em class="phrase">事業を強くする。</em>
       </h1>
 
       <p class="hero__lead">
-        Web・LINEから届いた新規問い合わせへの受信確認、現調前の情報回収、
-        案件台帳、見積後3回のフォローまで。30日で動く、ひと続きの営業フローに整えます。
+        集客、営業、情報発信、日々の業務。誰かの経験や頑張りに依存している仕事を整理し、
+        継続的に回り、改善でき、積み上がる仕組みに変えます。Web・SNS・AIは、そのための手段です。
       </p>
 
       <div class="hero__actions">
-        <a class="btn btn--primary" href="/diagnosis/reform-lead/" data-cta="hero-diagnosis">
-          反響漏れ診断を見る<span class="btn__arrow" aria-hidden="true">→</span>
+        <a class="btn btn--primary" href="/contact/?topic=system" data-cta="hero-consult">
+          仕組み化について相談する<span class="btn__arrow" aria-hidden="true">→</span>
         </a>
-        <a class="btn btn--ghost" href="/service/reform-lead-os/" data-cta="hero-product">
-          30日実装の内容を見る
+        <a class="btn btn--ghost" href="/about/" data-cta="hero-about">
+          シクミベースについて
         </a>
       </div>
 
-      <ul class="hero__facts" aria-label="サービスの要点">
-        <li><strong>30日</strong><span>本番稼働まで</span></li>
-        <li><strong>1本</strong><span>対象営業フロー</span></li>
-        <li><strong>人が承認</strong><span>見積・契約判断</span></li>
+      <ul class="hero__facts" aria-label="支援の考え方">
+        <li><strong>集客</strong><span>反響が積み上がる</span></li>
+        <li><strong>業務</strong><span>属人化を減らす</span></li>
+        <li><strong>改善</strong><span>数字で回し続ける</span></li>
       </ul>
 
       <p class="hero__note">
-        売上・受注数・SEO順位を保証するサービスではありません。合意した運用が動く状態を検収します。
+        ツール導入そのものを目的にせず、何を仕組み化すべきかを整理してから必要な手段だけを実装します。
       </p>
     </div>
 
-    <aside class="hero__flow reveal" data-delay="1" aria-label="反響対応の流れ">
+    <aside class="hero__flow reveal" data-delay="1" aria-label="仕組み化の流れ">
       <div class="hero__flow-head">
-        <p class="hero__flow-kicker">REFORM LEAD OS 30</p>
-        <h2>反響から追客までを、<br />1本の流れへ。</h2>
+        <p class="hero__flow-kicker">SHIKUMI BASE METHOD</p>
+        <h2>頑張り方ではなく、<br />回り方を設計する。</h2>
       </div>
 
       <ol class="flow-list">
@@ -59,226 +59,37 @@ const stages = [
         ))}
       </ol>
 
-      <p class="hero__flow-foot">未対応と次回行動日を、一覧で確認</p>
+      <p class="hero__flow-foot">成果が出た方法を、再現できる形で残す。</p>
     </aside>
   </div>
 </section>
 
 <style>
-  .hero {
-    position: relative;
-    background: var(--paper);
-    border-bottom: 1px solid var(--line);
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset-block: 0;
-    inset-inline-start: 63%;
-    inset-inline-end: -20vw;
-    background: var(--sky-soft);
-    pointer-events: none;
-  }
-
-  .hero__inner {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
-    gap: clamp(42px, 5vw, 84px);
-    align-items: center;
-    padding-block: clamp(56px, 7.5vw, 108px);
-  }
-
-  .hero__label {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    font-size: var(--fs-body-sm);
-    font-weight: 700;
-    color: var(--blue-ink);
-    letter-spacing: 0.04em;
-  }
-
-  .hero__label::before {
-    content: '';
-    inline-size: 32px;
-    block-size: 3px;
-    background: var(--gold);
-    flex: none;
-  }
-
-  .hero__title {
-    margin-top: clamp(20px, 2.6vw, 32px);
-    font-size: clamp(2.5rem, 1.55rem + 4vw, 5rem);
-    line-height: 1.2;
-    color: var(--navy);
-  }
-
-  .hero__title em {
-    font-style: normal;
-    color: var(--blue);
-  }
-
-  .hero__lead {
-    max-width: 38em;
-    margin-top: clamp(20px, 2.4vw, 28px);
-    font-size: var(--fs-lead);
-    color: var(--text-mute);
-  }
-
-  .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-top: clamp(28px, 3.2vw, 38px);
-  }
-
-  .hero__facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px 0;
-    margin-top: 32px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-  }
-
-  .hero__facts li {
-    display: grid;
-    gap: 1px;
-    min-width: 130px;
-    padding-inline: 18px;
-    border-inline-end: 1px solid var(--line);
-  }
-
-  .hero__facts li:first-child {
-    padding-inline-start: 0;
-  }
-
-  .hero__facts li:last-child {
-    border-inline-end: 0;
-  }
-
-  .hero__facts strong {
-    font-size: 0.9375rem;
-    color: var(--navy);
-  }
-
-  .hero__facts span,
-  .hero__note {
-    font-size: 0.75rem;
-    line-height: 1.7;
-    color: var(--text-mute);
-  }
-
-  .hero__note {
-    max-width: 50em;
-    margin-top: 16px;
-  }
-
-  .hero__flow {
-    padding: clamp(24px, 3vw, 34px);
-    border-top: 4px solid var(--gold);
-    background: var(--navy);
-    color: var(--text-on-dark);
-    box-shadow: 0 24px 48px -32px rgba(10, 35, 80, 0.75);
-  }
-
-  .hero__flow-kicker {
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    color: var(--text-on-dark-mute);
-  }
-
-  .hero__flow h2 {
-    margin-top: 10px;
-    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
-  }
-
-  .flow-list {
-    margin-top: 24px;
-    border-top: 1px solid var(--line-on-dark);
-  }
-
-  .flow-item {
-    position: relative;
-    display: grid;
-    grid-template-columns: 30px 1fr auto;
-    gap: 12px;
-    align-items: center;
-    padding: 13px 0;
-    border-bottom: 1px solid var(--line-on-dark);
-  }
-
-  .flow-item__no {
-    font-size: 0.625rem;
-    letter-spacing: 0.08em;
-    color: var(--text-on-dark-mute);
-  }
-
-  .flow-item__label {
-    font-size: 0.9375rem;
-    font-weight: 700;
-  }
-
-  .flow-item__note {
-    font-size: 0.6875rem;
-    color: var(--text-on-dark-mute);
-    white-space: nowrap;
-  }
-
-  .hero__flow-foot {
-    margin-top: 18px;
-    padding: 12px 14px;
-    background: rgba(255, 255, 255, 0.09);
-    border-left: 2px solid var(--gold);
-    font-size: 0.75rem;
-    color: var(--text-on-dark-mute);
-  }
-
-  @media (max-width: 960px) {
-    .hero::before {
-      inset-inline-start: 0;
-      inset-inline-end: 0;
-      inset-block-start: auto;
-      block-size: 38%;
-    }
-
-    .hero__inner {
-      grid-template-columns: 1fr;
-      align-items: start;
-    }
-
-    .hero__flow {
-      width: min(100%, 680px);
-    }
-  }
-
-  @media (max-width: 560px) {
-    .hero__actions .btn {
-      width: 100%;
-    }
-
-    .hero__facts {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .hero__facts li,
-    .hero__facts li:first-child {
-      padding-inline: 0 12px;
-    }
-
-    .hero__facts li:nth-child(2) {
-      border-inline-end: 0;
-      padding-inline-start: 12px;
-    }
-
-    .hero__facts li:last-child {
-      grid-column: 1 / -1;
-    }
-  }
+  .hero { position: relative; background: var(--paper); border-bottom: 1px solid var(--line); overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset-block: 0; inset-inline-start: 63%; inset-inline-end: -20vw; background: var(--sky-soft); pointer-events: none; }
+  .hero__inner { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr); gap: clamp(42px, 5vw, 84px); align-items: center; padding-block: clamp(56px, 7.5vw, 108px); }
+  .hero__label { display: inline-flex; align-items: center; gap: 12px; font-size: var(--fs-body-sm); font-weight: 700; color: var(--blue-ink); letter-spacing: 0.04em; }
+  .hero__label::before { content: ''; inline-size: 32px; block-size: 3px; background: var(--gold); flex: none; }
+  .hero__title { margin-top: clamp(20px, 2.6vw, 32px); font-size: clamp(2.5rem, 1.55rem + 4vw, 5rem); line-height: 1.2; color: var(--navy); }
+  .hero__title em { font-style: normal; color: var(--blue); }
+  .hero__lead { max-width: 38em; margin-top: clamp(20px, 2.4vw, 28px); font-size: var(--fs-lead); color: var(--text-mute); }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: clamp(28px, 3.2vw, 38px); }
+  .hero__facts { display: flex; flex-wrap: wrap; gap: 14px 0; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .hero__facts li { display: grid; gap: 1px; min-width: 130px; padding-inline: 18px; border-inline-end: 1px solid var(--line); }
+  .hero__facts li:first-child { padding-inline-start: 0; }
+  .hero__facts li:last-child { border-inline-end: 0; }
+  .hero__facts strong { font-size: 0.9375rem; color: var(--navy); }
+  .hero__facts span, .hero__note { font-size: 0.75rem; line-height: 1.7; color: var(--text-mute); }
+  .hero__note { max-width: 50em; margin-top: 16px; }
+  .hero__flow { padding: clamp(24px, 3vw, 34px); border-top: 4px solid var(--gold); background: var(--navy); color: var(--text-on-dark); box-shadow: 0 24px 48px -32px rgba(10, 35, 80, 0.75); }
+  .hero__flow-kicker { font-size: 0.625rem; font-weight: 700; letter-spacing: 0.16em; color: var(--text-on-dark-mute); }
+  .hero__flow h2 { margin-top: 10px; font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem); }
+  .flow-list { margin-top: 24px; border-top: 1px solid var(--line-on-dark); }
+  .flow-item { position: relative; display: grid; grid-template-columns: 30px 1fr auto; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--line-on-dark); }
+  .flow-item__no { font-size: 0.625rem; letter-spacing: 0.08em; color: var(--text-on-dark-mute); }
+  .flow-item__label { font-size: 0.9375rem; font-weight: 700; }
+  .flow-item__note { font-size: 0.6875rem; color: var(--text-on-dark-mute); white-space: nowrap; }
+  .hero__flow-foot { margin-top: 18px; padding: 12px 14px; background: rgba(255, 255, 255, 0.09); border-left: 2px solid var(--gold); font-size: 0.75rem; color: var(--text-on-dark-mute); }
+  @media (max-width: 960px) { .hero::before { inset-inline-start: 0; inset-inline-end: 0; inset-block-start: auto; block-size: 38%; } .hero__inner { grid-template-columns: 1fr; align-items: start; } .hero__flow { width: min(100%, 680px); } }
+  @media (max-width: 560px) { .hero__actions .btn { width: 100%; } .hero__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .hero__facts li, .hero__facts li:first-child { padding-inline: 0 12px; } .hero__facts li:nth-child(2) { border-inline-end: 0; padding-inline-start: 12px; } .hero__facts li:last-child { grid-column: 1 / -1; } }
 </style>
