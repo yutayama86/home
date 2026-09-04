@@ -5,39 +5,31 @@ import { site } from '../site.config';
 <section class="operator section" id="profile">
   <div class="wrap operator__inner reveal">
     <figure class="operator__visual">
-      <img
-        src="/operator-illustration-fresh.jpg"
-        alt="Web・マーケティング・地域事業に取り組むシクミベース運営者のイラスト"
-        width="1024"
-        height="1536"
-        loading="lazy"
-        decoding="async"
-      />
+      <img src="/operator-illustration-fresh.jpg" alt="シクミベース運営者のイラスト" width="1024" height="1536" loading="lazy" decoding="async" />
     </figure>
 
     <div class="operator__body">
       <p class="kicker">運営者<span class="kicker__en">OPERATOR</span></p>
-
       <h2 class="operator__name">{site.operator}</h2>
       <p class="operator__role">Web Director / シクミベース</p>
 
       <div class="operator__text">
         <p>
-          Web制作・ディレクションを中心に、要件定義、SEO、SNS運用、チームの業務改善まで幅広く経験してきました。
+          Web制作・ディレクションを中心に、要件整理、SEO、SNS運用、進行管理、チームの業務改善まで経験してきました。
           現在は企業のWeb・マーケティング支援と並行して、茨城県特化の地域メディア「イバトコ」を運営しています。
         </p>
         <p>
-          これまで培ってきた知識や経験と、AI・データ・テクノロジーを掛け合わせ、Webやマーケティング、業務改善の仕組み化を支援。
-          地域や中小企業が、個人の経験や労働量だけに頼らず、継続的に成果を生み出せる仕組みづくりを目指しています。
+          シクミベースでは、WebやAIを売ることよりも、集客・営業・発信・業務の流れを整理し、
+          個人の経験や労働量に依存しない形へ変えることを重視しています。成果が出た方法を標準化し、次に引き継げる事業基盤として残します。
         </p>
       </div>
 
-      <p class="operator__more"><a href="/about/">運営者について詳しく見る →</a></p>
+      <p class="operator__more"><a href="/about/">シクミベースについて詳しく見る →</a></p>
 
       <aside class="operator__note">
         <h3>法人化前の表記について</h3>
         <p>
-          シクミベースは、現在、法人ではなく個人で運営する事業ブランドです。
+          シクミベースは現在、法人ではなく個人で運営する事業ブランドです。
           法人設立後に、運営主体・会社情報・契約主体などの表記を更新します。
         </p>
       </aside>
@@ -46,105 +38,18 @@ import { site } from '../site.config';
 </section>
 
 <style>
-  .operator {
-    background: var(--sky-soft);
-  }
-
-  .kicker__en {
-    margin-left: 8px;
-    color: var(--text-mute);
-    font-weight: 700;
-    opacity: 0.85;
-  }
-
-  .operator__inner {
-    display: grid;
-    grid-template-columns: minmax(240px, 0.72fr) minmax(0, 1.28fr);
-    gap: clamp(32px, 4.5vw, 72px);
-    align-items: start;
-  }
-
-  .operator__visual {
-    margin: 0;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--paper);
-  }
-
-  /* 縦長の原画（1024×1536）をトリミングして、高さが伸びすぎないようにする */
-  .operator__visual img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: 50% 30%;
-  }
-
-  .operator__name {
-    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
-    color: var(--navy);
-    letter-spacing: 0.04em;
-  }
-
-  .operator__role {
-    margin-top: 6px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--text-mute);
-    font-feature-settings: normal;
-  }
-
-  .operator__text {
-    display: grid;
-    gap: 1.1em;
-    margin-top: clamp(20px, 2.4vw, 30px);
-    max-width: 40em;
-  }
-
-  .operator__more {
-    margin-top: 20px;
-    font-size: var(--fs-body-sm);
-    font-weight: 700;
-  }
-
-  .operator__more a {
-    color: var(--blue-ink);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  .operator__note {
-    margin-top: clamp(26px, 3vw, 38px);
-    padding: clamp(18px, 2vw, 24px);
-    border-left: 3px solid var(--gold);
-    background: var(--paper);
-    border-radius: 0 var(--radius) var(--radius) 0;
-  }
-
-  .operator__note h3 {
-    font-size: 0.8125rem;
-    letter-spacing: 0.04em;
-    color: var(--navy);
-  }
-
-  .operator__note p {
-    margin-top: 8px;
-    font-size: var(--fs-body-sm);
-    line-height: 1.8;
-    color: var(--text-mute);
-  }
-
-  @media (max-width: 860px) {
-    .operator__inner {
-      grid-template-columns: 1fr;
-      gap: 28px;
-    }
-
-    /* スマートフォンでは横長にトリミングして、縦に長くなりすぎないようにする */
-    .operator__visual img {
-      aspect-ratio: 3 / 2;
-    }
-  }
+  .operator { background: var(--sky-soft); }
+  .kicker__en { margin-left: 8px; color: var(--text-mute); font-weight: 700; opacity: .85; }
+  .operator__inner { display: grid; grid-template-columns: minmax(240px,.72fr) minmax(0,1.28fr); gap: clamp(32px,4.5vw,72px); align-items: start; }
+  .operator__visual { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--paper); }
+  .operator__visual img { width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; object-position: 50% 30%; }
+  .operator__name { font-size: clamp(1.5rem,1.2rem + 1.2vw,2.125rem); color: var(--navy); letter-spacing: .04em; }
+  .operator__role { margin-top: 6px; font-size: .75rem; font-weight: 700; letter-spacing: .1em; color: var(--text-mute); }
+  .operator__text { display: grid; gap: 1.1em; margin-top: clamp(20px,2.4vw,30px); max-width: 40em; }
+  .operator__more { margin-top: 20px; font-size: var(--fs-body-sm); font-weight: 700; }
+  .operator__more a { color: var(--blue-ink); text-decoration: underline; text-underline-offset: 4px; }
+  .operator__note { margin-top: clamp(26px,3vw,38px); padding: clamp(18px,2vw,24px); border-left: 3px solid var(--gold); background: var(--paper); border-radius: 0 var(--radius) var(--radius) 0; }
+  .operator__note h3 { font-size: .8125rem; letter-spacing: .04em; color: var(--navy); }
+  .operator__note p { margin-top: 8px; font-size: var(--fs-body-sm); line-height: 1.8; color: var(--text-mute); }
+  @media (max-width: 860px) { .operator__inner { grid-template-columns: 1fr; gap: 28px; } .operator__visual img { aspect-ratio: 3/2; } }
 </style>
