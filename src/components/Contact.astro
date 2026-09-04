@@ -1,165 +1,63 @@
 ---
-const deliverables = [
-  '現在の問い合わせ経路図',
-  '初回返信と見積フォローの現状',
-  '取りこぼし候補と改善優先順位',
-  '30日実装案と固定見積',
+const topics = [
+  '集客・営業を仕組みにしたい',
+  '発信を属人化させず続けたい',
+  '業務を標準化・自動化したい',
+  '何から仕組み化すべきか整理したい',
 ];
 ---
 
 <section class="contact section on-dark" id="contact">
   <div class="wrap contact__inner">
     <div class="contact__body reveal">
-      <p class="kicker">導入前診断<span class="kicker__en">DIAGNOSIS</span></p>
+      <p class="kicker">相談<span class="kicker__en">CONTACT</span></p>
       <h2 class="contact__title">
-        <span class="phrase">まず、見積フォローが</span><br />
-        <span class="phrase">止まる場所を特定します。</span>
+        <span class="phrase">まず、どこを仕組みにすると</span><br />
+        <span class="phrase">一番効果が大きいか整理します。</span>
       </h2>
       <p class="contact__lead measure">
-        現在の問い合わせ経路、初回返信、案件台帳、見積後の連絡状況を確認し、
-        取りこぼし候補と改善順序をまとめます。無料提案ではなく、自社で利用できる診断資料として納品します。
+        Web、SNS、AIありきではありません。現在の集客・営業・業務・発信の流れを確認し、
+        属人化やボトルネックが大きい場所から改善優先順位を整理します。
       </p>
 
-      <div class="contact__price">
-        <span>見積フォロー漏れ診断</span>
-        <strong>55,000円<small>（税別）</small></strong>
-        <span>実装契約時は同額を実装費から控除</span>
-      </div>
-
       <div class="contact__actions">
-        <a class="btn btn--on-dark" href="/diagnosis/reform-lead/" data-cta="home-diagnosis-detail">
-          診断内容と申込条件を見る<span class="btn__arrow" aria-hidden="true">→</span>
+        <a class="btn btn--on-dark" href="/contact/?topic=system" data-cta="home-system-contact">
+          仕組み化について相談する<span class="btn__arrow" aria-hidden="true">→</span>
         </a>
       </div>
+
+      <p class="contact__note">
+        法人化前の個人運営ブランドのため、対応可能な件数には限りがあります。内容を確認したうえで、対応可否をご案内します。
+      </p>
     </div>
 
     <aside class="contact__deliverables reveal" data-delay="1">
-      <h3>診断でお渡しするもの</h3>
+      <h3>こんな相談から始められます</h3>
       <ul>
-        {deliverables.map((item) => <li>{item}</li>)}
+        {topics.map((item) => <li>{item}</li>)}
       </ul>
       <p>
-        申込時点では費用は確定しません。対象条件と実施内容を確認し、支払方法をご案内したあとに正式受付となります。
+        まだ課題が言語化できていなくても問題ありません。現状を伺い、優先順位を一緒に整理します。
       </p>
-      <a
-        class="contact__direct"
-        href="/contact/?topic=reform-audit"
-        data-cta="home-diagnosis-apply"
-        data-cta-topic="reform-audit"
-      >
-        診断の適合確認を申し込む →
-      </a>
+      <a class="contact__direct" href="/service/">支援領域を確認する →</a>
     </aside>
   </div>
 </section>
 
 <style>
-  .contact {
-    background: var(--navy);
-    color: var(--text-on-dark);
-  }
-
-  .kicker__en {
-    margin-left: 8px;
-    opacity: 0.7;
-  }
-
-  .contact__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
-    gap: clamp(36px, 5vw, 80px);
-    align-items: start;
-  }
-
-  .contact__title {
-    font-size: var(--fs-h2);
-  }
-
-  .contact__lead {
-    margin-top: clamp(18px, 2.2vw, 26px);
-    color: var(--text-on-dark-mute);
-  }
-
-  .contact__price {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 6px 18px;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line-on-dark);
-    font-size: 0.75rem;
-    color: var(--text-on-dark-mute);
-  }
-
-  .contact__price strong {
-    font-size: clamp(1.45rem, 1.2rem + 1vw, 2rem);
-    color: #fff;
-  }
-
-  .contact__price small {
-    font-size: 0.6875rem;
-  }
-
-  .contact__actions {
-    margin-top: clamp(26px, 3vw, 36px);
-  }
-
-  .contact__deliverables {
-    padding: clamp(24px, 3vw, 34px);
-    border-top: 3px solid var(--gold);
-    background: rgba(255, 255, 255, 0.07);
-  }
-
-  .contact__deliverables h3 {
-    font-size: 1rem;
-  }
-
-  .contact__deliverables ul {
-    display: grid;
-    gap: 12px;
-    margin-top: 20px;
-  }
-
-  .contact__deliverables li {
-    position: relative;
-    padding-left: 24px;
-    font-size: var(--fs-body-sm);
-    color: var(--text-on-dark-mute);
-  }
-
-  .contact__deliverables li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--gold);
-    font-weight: 700;
-  }
-
-  .contact__deliverables p {
-    margin-top: 24px;
-    padding-top: 18px;
-    border-top: 1px solid var(--line-on-dark);
-    font-size: 0.75rem;
-    color: var(--text-on-dark-mute);
-  }
-
-  .contact__direct {
-    display: inline-block;
-    margin-top: 18px;
-    font-size: var(--fs-body-sm);
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  @media (max-width: 860px) {
-    .contact__inner {
-      grid-template-columns: 1fr;
-    }
-
-    .contact__actions .btn {
-      width: 100%;
-    }
-  }
+  .contact { background: var(--navy); color: var(--text-on-dark); }
+  .kicker__en { margin-left: 8px; opacity: 0.7; }
+  .contact__inner { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr); gap: clamp(36px, 5vw, 80px); align-items: start; }
+  .contact__title { font-size: var(--fs-h2); }
+  .contact__lead { margin-top: clamp(18px, 2.2vw, 26px); color: var(--text-on-dark-mute); }
+  .contact__actions { margin-top: clamp(26px, 3vw, 36px); }
+  .contact__note { margin-top: 18px; font-size: .75rem; color: var(--text-on-dark-mute); }
+  .contact__deliverables { padding: clamp(24px, 3vw, 34px); border-top: 3px solid var(--gold); background: rgba(255,255,255,.07); }
+  .contact__deliverables h3 { font-size: 1rem; }
+  .contact__deliverables ul { display: grid; gap: 12px; margin-top: 20px; }
+  .contact__deliverables li { position: relative; padding-left: 24px; font-size: var(--fs-body-sm); color: var(--text-on-dark-mute); }
+  .contact__deliverables li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+  .contact__deliverables p { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line-on-dark); font-size: .75rem; color: var(--text-on-dark-mute); }
+  .contact__direct { display: inline-block; margin-top: 18px; font-size: var(--fs-body-sm); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 860px) { .contact__inner { grid-template-columns: 1fr; } .contact__actions .btn { width: 100%; } }
 </style>
