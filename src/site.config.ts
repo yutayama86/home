@@ -8,49 +8,24 @@
 export const site = {
   name: 'シクミベース',
   url: 'https://shikumi-base.com',
-  title: 'シクミベース｜住宅リフォーム会社の反響・見積フォローを仕組み化',
+  title: 'シクミベース｜仕組みで、事業を強くする。',
   description:
-    '茨城・近隣の外壁塗装・屋根・住宅リフォーム会社向けに、問い合わせへの受信確認、現調前情報回収、案件台帳、見積後フォローを30日で実装します。',
+    'シクミベースは、中小企業・地域企業の集客・営業・業務・情報発信を、属人的な頑張りではなく再現可能な仕組みに変える事業ブランドです。Web、SNS、AI、データは目的ではなく、仕組みを実装するための手段として活用します。',
   operator: '山野辺 雄太',
 } as const;
 
-/**
- * 問い合わせ導線。
- *
- * サイト内の /contact/ にフォームを持ち、送信は Cloudflare Pages Functions
- * （functions/api/contact.ts）が受けます。フォーム開始・完了までGA4で計測できます。
- *
- * `email` はフォームが使えない場合の代替手段としてページ下部に表示します。
- */
 export const contact: {
-  /** サイト内フォームのパス。 */
   formPath: string;
-  /** 代替の連絡先。null なら表示しない。 */
   email: string | null;
 } = {
   formPath: '/contact/',
   email: 'info@shikumi-base.com',
 };
 
-/** すべてのCTAのリンク先。相談内容は遷移先で選ぶ。 */
 export function ctaHref(topic?: string): string {
   return topic ? `${contact.formPath}?topic=${topic}` : contact.formPath;
 }
 
-/**
- * アクセス解析。2種類を併用しています。
- *
- * ■ Cloudflare Web Analytics（cloudflareToken）
- *   Cookieを使わず個人を追跡しない軽量な計測。
- *   現在は Cloudflare Pages 側の管理画面で有効化しており、ビーコンは
- *   Cloudflareがエッジで自動挿入します。そのため、ここは null のままにします。
- *   （値を入れるとタグが二重になり、二重計測になります）
- *
- * ■ Google Analytics 4（ga4MeasurementId）
- *   流入元やユーザー行動の詳細分析用。「G-」で始まる測定IDを設定します。
- *   Cookieを使うため、プライバシーポリシーでの説明が必要です。
- *   測定IDの場所: GA4 → 管理 → データストリーム → 対象のウェブストリーム
- */
 export const analytics: {
   cloudflareToken: string | null;
   ga4MeasurementId: string | null;
