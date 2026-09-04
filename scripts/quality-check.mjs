@@ -222,7 +222,7 @@ function checkGeneratedEditorialQuality(file, data, body) {
 
   const requiredTerms = [
     ['初回返信時間', /初回返信時間/],
-    ['未対応数', /未対応数/],
+    ['未対応数', /未対応(?:案件)?数/],
     ['次回行動日設定率', /次回行動日設定率/],
     ['追客実施率', /(?:追客|見積後フォロー|フォロー).{0,8}(?:実施率|送信率)/],
   ];
@@ -248,7 +248,7 @@ function checkGeneratedEditorialQuality(file, data, body) {
 
   const inventedProductClaims = [
     ['有料診断を無料とする誤記', /無料(?:診断|で提供)/],
-    ['既製ツールとしての誤記', /(?:一括管理|案件管理)ツール|入力画面/],
+    ['既製ツールとしての誤記', /(?:一括管理|案件管理)ツール(?:です|として|を提供)|入力画面/],
     ['未定義の連携先', /Slack|Teams|Chatwork/],
     ['未定義の自動割り振り', /自動割り振り|自動振り分け/],
     [
@@ -260,6 +260,10 @@ function checkGeneratedEditorialQuality(file, data, body) {
     ['未定義の金額基準', /\d+(?:[,.]\d+)?\s*万円(?:以上|以下|超|未満)/],
     ['未定義の件数基準', /(?:月|毎月|月間)\s*\d+\s*件(?:以上|以下|未満)/],
     ['未定義のカスタマイズ保証', /カスタマイズ可能/],
+    ['未決定の実装技術', /スプレッドシート|軽量DB|PDF\s*を添付|(?:例外|未回答)タグ|フラグを/],
+    ['誤解を招く診断費表現', /別途請求は発生しません/],
+    ['不自然な運営者呼称', /山野辺雄太さん/],
+    ['根拠のない量表現', /毎日多数/],
   ];
   for (const [label, pattern] of inventedProductClaims) {
     if (pattern.test(body)) addError(file, `${label}が含まれています`);
@@ -267,6 +271,25 @@ function checkGeneratedEditorialQuality(file, data, body) {
 
   if (!body.includes('税別55,000円')) {
     addError(file, '見積フォロー漏れ診断の価格「税別55,000円」が明記されていません');
+  }
+
+  const productScope = [
+    ['受信確認', /受信確認/],
+    ['現調前情報の回収', /現調前.{0,8}(?:情報|項目).{0,8}(?:回収|収集)/],
+    ['案件台帳', /案件台帳/],
+    ['未対応通知', /未対応通知/],
+    ['見積後3回のフォロー', /見積後.{0,8}(?:3回.{0,8}フォロー|フォロー.{0,8}3回)|3回.{0,8}見積後フォロー/],
+    ['KPI計測', /KPI.{0,8}(?:計測|測定|集計)/i],
+  ];
+  for (const [label, pattern] of productScope) {
+    if (!pattern.test(body)) addError(file, `商品範囲「${label}」の説明がありません`);
+  }
+
+  if (!/\]\(\/diagnosis\/reform-lead\/\)/.test(body)) {
+    addError(file, '見積フォロー漏れ診断へのMarkdownリンクがありません');
+  }
+  if (!/\]\(\/service\/reform-lead-os\/\)/.test(body)) {
+    addError(file, 'リフォーム反響OS 30へのMarkdownリンクがありません');
   }
 }
 
