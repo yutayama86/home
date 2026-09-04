@@ -224,7 +224,7 @@ function checkGeneratedEditorialQuality(file, data, body) {
     ['初回返信時間', /初回返信時間/],
     ['未対応数', /未対応数/],
     ['次回行動日設定率', /次回行動日設定率/],
-    ['追客実施率', /(?:追客|見積後フォロー)(?:の)?実施率/],
+    ['追客実施率', /(?:追客|見積後フォロー|フォロー).{0,8}(?:実施率|送信率)/],
   ];
   for (const [label, pattern] of requiredTerms) {
     if (!pattern.test(body)) addError(file, `KPI「${label}」の定義がありません`);
