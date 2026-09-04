@@ -1,16 +1,16 @@
 ---
 const gaps = [
   {
-    title: '返信が遅れる',
-    body: 'メールやLINEの確認が後回しになり、誰が返したかも追えない。',
+    title: '社長に仕事が集まる',
+    body: '判断・営業・確認が一人に集中し、忙しくなるほど事業が止まりやすくなる。',
   },
   {
-    title: '情報が揃わない',
-    body: '写真、施工場所、希望時期を現調直前に聞き直している。',
+    title: '成果が再現できない',
+    body: 'うまくいった方法が個人の経験に残り、他の人へ引き継げない。',
   },
   {
-    title: '見積後が止まる',
-    body: '次に連絡する日が決まらず、案件が担当者の記憶から抜ける。',
+    title: '改善が感覚頼りになる',
+    body: '数字や記録がつながっておらず、次に何を直すべきか判断しにくい。',
   },
 ];
 ---
@@ -18,14 +18,14 @@ const gaps = [
 <section class="about section" id="about">
   <div class="wrap">
     <div class="about__head reveal">
-      <p class="kicker">先に直すこと<span class="kicker__en">FIRST PRIORITY</span></p>
+      <p class="kicker">仕組み化する理由<span class="kicker__en">WHY SYSTEMIZE</span></p>
       <h2 class="about__statement">
-        <span class="phrase">反響を増やす前に、</span><br />
-        <strong class="phrase">いま届いている反響を逃さない。</strong>
+        <span class="phrase">頑張る人を増やす前に、</span><br />
+        <strong class="phrase">頑張らなくても回る部分を増やす。</strong>
       </h2>
       <p class="about__lead measure">
-        問い合わせがメール、LINE、電話、紙、Excelに分かれると、初回返信や見積後の連絡は
-        担当者の記憶に頼り始めます。まず、届いた反響を確認し、追い、改善できる土台をつくります。
+        事業が伸びるほど、集客・営業・業務・情報発信は複雑になります。そこで人を増やすだけでは、
+        属人化も管理コストも増えます。シクミベースは、成果が出る流れを整理し、誰でも回せて改善できる形に変えます。
       </p>
     </div>
 
@@ -40,108 +40,29 @@ const gaps = [
     </ol>
 
     <p class="about__bridge reveal">
-      リフォーム反響OS 30は、この3つの分断を、ひとつの営業フローとしてつなぎます。
+      Web・SNS・AI・データは目的ではありません。必要な手段だけを使い、事業が継続的に回る土台をつくります。
     </p>
   </div>
 </section>
 
 <style>
-  .about {
-    background: var(--paper);
-  }
-
-  .kicker__en {
-    margin-left: 8px;
-    color: var(--text-mute);
-    font-weight: 700;
-    opacity: 0.85;
-  }
-
-  .about__head {
-    max-width: 50em;
-  }
-
-  .about__statement {
-    font-size: var(--fs-h2);
-    color: var(--navy);
-  }
-
-  .about__statement strong {
-    font-weight: 700;
-    background-image: linear-gradient(transparent 66%, var(--sky) 66%);
-    background-repeat: repeat-x;
-  }
-
-  .about__lead {
-    margin-top: clamp(20px, 2.4vw, 28px);
-    color: var(--text-mute);
-  }
-
-  .gaps {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: clamp(44px, 5vw, 72px);
-    border-top: 1px solid var(--line);
-  }
-
-  .gap {
-    padding: clamp(28px, 3vw, 40px) clamp(20px, 2.4vw, 34px);
-    border-inline-end: 1px solid var(--line);
-  }
-
-  .gap:first-child {
-    padding-inline-start: 0;
-  }
-
-  .gap:last-child {
-    border-inline-end: 0;
-    padding-inline-end: 0;
-  }
-
-  .gap__no {
-    display: block;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: var(--ls-label);
-    color: var(--blue);
-  }
-
-  .gap__title {
-    margin-top: 14px;
-    font-size: var(--fs-h3);
-    color: var(--navy);
-  }
-
-  .gap__body {
-    margin-top: 12px;
-    font-size: var(--fs-body-sm);
-    color: var(--text-mute);
-  }
-
-  .about__bridge {
-    margin-top: 4px;
-    padding: 18px 22px;
-    border-left: 3px solid var(--gold);
-    background: var(--sky-soft);
-    font-weight: 700;
-    color: var(--navy);
-  }
-
+  .about { background: var(--paper); }
+  .kicker__en { margin-left: 8px; color: var(--text-mute); font-weight: 700; opacity: 0.85; }
+  .about__head { max-width: 50em; }
+  .about__statement { font-size: var(--fs-h2); color: var(--navy); }
+  .about__statement strong { font-weight: 700; background-image: linear-gradient(transparent 66%, var(--sky) 66%); background-repeat: repeat-x; }
+  .about__lead { margin-top: clamp(20px, 2.4vw, 28px); color: var(--text-mute); }
+  .gaps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(44px, 5vw, 72px); border-top: 1px solid var(--line); }
+  .gap { padding: clamp(28px, 3vw, 40px) clamp(20px, 2.4vw, 34px); border-inline-end: 1px solid var(--line); }
+  .gap:first-child { padding-inline-start: 0; }
+  .gap:last-child { border-inline-end: 0; padding-inline-end: 0; }
+  .gap__no { display: block; font-size: 0.6875rem; font-weight: 700; letter-spacing: var(--ls-label); color: var(--blue); }
+  .gap__title { margin-top: 14px; font-size: var(--fs-h3); color: var(--navy); }
+  .gap__body { margin-top: 12px; font-size: var(--fs-body-sm); color: var(--text-mute); }
+  .about__bridge { margin-top: 4px; padding: 18px 22px; border-left: 3px solid var(--gold); background: var(--sky-soft); font-weight: 700; color: var(--navy); }
   @media (max-width: 860px) {
-    .gaps {
-      grid-template-columns: 1fr;
-    }
-
-    .gap,
-    .gap:first-child,
-    .gap:last-child {
-      padding: 26px 0;
-      border-inline-end: 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .gap:last-child {
-      border-bottom: 0;
-    }
+    .gaps { grid-template-columns: 1fr; }
+    .gap, .gap:first-child, .gap:last-child { padding: 26px 0; border-inline-end: 0; border-bottom: 1px solid var(--line); }
+    .gap:last-child { border-bottom: 0; }
   }
 </style>
