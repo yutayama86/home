@@ -3,11 +3,10 @@ import { ctaHref } from '../site.config';
 import { services } from '../data/taxonomy';
 
 const nav = [
-  { href: '/service/reform-lead-os/', label: '反響OS 30' },
-  { href: '/diagnosis/reform-lead/', label: '導入前診断' },
+  { href: '/service/', label: '支援領域' },
   { href: '/knowledge/', label: 'ナレッジ' },
   { href: '/case/', label: '事例' },
-  { href: '/about/', label: '運営者' },
+  { href: '/about/', label: 'シクミベースについて' },
 ];
 
 const current = Astro.url.pathname;
@@ -21,23 +20,12 @@ const isActive = (href: string) => current === href || current.startsWith(href);
     <nav class="nav" aria-label="メインメニュー">
       <ul class="nav__list">
         {nav.map((item) => (
-          <li>
-            <a
-              class="nav__link"
-              href={item.href}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
+          <li><a class="nav__link" href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
         ))}
       </ul>
-      <a
-        class="btn btn--primary nav__cta"
-        href={ctaHref('reform-audit')}
-        data-cta="header-diagnosis"
-        data-cta-topic="reform-audit"
-      >診断を申し込む</a>
+      <a class="btn btn--primary nav__cta" href={ctaHref('system')} data-cta="header-consult" data-cta-topic="system">
+        仕組み化を相談する
+      </a>
     </nav>
 
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
@@ -49,200 +37,46 @@ const isActive = (href: string) => current === href || current.startsWith(href);
   <div class="mobile-menu" id="mobile-menu" hidden>
     <nav class="wrap mobile-menu__inner" aria-label="モバイルメニュー">
       <ul class="mobile-menu__list">
-        {nav.map((item) => (
-          <li><a href={item.href}>{item.label}</a></li>
-        ))}
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
       </ul>
 
-      <p class="mobile-menu__sub">その他の支援</p>
+      <p class="mobile-menu__sub">仕組みにする領域</p>
       <ul class="mobile-menu__list mobile-menu__list--sub">
-        {services.map((service) => (
-          <li><a href={`/service/${service.id}/`}>{service.name}</a></li>
-        ))}
+        {services.map((service) => <li><a href={`/service/${service.id}/`}>{service.name}</a></li>)}
       </ul>
 
-      <a
-        class="btn btn--primary mobile-menu__cta"
-        href={ctaHref('reform-audit')}
-        data-cta="mobile-menu-diagnosis"
-        data-cta-topic="reform-audit"
-      >
-        診断を申し込む
+      <a class="btn btn--primary mobile-menu__cta" href={ctaHref('system')} data-cta="mobile-menu-consult" data-cta-topic="system">
+        仕組み化を相談する
       </a>
     </nav>
   </div>
 </header>
 
 <style>
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .header__inner {
-    height: var(--header-h);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
-
-  .logo {
-    font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    line-height: 1;
-    color: var(--navy);
-    white-space: nowrap;
-  }
-
-  .nav {
-    display: flex;
-    align-items: center;
-    gap: clamp(20px, 2.4vw, 36px);
-  }
-
-  .nav__list {
-    display: flex;
-    align-items: center;
-    gap: clamp(16px, 1.8vw, 28px);
-  }
-
-  .nav__link {
-    position: relative;
-    display: inline-block;
-    padding: 6px 0;
-    font-size: var(--fs-nav);
-    font-weight: 700;
-    color: var(--text);
-    transition: color 0.2s var(--ease);
-  }
-
-  .nav__link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--blue);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.28s var(--ease);
-  }
-
-  .nav__link:hover,
-  .nav__link[aria-current='page'] {
-    color: var(--blue-ink);
-  }
-
-  .nav__link:hover::after,
-  .nav__link[aria-current='page']::after {
-    transform: scaleX(1);
-  }
-
-  .nav__cta {
-    min-height: 44px;
-    padding: 10px 22px;
-  }
-
-  .menu-toggle {
-    display: none;
-    align-items: center;
-    gap: 8px;
-    min-height: 44px;
-    padding: 8px 14px;
-    background: transparent;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-pill);
-    color: var(--navy);
-    font: inherit;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .menu-toggle__bars {
-    display: grid;
-    gap: 5px;
-    width: 18px;
-  }
-
-  .menu-toggle__bars span {
-    display: block;
-    height: 2px;
-    background: currentColor;
-    transition: transform 0.25s var(--ease);
-  }
-
-  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:first-child {
-    transform: translateY(3.5px) rotate(45deg);
-  }
-
-  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:last-child {
-    transform: translateY(-3.5px) rotate(-45deg);
-  }
-
-  .mobile-menu {
-    border-top: 1px solid var(--line);
-    background: var(--paper);
-    max-height: calc(100dvh - var(--header-h));
-    overflow-y: auto;
-  }
-
-  .mobile-menu[hidden] {
-    display: none;
-  }
-
-  .mobile-menu__inner {
-    padding-block: 12px 24px;
-  }
-
-  .mobile-menu__list {
-    border-top: 1px solid var(--line);
-  }
-
-  .mobile-menu__list a {
-    display: block;
-    padding: 16px 4px;
-    border-bottom: 1px solid var(--line);
-    font-size: 1rem;
-    font-weight: 700;
-  }
-
-  .mobile-menu__sub {
-    margin-top: 22px;
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: var(--ls-label);
-    color: var(--blue-ink);
-  }
-
-  .mobile-menu__list--sub a {
-    padding: 14px 4px 14px 16px;
-    font-size: 0.9375rem;
-    color: var(--text-mute);
-  }
-
-  .mobile-menu__cta {
-    width: 100%;
-    margin-top: 22px;
-  }
-
-  @media (max-width: 900px) {
-    .nav {
-      display: none;
-    }
-
-    .menu-toggle {
-      display: inline-flex;
-    }
-  }
+  .header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+  .header__inner { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .logo { font-size: clamp(1.25rem,1.15rem + .4vw,1.5rem); font-weight: 700; letter-spacing: .06em; line-height: 1; color: var(--navy); white-space: nowrap; }
+  .nav { display: flex; align-items: center; gap: clamp(20px,2.4vw,36px); }
+  .nav__list { display: flex; align-items: center; gap: clamp(16px,1.8vw,28px); }
+  .nav__link { position: relative; display: inline-block; padding: 6px 0; font-size: var(--fs-nav); font-weight: 700; color: var(--text); transition: color .2s var(--ease); }
+  .nav__link::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background: var(--blue); transform: scaleX(0); transform-origin: left; transition: transform .28s var(--ease); }
+  .nav__link:hover,.nav__link[aria-current='page'] { color: var(--blue-ink); }
+  .nav__link:hover::after,.nav__link[aria-current='page']::after { transform: scaleX(1); }
+  .nav__cta { min-height: 44px; padding: 10px 22px; }
+  .menu-toggle { display: none; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; background: transparent; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); color: var(--navy); font: inherit; font-size: .8125rem; font-weight: 700; cursor: pointer; }
+  .menu-toggle__bars { display: grid; gap: 5px; width: 18px; }
+  .menu-toggle__bars span { display: block; height: 2px; background: currentColor; transition: transform .25s var(--ease); }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+  .mobile-menu { border-top: 1px solid var(--line); background: var(--paper); max-height: calc(100dvh - var(--header-h)); overflow-y: auto; }
+  .mobile-menu[hidden] { display: none; }
+  .mobile-menu__inner { padding-block: 12px 24px; }
+  .mobile-menu__list { border-top: 1px solid var(--line); }
+  .mobile-menu__list a { display: block; padding: 16px 4px; border-bottom: 1px solid var(--line); font-size: 1rem; font-weight: 700; }
+  .mobile-menu__sub { margin-top: 22px; font-size: var(--fs-label); font-weight: 700; letter-spacing: var(--ls-label); color: var(--blue-ink); }
+  .mobile-menu__list--sub a { padding: 14px 4px 14px 16px; font-size: .9375rem; color: var(--text-mute); }
+  .mobile-menu__cta { width: 100%; margin-top: 22px; }
+  @media (max-width: 900px) { .nav { display: none; } .menu-toggle { display: inline-flex; } }
 </style>
 
 <script is:inline>
@@ -250,29 +84,10 @@ const isActive = (href: string) => current === href || current.startsWith(href);
     const toggle = document.querySelector('.menu-toggle');
     const menu = document.getElementById('mobile-menu');
     if (!toggle || !menu) return;
-
-    const setOpen = (open) => {
-      toggle.setAttribute('aria-expanded', String(open));
-      menu.hidden = !open;
-    };
-
-    toggle.addEventListener('click', () => {
-      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-    });
-
-    menu.addEventListener('click', (event) => {
-      if (event.target.closest('a')) setOpen(false);
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-        setOpen(false);
-        toggle.focus();
-      }
-    });
-
-    window.matchMedia('(min-width: 901px)').addEventListener('change', (event) => {
-      if (event.matches) setOpen(false);
-    });
+    const setOpen = (open) => { toggle.setAttribute('aria-expanded', String(open)); menu.hidden = !open; };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', (event) => { if (event.target.closest('a')) setOpen(false); });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setOpen(false); toggle.focus(); } });
+    window.matchMedia('(min-width: 901px)').addEventListener('change', (event) => { if (event.matches) setOpen(false); });
   })();
 </script>
