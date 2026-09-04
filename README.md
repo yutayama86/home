@@ -68,6 +68,7 @@ npm run verify   # 型チェック → ビルド → 品質チェック
 - 検索意図・主軸キーワードの未設定
 - サイト内リンクの欠如
 - title / description の長さ
+- sitemap掲載URLと生成ページの一致、canonical、noindex矛盾
 - 日本語で強調が反映されていない箇所（`**「〜」**` の flanking 問題）
 
 ### 毎日の改善サイクル
