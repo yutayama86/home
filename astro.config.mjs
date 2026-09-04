@@ -5,15 +5,6 @@ import sitemap from '@astrojs/sitemap';
 
 const SITE = 'https://shikumi-base.com';
 
-/**
- * 記事の更新日を集める。
- *
- * サイトマップに lastmod を入れておくと、Googleがどのページを再クロールすべきか
- * 判断できる。毎日リライトを回す前提のサイトでは、これがないと更新が伝わりにくい。
- *
- * astro.config はコンテンツ読み込みより前に評価されるため、
- * frontmatter を直接読む。
- */
 function collectLastmod() {
   const map = new Map();
 
@@ -22,16 +13,11 @@ function collectLastmod() {
 
     for (const file of readdirSync(dir)) {
       if (!file.endsWith('.md')) continue;
-
       const raw = readFileSync(join(dir, file), 'utf-8');
       const field = (key) => raw.match(new RegExp(`^${key}:\\s*(.*)$`, 'm'))?.[1]?.trim();
-
-      // 下書きはページ自体が生成されないので対象外
       if (field('draft') === 'true') continue;
-
       const date = field('updatedAt') || field('publishedAt');
       if (!date) continue;
-
       const path = toPath(basename(file, '.md'), field('category'));
       if (path) map.set(path, new Date(date));
     }
@@ -46,23 +32,25 @@ function collectLastmod() {
 }
 
 const lastmodByUrl = collectLastmod();
-
-/** 記事が1本もない一覧ページ用に、サイト全体で最も新しい更新日を持っておく。 */
 const newest = [...lastmodByUrl.values()].sort((a, b) => b - a)[0] ?? new Date();
+
+const legacyPaths = [
+  '/service/reform-lead-os/',
+  '/diagnosis/reform-lead/',
+];
 
 export default defineConfig({
   site: SITE,
   integrations: [
     sitemap({
-      /* 検索結果に出したくないページはサイトマップからも外す。
-         noindex を付けたページを載せると、Googleに矛盾した指示を出すことになる。 */
-      filter: (page) => !page.includes('/contact/thanks/'),
+      filter: (page) =>
+        !page.includes('/contact/thanks/') &&
+        !legacyPaths.some((path) => page === `${SITE}${path}`),
 
       serialize(item) {
         const lastmod = lastmodByUrl.get(item.url);
 
         if (lastmod) {
-          // 記事ページ：自身の更新日
           item.lastmod = lastmod.toISOString();
           item.changefreq = 'monthly';
           item.priority = 0.7;
@@ -70,20 +58,16 @@ export default defineConfig({
           item.lastmod = newest.toISOString();
           item.changefreq = 'weekly';
           item.priority = 1.0;
-        } else if (item.url.includes('/service/') || item.url.includes('/diagnosis/')) {
-          // 問い合わせに最も近いページ
+        } else if (item.url.includes('/service/')) {
           item.changefreq = 'monthly';
-          item.priority = 0.9;
+          item.priority = 0.85;
         } else if (item.url.includes('/knowledge/') || item.url.includes('/case/')) {
-          // 一覧ページ：記事が増えるたびに内容が変わる
           item.lastmod = newest.toISOString();
           item.changefreq = 'weekly';
-          item.priority = 0.6;
+          item.priority = 0.65;
         } else if (item.url.endsWith('/contact/') || item.url.endsWith('/about/')) {
-          // 問い合わせ先と運営者情報。更新頻度は低いが、
-          // 検索結果に出す優先度は規約類より高い。
           item.changefreq = 'monthly';
-          item.priority = 0.5;
+          item.priority = 0.6;
         } else {
           item.changefreq = 'yearly';
           item.priority = 0.3;
