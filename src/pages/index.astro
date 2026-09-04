@@ -28,16 +28,16 @@ const jsonLd = {
       description: site.description,
       logo: new URL('/og.png', site.url).href,
       founder: { '@type': 'Person', name: site.operator },
-      areaServed: { '@type': 'AdministrativeArea', name: '茨城県および近隣地域' },
+      areaServed: { '@type': 'Country', name: '日本' },
       sameAs: ['https://ibatoco.jp/'],
     },
     {
       '@type': 'Service',
-      name: 'リフォーム反響OS 30',
-      serviceType: '住宅リフォーム会社向け反響対応・見積フォローの業務設計と実装',
-      url: new URL('/service/reform-lead-os/', site.url).href,
+      name: '事業の仕組み化支援',
+      serviceType: '中小企業・地域企業の集客・営業・業務・情報発信の仕組み化設計と実装',
+      url: site.url,
       provider: { '@type': 'Organization', name: site.name, url: site.url },
-      audience: { '@type': 'BusinessAudience', audienceType: '外壁塗装・屋根・住宅リフォーム会社' },
+      audience: { '@type': 'BusinessAudience', audienceType: '中小企業・地域企業の経営者・事業責任者' },
     },
   ],
 };
@@ -58,10 +58,10 @@ const jsonLd = {
           <div class="knowledge__head reveal">
             <p class="kicker">ナレッジ<span class="kicker__en">KNOWLEDGE</span></p>
             <h2 class="section-title">
-              <span class="phrase">判断材料になる情報を、</span><span class="phrase">実務から。</span>
+              <span class="phrase">仕組みで強くするための、</span><span class="phrase">実務知識。</span>
             </h2>
             <p class="section-lead measure">
-              費用の考え方、依頼先の選び方、始める順番。実際に決めるときに必要な情報をまとめています。
+              属人化、集客、営業、業務改善、AI活用。成果を一度きりで終わらせず、再現できる形にするための判断材料をまとめています。
             </p>
           </div>
 
@@ -97,27 +97,9 @@ const jsonLd = {
 </BaseLayout>
 
 <style>
-  .knowledge {
-    background: var(--paper);
-  }
-
-  .kicker__en {
-    margin-left: 8px;
-    color: var(--text-mute);
-    font-weight: 700;
-    opacity: 0.85;
-  }
-
-  .knowledge__head {
-    max-width: 46em;
-  }
-
-  .knowledge__list {
-    margin-top: clamp(32px, 4vw, 48px);
-    border-top: 1px solid var(--line);
-  }
-
-  .knowledge__more {
-    margin-top: clamp(28px, 3.5vw, 40px);
-  }
+  .knowledge { background: var(--paper); }
+  .kicker__en { margin-left: 8px; color: var(--text-mute); font-weight: 700; opacity: 0.85; }
+  .knowledge__head { max-width: 46em; }
+  .knowledge__list { margin-top: clamp(32px, 4vw, 48px); border-top: 1px solid var(--line); }
+  .knowledge__more { margin-top: clamp(28px, 3.5vw, 40px); }
 </style>
