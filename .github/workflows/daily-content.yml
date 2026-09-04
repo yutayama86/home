@@ -105,6 +105,9 @@ jobs:
         run: |
           article_path="src/content/knowledge/${{ steps.topic.outputs.slug }}.md"
           if [ -f "$article_path" ]; then
+            echo "::group::Rejected article for editorial review"
+            sed -n '1,320p' "$article_path"
+            echo "::endgroup::"
             rm -- "$article_path"
           fi
           npm run verify
